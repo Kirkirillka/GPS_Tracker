@@ -16,3 +16,26 @@ The site data collector must store the received data in an internal database and
 - validate the functionality of the developed program in the real environment using a WiFi (IEEE 802.11) communication link;
 - Perform multiple experiments, tune the transmit/receive parameters, and analyze the capacity and robustness of the connection.
 - develop a simple GUI interface to visualize the data in real-time.
+
+## Discussion
+
+### Organization
+
+- How frequently must you report your results to your supervisor (usually every 3-4 weeks)?
+- How frequently will you meet your supervisor (usually, there are only 2-3 meetings overall)?
+- First references, basic tools, and templates you can start from (some papers, documents, frameworks, programming environments, simulation tools, templates, demo projects, etc.).
+- What is the amount of written pages required for documentation of your results?
+
+### General
+
+- What is the main idea of the topic?
+- What skills are required from you in the topic: literature study, analysis, simulations, implementation, etc.?
+- What output is being expected?
+- How can you divide the topic among the group members?
+
+### Technical detaiks
+
+- What technologies you will use in the project?
+- What are components of the project?
+- How the components are connected?
+- What are the interfaces between components?
