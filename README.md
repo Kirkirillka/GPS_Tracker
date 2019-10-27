@@ -2,8 +2,9 @@
 
 ## Available git branches
 
-- master - main branch
-- develop - developing system
+- **master** - main branch
+- **develop** - developing system
+- **feature/telemetry** - information about messaging (GPS, Cellular Network quality signal, etc.) between clients and server
 
 ## Available pages
 
