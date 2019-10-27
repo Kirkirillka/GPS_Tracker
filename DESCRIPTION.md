@@ -47,6 +47,10 @@ The site data collector must store the received data in an internal database and
     - Testing
     - Documentation
     - Reporting 
+    
+##### Protocols Specific Questions
+
+- Which protocol use to serialize data between clients and receiving servers? (XML, JSON, Protobuf)
 
 #### Documentation
 
