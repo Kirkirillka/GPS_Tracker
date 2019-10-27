@@ -20,7 +20,7 @@
 - Structural UML
     - **Class Diagram**
     - **Object Diagram**
-    - **Component Diagram**
+    - **Component Diagram** - [IBM how to](https://developer.ibm.com/articles/the-component-diagram/)
     - **Composite Structure Diagram**
     - Deployment Diagram
     - Package Diagram
