@@ -1,7 +1,26 @@
 # Telemetry data between GPS devices and server
 
+## Information to be sent
 
-Current data schema: **JSON**
+### Mandatory properties
+
+- Time of message
+- ID of client [UUID]
+- Type of client [Handy, UAV]
+- Coordinates [Longitude, latitude]
+- Payload (May be empty)
+
+### Compulsory properties
+
+- Cellular Network status (included in payload)
+    - Current Cell Network name
+    - Current Cell ID
+    - eNB/BS around
+    - Receiving power from eNB/BS
+    - Error rate
+
+
+## With JSON
 
 Example of schema of data transferred from GPS devices to server:
 
