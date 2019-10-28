@@ -3,6 +3,9 @@
 ## Supervisor
 Oleksandr Andryeyev
 
+Email: ghostplus@gmail.com, oleksandr.andryeyev@tu-ilmenau.de  
+Github: @ghostplus
+
 ## Description
 
 The successful placement of an aerial base station requires knowledge of the locations of the user equipment. This data must be collected continuously to provide up-to-date information for a placement algorithm. In order to prepare the experimental evaluation of the placement of the aerial base stations, the framework for the performance analysis needs to be developed.
@@ -22,10 +25,15 @@ The site data collector must store the received data in an internal database and
 ### Organization
 
 - How frequently must you report your results to your supervisor (usually every 3-4 weeks)?
+    - Meeting every 4 weeks, next meeting on November 18.
 - How frequently will you meet your supervisor (usually, there are only 2-3 meetings overall)?
+    - Around 4 times
 - First references, basic tools, and templates you can start from (some papers, documents, frameworks, programming environments, simulation tools, templates, demo projects, etc.).
+    - For first meeting bring a scheme of components, design decision explanation, why you have chosen the current way of designing
 - What is the exact form of report you should have before finishing the project?
+    - LaTex report, Programming code, Documentation, Presentation
 - What is the amount of written pages required for documentation of your results?
+    - 10-15 pages
 
 ### General
 
@@ -38,20 +46,50 @@ The site data collector must store the received data in an internal database and
 
 #### Technologies
 
-- What technologies you will use in the project?
-- What are components of the project?
-- How the components are connected?
-- What are the interfaces between components?
-- What are main principles of working in the project?
-    - Programming
-    - Testing
-    - Documentation
-    - Reporting 
-    
-##### Protocols Specific Questions
+##### What technologies you will use in the project?
 
-- Which protocol use to serialize data between clients and receiving servers? (XML, JSON, Protobuf)
+- Android Native
+- JSON
+- MQTT
+- Docker
+- Mongo
+- VueJS
 
-#### Documentation
+##### What are components of the project?
 
-- How will we document the code? Which tools to use? (Markdown, Sphinx Doc)
+- ClientSide App
+- Client Connection Broker
+- Data Middleware Component
+- Storage
+- Visual Backend
+- Visual Frontend
+
+
+##### How the components are connected?
+
+By components (see question below) + containerization software
+
+##### What are the interfaces between components?
+
+Interfaces:
+
+- MQTT
+- Storage API
+- HTTP API
+
+##### What are main principles of working in the project?
+
+- Programming
+    - Logging
+    - JSON validation
+    - Pull Request, Merge Request are important!
+    - In Python use Type hints, helps to check types accordance - (link)(https://docs.python.org/3/library/typing.html)
+- Testing
+    - Data processing testing is mandatory
+    - Integration Tests
+- Documentation
+    - Documentation of code and in internal Wiki
+    - Use Markdown for documentation
+- Reporting 
+    - Include test results
+    - Include schemes
