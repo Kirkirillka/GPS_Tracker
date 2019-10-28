@@ -14,3 +14,4 @@
 ### Protobuf
 - [Google Protobuf: Basics for Python programmers](https://developers.google.com/protocol-buffers/docs/pythontutorial)
 - [Arduino + Protobuf + Go + InfluxDB + Graphana + K8s](https://medium.com/grpc/efficient-iot-with-the-esp8266-protocol-buffers-grafana-go-and-kubernetes-a2ae214dbd29)
+- [Темная сторона protobuf](https://habr.com/ru/post/310032/)
