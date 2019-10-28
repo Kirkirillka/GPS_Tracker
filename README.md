@@ -8,6 +8,7 @@
 - **feature/code_examples** - stores all source code, documentation about how to use frameworks, techs, etc. with simple code examples
     - **feature/protobuf** - examples how to compile, install and use Protobuf with Python3
     - **feature/mqtt** - how to use MQTT with Python
+    - **feature/mongodb** - how to use MongoDB with Python
 
 ## Available pages
 
