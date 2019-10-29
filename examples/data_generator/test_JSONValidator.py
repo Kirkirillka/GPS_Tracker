@@ -23,7 +23,7 @@ class TestJSONValidator(TestCase):
             correct_samples = load(file)
 
         validator = JSONValidator()
-        is_valid = all([True for sample in correct_samples if validator.validate(sample) is True])
+        is_valid = all([validator.validate(sample) for sample in correct_samples])
 
         self.assertTrue(is_valid)
 
@@ -34,6 +34,6 @@ class TestJSONValidator(TestCase):
             wrong_samples = load(file)
 
         validator = JSONValidator()
-        is_not_valid = all([True for sample in wrong_samples if validator.validate(sample) is False])
+        is_not_valid = all([not validator.validate(sample) for sample in wrong_samples])
 
         self.assertTrue(is_not_valid)
