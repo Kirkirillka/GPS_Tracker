@@ -35,17 +35,17 @@ class AbstractValidator(ABC):
 
 class JSONValidator(AbstractValidator):
 
-    def __init__(self):
+    def __init__(self, schema_filepath="valid_schema.json"):
 
-        _schema = self._read_schema_from_file()
+        _schema = self._read_schema_from_file(schema_filepath)
         # Use already existing JSON validator
         self.internal_validator = Draft7Validator(_schema)
 
     @staticmethod
-    def _read_schema_from_file():
+    def _read_schema_from_file(schema_filepath):
 
         """
-            Reads a schema from file "valid_scheme.json"
+            Reads a schema from file "valid_schema.json"
 
         :exception IOError:
             Raise IOError if a file with scheme is not found
@@ -53,7 +53,7 @@ class JSONValidator(AbstractValidator):
         """
 
         try:
-            with open("valid_scheme.json") as file:
+            with open(schema_filepath) as file:
                 schema = json.load(file)
 
         except IOError as e:

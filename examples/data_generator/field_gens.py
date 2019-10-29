@@ -54,17 +54,28 @@ def latitude_gen():
 
     return str(base_latitude + offset * math.sin(radians))
 
+def empty_payload_gen():
+
+    return []
+
 
 fields_mapping = {
     "time": time_gen,
     "device.id" : device_id_gen,
     "device.device_type": device_type_gen,
     "longitude": longitude_gen,
-    "latitude": latitude_gen
+    "latitude": latitude_gen,
+    "payload": empty_payload_gen
 }
 
 
 def gen_empty_sample_packet():
+
+    """
+        Generates an empty telemetry message with clean payload.
+    :return:
+    """
+
     target = {}
 
     # for each field
@@ -84,4 +95,3 @@ def gen_empty_sample_packet():
 
 
     return target
-
