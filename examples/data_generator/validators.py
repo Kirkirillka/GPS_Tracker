@@ -1,4 +1,10 @@
 from abc import ABC, abstractmethod
+from typing import  Mapping
+import json
+
+from deepdiff import DeepDiff
+
+from jsonschema import Draft7Validator
 
 
 class AbstractValidator(ABC):
@@ -25,3 +31,84 @@ class AbstractValidator(ABC):
         :return: object
         """
         pass
+
+
+class JSONValidator(AbstractValidator):
+
+    def __init__(self):
+
+        _schema = self._read_schema_from_file()
+        # Use already existing JSON validator
+        self.internal_validator = Draft7Validator(_schema)
+
+    @staticmethod
+    def _read_schema_from_file():
+
+        """
+            Reads a schema from file "valid_scheme.json"
+
+        :exception IOError:
+            Raise IOError if a file with scheme is not found
+        :return: dict
+        """
+
+        try:
+            with open("valid_scheme.json") as file:
+                schema = json.load(file)
+
+        except IOError as e:
+            raise FileNotFoundError("A file with schema is not found!")
+
+        return schema
+
+    def get_valid_schema(self):
+
+        """
+            Returns the scheme provided at initialization
+        :return: dict
+        """
+
+        # Simple pass through to internal validator
+        return self.internal_validator.schema
+
+    def compare_schema(self, schema: dict):
+
+        """
+            Returns if the provided schema is the same as used in the current JSON validator
+        :param schema: dict
+            suggested schema
+        :return: bool
+            True if the schema is identical, False otherwise
+        """
+
+        internal_schema = self.internal_validator.schema
+        decision = True if not DeepDiff(internal_schema, schema) else False
+
+        return decision
+
+    def validate(self, sample: Mapping[str, dict]):
+
+        # check if we supplied with a string
+        if isinstance(sample, str):
+
+            normalized_sample = None
+
+            try:
+                normalized_sample = json.loads(sample)
+            except Exception as e:
+                raise ValueError("A supplied string is not a valid JSON object")
+
+            sample = normalized_sample
+
+        # check if we supplied with a dict or a sample was normalized
+        if not isinstance(sample, dict):
+            raise ValueError(f"A supplied object {type(sample)} cannot be converted into JSON")
+
+        # Ask a JSON Schema checker implementation to check if it is valid
+        decision = self.internal_validator.is_valid(sample)
+
+        return decision
+
+
+
+

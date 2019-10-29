@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "properties": {
+    "time": {"type": "string", "format": "datetime"},
+    "device": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "string"},
+        "device_type": {"type": "string"}
+      }
+    },
+    "longitude": {"type": "string"},
+    "latitude": {"type": "string"},
+    "payload": {"type": "array"}
+  }
+}
