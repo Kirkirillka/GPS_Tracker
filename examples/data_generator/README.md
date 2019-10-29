@@ -1,5 +1,11 @@
 # Sample Data Generator
 
+## Links
+
+- [Online JSON Schema Validator](https://www.jsonschemavalidator.net/)
+
+## Idea
+
 Main aim is to generate a project schema-valid data
 
 - An example of data is presented in file `data.json`
