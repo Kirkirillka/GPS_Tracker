@@ -11,7 +11,7 @@
           "type": "string",
           "enum": [
             "handy",
-            "EUV"
+            "UAV"
           ]
         }
       },
