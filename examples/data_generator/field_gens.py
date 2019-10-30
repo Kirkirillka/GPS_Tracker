@@ -12,7 +12,9 @@ import math
 
 random.seed()
 
-
+#
+# Field generators for Raw Empty sample
+#
 def time_gen():
 
     """
@@ -54,32 +56,45 @@ def latitude_gen():
 
     return str(base_latitude + offset * math.sin(radians))
 
+#
+# Generating payload
+#
+
+
 def empty_payload_gen():
 
     return []
 
 
-fields_mapping = {
-    "time": time_gen,
-    "device.id" : device_id_gen,
-    "device.device_type": device_type_gen,
-    "longitude": longitude_gen,
-    "latitude": latitude_gen,
-    "payload": empty_payload_gen
-}
+def generate_wifi_status_payload():
+    pass
 
 
-def gen_empty_sample_packet():
+#
+# Utilities
+#
+
+def generate_dict_by_mapping(field_map: dict):
 
     """
-        Generates an empty telemetry message with clean payload.
-    :return:
+        Generates an empty dictionary, based on mapping, provided in a way
+
+        {
+            "field1": function_to_generate1,
+            "field2": function_to_generate2,
+            "nested.field1": func3,
+            "more.deep.field": func4
+        }
+
+    :param field_map: dict
+        A Dict based mapping between a field and a function to generate the value for that field
+    :return: dict
     """
 
     target = {}
 
     # for each field
-    for key, function in fields_mapping.items():
+    for key, function in field_map.items():
 
         # deep field creation phase
         # https://stackoverflow.com/questions/26226056/generic-way-to-create-nested-dictionary-from-flat-dictionary-in-python
@@ -93,5 +108,27 @@ def gen_empty_sample_packet():
             subtarget = subtarget.setdefault(component, dict())
         subtarget[components[-1]] = value
 
-
     return target
+
+
+# A field mapping to create a new schema-valid JSON message, but without payload
+empty_message = {
+    "time": time_gen,
+    "device.id" : device_id_gen,
+    "device.device_type": device_type_gen,
+    "longitude": longitude_gen,
+    "latitude": latitude_gen,
+    "payload": empty_payload_gen
+}
+
+# A field mapping to create payload for Cellular Network status message
+# //TODO: find information about what information can be taken from Android and sent in this CellularNetwork payload
+cellular_payload = {
+
+}
+
+# A field mapping to create payload for Wifi status message
+# //TODO: find information about what information can be taken from Android and sent in this Wifi payload
+wifi_payload = {
+
+}
