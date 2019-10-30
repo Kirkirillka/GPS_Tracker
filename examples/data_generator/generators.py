@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 
 from validators import  JSONValidator
-from field_gens import gen_empty_sample_packet
+from field_gens import generate_dict_by_mapping
 
 
 class AbstractGenerator(ABC):
@@ -26,6 +26,14 @@ class AbstractGenerator(ABC):
         """
         pass
 
+    @abstractmethod
+    def __iter__(self):
+        pass
+
+    @abstractmethod
+    def __next__(self):
+        pass
+
 
 class JSONGenerator(AbstractGenerator):
 
@@ -34,11 +42,18 @@ class JSONGenerator(AbstractGenerator):
         valid JSON payload to be sent to ClientBroker
     """
 
-    def __init__(self):
+    def __init__(self, field_mapping: dict):
 
+        self._map = field_mapping
         self._validator = JSONValidator()
+        self._num = 0
 
     def get(self):
+
+        """
+            Return one sample in valid JSON Schema
+        :return: dict
+        """
 
         if hasattr(self,"get_with_payload"):
 
@@ -50,7 +65,7 @@ class JSONGenerator(AbstractGenerator):
         else:
 
             # If not implemented, then return a sample without payload
-            return self.get_empty()
+            return self._get_empty()
 
     def _get_empty(self):
         """
@@ -58,6 +73,30 @@ class JSONGenerator(AbstractGenerator):
         :return: dict
         """
 
-        empty_sample = gen_empty_sample_packet()
+        # Take a new sample
+        empty_sample = generate_dict_by_mapping(self._map)
+
+        # Increase counter
+        self._num += 1
 
         return empty_sample
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+
+        """
+            Interface for iterating
+
+            WARNING! There is not limits in iterations, so if you intentionally not set limits
+            to take from this iterator, then it will loop infinitely
+
+        :return: dict
+        """
+
+        # Increase counter
+        self._num += 1
+
+        # Return a sample
+        return self.get()
