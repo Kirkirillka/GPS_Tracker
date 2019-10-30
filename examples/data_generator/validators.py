@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import  Mapping
+
 import json
+from json.decoder import JSONDecodeError
 
 from deepdiff import DeepDiff
-
 from jsonschema import Draft7Validator
 
 
@@ -35,8 +36,26 @@ class AbstractValidator(ABC):
 
 class JSONValidator(AbstractValidator):
 
-    def __init__(self, schema_filepath="valid_schema.json"):
+    """
+        Validate an provided object to be a valid JSON Schema based object.
 
+        Can use any JSON schema provided in file.
+        When instantiating an object, provde a path to JSON Schema file (default is "valid_schema.json",
+        that default for payload empty sample)
+
+        > # Default behavior
+        > validator = JSONValidator()
+        >
+        > other_validator = JSONValidator("gps_schema.json")
+
+
+    """
+
+    def __init__(self, schema_filepath="valid_schema.json"):
+        """
+
+        :param schema_filepath: a filepath to a JSON Schema stored in a file
+        """
         _schema = self._read_schema_from_file(schema_filepath)
         # Use already existing JSON validator
         self.internal_validator = Draft7Validator(_schema)
@@ -45,7 +64,7 @@ class JSONValidator(AbstractValidator):
     def _read_schema_from_file(schema_filepath):
 
         """
-            Reads a schema from file "valid_schema.json"
+            Reads a schema from provided file to JSON schema
 
         :exception IOError:
             Raise IOError if a file with scheme is not found
@@ -58,6 +77,8 @@ class JSONValidator(AbstractValidator):
 
         except IOError as e:
             raise FileNotFoundError("A file with schema is not found!")
+        except JSONDecodeError as e:
+            raise e
 
         return schema
 
