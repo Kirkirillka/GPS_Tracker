@@ -57,6 +57,48 @@ def latitude_gen():
     return str(base_latitude + offset * math.sin(radians))
 
 #
+# Generators for WiFi status fields
+#
+
+def wifi_info_type_gen():
+
+    choices = ["wifi"]
+
+    return random.choice(choices)
+
+
+def wifi_info_ssid_gen():
+
+    number_of_aps = 10
+    ap_name_template = "AP #{}"
+
+    ap_number = random.randint(1, number_of_aps)
+
+    return ap_name_template.format(ap_number)
+
+
+def wifi_info_bssid_gen():
+
+    mac_manufacturer_prefix = "02:00:00:"
+
+    # https://stackoverflow.com/questions/8484877/mac-address-generator-in-python
+
+    postfix = "%02x:%02x:%02x" % (random.randint(0, 255),
+                                 random.randint(0, 255),
+                                 random.randint(0, 255))
+
+    return mac_manufacturer_prefix + postfix
+
+
+def wifi_info_signal_rssi_gen():
+
+    min_signal = -100
+    max_signal = -20
+
+    return random.randint(min_signal, max_signal)
+
+
+#
 # Generating payload
 #
 
@@ -67,7 +109,11 @@ def empty_payload_gen():
 
 
 def generate_wifi_status_payload():
-    pass
+
+    wifi_status_limits = {
+        "min": -30,
+        "max": -90
+    }
 
 
 #
@@ -129,6 +175,11 @@ cellular_payload = {
 
 # A field mapping to create payload for Wifi status message
 # //TODO: find information about what information can be taken from Android and sent in this Wifi payload
-wifi_payload = {
+WIFI_PAYLOAD_FIELDS_TEMPLATE = {
+    "info_type": wifi_info_type_gen,
+    "ssid": wifi_info_ssid_gen,
+    "bssid": wifi_info_bssid_gen,
+    "signal.rssi": wifi_info_signal_rssi_gen
+}
 
 }
