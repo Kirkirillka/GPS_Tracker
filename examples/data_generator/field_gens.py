@@ -157,8 +157,15 @@ def generate_dict_by_mapping(field_map: dict):
     return target
 
 
+# A dump mapping to test if our JSONGenerator and JSONParser works correctly
+DUMP_PAYLOAD_FIELDS_TEMPLATE = {
+    "firstName": lambda : "John",
+    "lastName": lambda : 'Doe',
+    "age": lambda : 1
+}
+
 # A field mapping to create a new schema-valid JSON message, but without payload
-empty_message = {
+RAW_PAYLOAD_FIELDS_TEMPLATE = {
     "time": time_gen,
     "device.id" : device_id_gen,
     "device.device_type": device_type_gen,
@@ -169,7 +176,7 @@ empty_message = {
 
 # A field mapping to create payload for Cellular Network status message
 # //TODO: find information about what information can be taken from Android and sent in this CellularNetwork payload
-cellular_payload = {
+CELLULAR_PAYLOAD_FIELDS_TEMPLATE = {
 
 }
 
@@ -182,4 +189,3 @@ WIFI_PAYLOAD_FIELDS_TEMPLATE = {
     "signal.rssi": wifi_info_signal_rssi_gen
 }
 
-}
