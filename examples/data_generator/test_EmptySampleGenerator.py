@@ -1,22 +1,21 @@
 from unittest import TestCase
 
 from validators import JSONValidator
-from generators import JSONGenerator
-from field_gens import empty_message
+from generators import EmptySampleGenerator
 
 
-class TestJSONGenerator(TestCase):
+class TestEmptySampleGenerator(TestCase):
     def test_generate_on_empty_sample(self):
 
         """
-            Test if the producing an empty sample having a valid JSON scheme
+            Test if the producing an empty sample
         :return: None
         """
 
         validator = JSONValidator("valid_schema.json")
-        generator = JSONGenerator(empty_message)
+        generator = EmptySampleGenerator()
 
-        # Take only one sample from JSONGenerator
+        # Take only one sample from EmptySampleGenerator
         sample = generator.get()
 
         self.assertTrue(validator.validate(sample))
@@ -24,14 +23,15 @@ class TestJSONGenerator(TestCase):
     def test_generator_to_iterate(self):
 
         """
-            Test if we can use JSONGenerator as an iterator
+            Test if we can use EmptySampleGenerator as an iterator
         :return:
         """
 
-        validator = JSONValidator("valid_schema.json")
-        generator = JSONGenerator(empty_message)
 
-        # Takes thirty samples from JSONGenerator
+        generator = EmptySampleGenerator()
+        validator = JSONValidator("valid_schema.json")
+
+        # Takes thirty samples from EmptySampleGenerator
         samples = [next(generator) for x in range(30)]
 
         is_valid = all([validator.validate(sample) for sample in samples])
