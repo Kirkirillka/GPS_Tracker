@@ -1,10 +1,14 @@
 from unittest import TestCase
 
 from validators import JSONValidator
-from generators import WifiInfoGenerator
+from generators import WIFIPayloadGenerator
 
 
-class TestWifiInfoGenerator(TestCase):
+class TestWIFIPayloadGenerator(TestCase):
+
+    JSON_SCHEMA = "../schemas/wifi_payload_schema.json"
+    ITERATION_LENGTH = 30
+
     def test_generate_on_wifi_info_sample(self):
 
         """
@@ -12,8 +16,8 @@ class TestWifiInfoGenerator(TestCase):
         :return: None
         """
 
-        validator = JSONValidator("wifi_status_schema.json")
-        generator = WifiInfoGenerator()
+        validator = JSONValidator(self.JSON_SCHEMA)
+        generator = WIFIPayloadGenerator()
 
         # Take only one sample from WifiInfoGenerator
         sample = generator.get()
@@ -27,11 +31,11 @@ class TestWifiInfoGenerator(TestCase):
         :return:
         """
 
-        validator = JSONValidator("wifi_status_schema.json")
-        generator = WifiInfoGenerator()
+        validator = JSONValidator(self.JSON_SCHEMA)
+        generator = WIFIPayloadGenerator()
 
         # Takes thirty samples from EmptySampleGenerator
-        samples = [next(generator) for x in range(30)]
+        samples = [next(generator) for x in range(self.ITERATION_LENGTH)]
 
         is_valid = all([validator.validate(sample) for sample in samples])
 
