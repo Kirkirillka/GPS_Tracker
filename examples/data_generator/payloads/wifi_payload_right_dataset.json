@@ -1,0 +1,8 @@
+{
+  "info_type": "wifi",
+  "ssid": "Example AP name",
+  "bssid": "b8:38:61:b8:b5:df",
+  "signal": {
+    "rssi": -44
+  }
+}
