@@ -11,8 +11,8 @@ Also, there are classes to check the schema validity of producing samples.
 
 ### Main things
 
-- There is JSON Schema which represent a bare empty message with no payload - [valid_schema.json](valid_schema.json)
-- There are two datasets representing valid samples ([correct_data.json](correct_data.json)) and invalid samples ([wrong_data.json](wrong_data.json))
+- There are JSON Schemas which reflects structure of expected JSON object (located in folder **schemas**)
+- There are two types of datasets representing right and wrong payload (located in folder **payloads**)
 - For sample generation, there is a special method of generating dictionaries from a dictionary mapping
 
 So, let's suppose, we have the following mapping:
