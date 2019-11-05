@@ -9,6 +9,7 @@
     - **feature/mqtt** - how to use MQTT with Python
     - **feature/mongodb** - how to use MongoDB with Python
     - **feature/protobuf** - examples how to compile, install and use Protobuf with Python3
+    - **feature/data_generator** - classes to generate a fake data from ClientApps (like Wifi status, Raw Payload messages)
 
 ## Available pages
 
