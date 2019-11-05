@@ -14,5 +14,6 @@
 ## Available pages
 
 - [Information on the project](DESCRIPTION.md)
-- [Project Documentation](docs/README.md)
-- [Extra information to keep in mind while working](extras/README.md)
+- [Project Documentation](docs/)
+- [Examples of code, approaches, ideas](examples)
+- [Extra information to keep in mind while working](extras/)
