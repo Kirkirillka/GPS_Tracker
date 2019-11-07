@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "device": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "device_type": {
+          "type": "string",
+          "enum": [
+            "handy",
+            "UAV"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "device_type"
+      ]
+    },
+    "longitude": {
+      "type": "string"
+    },
+    "latitude": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "info_type": {
+          "type": "string",
+          "enum": [
+            "wifi"
+          ]
+        },
+        "ssid": {
+          "type": "string"
+        },
+        "bssid": {
+          "type": "string"
+        },
+        "signal": {
+          "type": "object",
+          "properties": {
+            "rssi": {
+              "type": "integer",
+              "minimum": -100,
+              "maximum": -20
+            }
+          },
+          "required": [
+            "rssi"
+          ]
+        }
+      },
+      "required": [
+        "info_type",
+        "ssid",
+        "bssid",
+        "signal"
+      ]
+    }
+  },
+  "required": [
+    "time",
+    "device",
+    "longitude",
+    "latitude",
+    "payload"
+  ]
+}
