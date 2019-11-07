@@ -2,6 +2,7 @@
 
 in this section, we put diagrams, schemes, images, which can help us understand how the system works, show its internals.
 
+- **Conceptual Diagram** ([here](conceptual)) - to show how the system in general works.
 - **Architecture Diagram** ([here](architecture)) - to show how the overall architecture of the project looks like, which
 technologies have we chosen for the project.
 - **Component Diagram** ([here](components)) - to show how components are composed and connect to each other,
