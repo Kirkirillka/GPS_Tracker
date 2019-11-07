@@ -1,6 +1,6 @@
 # Architecture Diagram
 
-## Achitecture Diagram
+## Architecture Diagram
 
 ![Architecture UML](ArchitectureDiagram-Achitecture%20Diagram.png)
 
