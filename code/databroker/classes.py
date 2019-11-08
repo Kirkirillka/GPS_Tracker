@@ -2,7 +2,7 @@ import paho
 import json
 import logging
 
-from typing import List, Callable
+from typing import List, Callable, Tuple, Any, Mapping
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
@@ -122,9 +122,9 @@ class DataBroker:
 
         raise NotImplementedError
 
-    def _normalize(self, serialized_object: str) -> dict:
+    def _normalize(self, serialized_object: Any) -> dict:
 
-        """Try to convert an object, which was serialized as JSON string, into an dict with follows a schema. The schema
+        """Try to convert an object into an dict with follows a schema. The schema
          and checkers are defined in Normalizer, which actually performs all checks.
 
         :param serialized_object: An serializer JSON object string
@@ -136,7 +136,7 @@ class DataBroker:
 
         raise NotImplementedError
 
-    def _store_message_callback(self, client_id, userdata, message) -> None:
+    def _store_message_callback(self, client_id: str, userdata: Any, message: Any) -> Any:
 
         """
             A function used as callback for every message received in the specified topics list. Has quite strict
@@ -161,3 +161,42 @@ class DataBroker:
         """
 
         raise NotImplementedError
+
+
+class Normalizer:
+
+    """
+        Class Normalizer
+
+        Transforms serialized object into Python-comparable JSON object and check the validity of JSON scheme.
+    """
+
+    def __init__(self):
+
+        self._object_validators = {}
+
+    def _try_cast(self, cast_object: Any) -> Tuple[dict, bool]:
+
+        """
+            Try to first transform cast_object into JSON  object.
+            If cast_object can be transform, then it returns {dict, True}.
+            If transformation is not possible, then it returns tuple ({}, False).
+
+
+        :param cast_object: a string of serialized JSON object
+        :return: a tuple {des_obj, True} where des_obj is deserialized object, ({}, False) otherwise
+        """
+
+        raise NotImplementedError
+
+    def normalize(self, norm_object: Any) -> Mapping[dict, None]:
+
+        """
+            Cast norm_object into JSON, check the type field and apply the appropriate Validator to check the scheme
+            correctness. If ll went without error, the normalized object is returned back.
+
+        :param norm_object: a JSON-deserializable object
+        :return: dict if norm_object can be trasnformed into JSON with a valid JSON schema, None otherwise
+        """
+
+        raise  NotImplementedError
