@@ -3,6 +3,7 @@
   "type": "object",
   "properties": {
     "time": {"type": "string", "format": "date-time"},
+    "message_type": {"type": "string", "enum": ["raw"]},
     "device": {
       "type": "object",
       "properties": {
@@ -21,5 +22,5 @@
     "latitude": {"type": "string"},
     "payload": {"type": "array"}
   },
-  "required": ["time", "device", "longitude", "latitude","payload"]
+  "required": ["time", "device", "longitude", "latitude","payload","message_type"]
 }
