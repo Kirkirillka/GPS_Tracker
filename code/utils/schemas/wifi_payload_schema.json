@@ -6,6 +6,12 @@
       "type": "string",
       "format": "date-time"
     },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "wifi","raw"
+      ]
+    },
     "device": {
       "type": "object",
       "properties": {
@@ -32,40 +38,37 @@
       "type": "string"
     },
     "payload": {
-      "type": "object",
-      "properties": {
-        "info_type": {
-          "type": "string",
-          "enum": [
-            "wifi"
-          ]
-        },
-        "ssid": {
-          "type": "string"
-        },
-        "bssid": {
-          "type": "string"
-        },
-        "signal": {
-          "type": "object",
-          "properties": {
-            "rssi": {
-              "type": "integer",
-              "minimum": -100,
-              "maximum": -20
-            }
+      "type": "array",
+      "items": {
+        "$schema": "http://json-schema.org/schema#",
+        "type": "object",
+        "properties": {
+          "ssid": {
+            "type": "string"
           },
-          "required": [
-            "rssi"
-          ]
-        }
-      },
-      "required": [
-        "info_type",
-        "ssid",
-        "bssid",
-        "signal"
-      ]
+          "bssid": {
+            "type": "string"
+          },
+          "signal": {
+            "type": "object",
+            "properties": {
+              "rssi": {
+                "type": "integer",
+                "minimum": -100,
+                "maximum": -20
+              }
+            },
+            "required": [
+              "rssi"
+            ]
+          }
+        },
+        "required": [
+          "ssid",
+          "bssid",
+          "signal"
+        ]
+      }
     }
   },
   "required": [
@@ -73,6 +76,7 @@
     "device",
     "longitude",
     "latitude",
-    "payload"
+    "payload",
+    "message_type"
   ]
 }

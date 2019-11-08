@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 
 from utils.field_gens import generate_dict_by_mapping, RAW_PAYLOAD_FIELDS_TEMPLATE, WIFI_PAYLOAD_FIELDS_TEMPLATE
 
+from utils.field_gens import raw_payload_message_gen, wifi_payload_message_gen
+
 
 class AbstractGenerator(ABC):
     """
@@ -108,7 +110,10 @@ class WIFIPayloadGenerator(RawPayloadGenerator):
         # Generate WIFI status payload
         wifi = self.wifi_payload_generator.get()
 
+        # Set payload type
+        body["message_type"] = wifi_payload_message_gen()
+
         # Update payload in main message
-        body['payload'] = wifi
+        body['payload'].append(wifi)
 
         return body
