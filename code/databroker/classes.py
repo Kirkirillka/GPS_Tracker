@@ -189,7 +189,7 @@ class Normalizer:
 
         raise NotImplementedError
 
-    def normalize(self, norm_object: Any) -> Mapping[dict, None]:
+    def normalize(self, norm_object: Any) -> dict:
 
         """
             Cast norm_object into JSON, check the type field and apply the appropriate Validator to check the scheme
