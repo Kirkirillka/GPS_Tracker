@@ -1,6 +1,11 @@
 import paho
+import json
+import logging
 
 from typing import List, Callable
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 
 class BrokerAdapter:
@@ -97,6 +102,62 @@ class BrokerAdapter:
             Run internal loop_forever function. This function is blocking, so function won't return
             until disconnect is executed on MQTT connection object
         :return: True if loop is stopped
+        """
+
+        raise NotImplementedError
+
+
+class DataBroker:
+
+    """ Class DataBroker
+
+        This class is for processing raw messages from MQTT Message Broker Server and save them in Storage.
+    """
+
+    def __init__(self):
+
+        self._broker_adapter = None
+        self._store_adapter = None
+        self._normalizer = None
+
+        raise NotImplementedError
+
+    def _normalize(self, serialized_object: str) -> dict:
+
+        """Try to convert an object, which was serialized as JSON string, into an dict with follows a schema. The schema
+         and checkers are defined in Normalizer, which actually performs all checks.
+
+        :param serialized_object: An serializer JSON object string
+        :return: The deserialized string as a dict if string was successfully converted
+        :raises:
+            :raise json.JSONDecodeError if the string cannot be deserialized
+            :raise ValueError if the object has not valid schema
+        """
+
+        raise NotImplementedError
+
+    def _store_message_callback(self, client_id, userdata, message) -> None:
+
+        """
+            A function used as callback for every message received in the specified topics list. Has quite strict
+            parameter signature. You can use any function as a callback function provided that it received 3 parameters.
+        :param client_id: An client ID.
+        :param userdata: ?
+        :param message: Message sent in the topic. It has topic name, payload.
+        :return: None
+        """
+
+        raise NotImplementedError
+
+    def run_loop(self):
+
+        """
+            Starts pooling MQTT server with BrokerAdapter. Internally, executes _broker_adapter serve function. You
+            can stop polling with your callback function and invoke stop() on _broker_adapter.
+
+            run_loop() is a blocking function.
+
+        :return: None
         """
 
         raise NotImplementedError
