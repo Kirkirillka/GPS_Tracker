@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 from databroker.classes import Normalizer
+from databroker.test_utils import get_correct_data_with_correct_scheme, get_correct_data_with_wrong_scheme
 
 
 class TestNormalizer(TestCase):
@@ -11,11 +12,24 @@ class TestNormalizer(TestCase):
     def test__try_cast(self):
         self.fail()
 
-    def test_normalize(self):
+    def test_normalize_correct_data_wrong_scheme(self):
+
+        data = get_correct_data_with_wrong_scheme()
 
         normalizer = Normalizer()
 
-        json_dict = normalizer.normalize()
+        json_dict = normalizer.normalize(data)
+
+        self.assertTrue(isinstance(dict, json_dict))
+        self.assertGreater(len(json_dict), 0)
+
+    def test_normalize_correct_data_right_scheme(self):
+
+        data = get_correct_data_with_correct_scheme()
+
+        normalizer = Normalizer()
+
+        json_dict = normalizer.normalize(data)
 
         self.assertTrue(isinstance(dict, json_dict))
         self.assertGreater(len(json_dict), 0)
