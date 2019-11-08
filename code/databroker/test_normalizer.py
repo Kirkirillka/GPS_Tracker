@@ -9,9 +9,6 @@ class TestNormalizer(TestCase):
     def setUp(self) -> None:
         pass
 
-    def test__try_cast(self):
-        self.fail()
-
     def test_normalize_correct_data_wrong_scheme(self):
 
         data = get_correct_data_with_wrong_scheme()
@@ -20,16 +17,18 @@ class TestNormalizer(TestCase):
 
         json_dict = normalizer.normalize(data)
 
-        self.assertTrue(isinstance(dict, json_dict))
-        self.assertGreater(len(json_dict), 0)
+        self.assertFalse(isinstance(json_dict, dict ))
+        self.assertEqual(json_dict, None)
 
     def test_normalize_correct_data_right_scheme(self):
 
-        data = get_correct_data_with_correct_scheme()
+        dataset = get_correct_data_with_correct_scheme()
 
         normalizer = Normalizer()
 
-        json_dict = normalizer.normalize(data)
+        for row in dataset:
 
-        self.assertTrue(isinstance(dict, json_dict))
-        self.assertGreater(len(json_dict), 0)
+            json_dict = normalizer.normalize(row)
+
+            self.assertTrue(isinstance(json_dict, dict ))
+            self.assertGreater(len(json_dict), 0)

@@ -4,6 +4,8 @@ import logging
 
 from typing import List, Callable, Tuple, Any, Mapping
 
+from utils.validators import VALIDATOR_MAPPING, VALIDATOR_MESSAGE_TYPES
+
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
 
@@ -171,6 +173,9 @@ class Normalizer:
         Transforms serialized object into Python-comparable JSON object and check the validity of JSON scheme.
     """
 
+    # Currently, allow only strings to be normalized
+    ALLOWED_OBJECT_TYPES = (str,)
+
     def __init__(self):
 
         self._object_validators = {}
@@ -187,16 +192,55 @@ class Normalizer:
         :return: a tuple {des_obj, True} where des_obj is deserialized object, ({}, False) otherwise
         """
 
-        raise NotImplementedError
+        if not any(isinstance(cast_object, _type) for _type in self.ALLOWED_OBJECT_TYPES):
+            return {}, False
 
-    def normalize(self, norm_object: Any) -> dict:
+        # Try to deserialize JSON into dict
+        try:
+            _casted_obj = json.loads(cast_object)
+        except json.JSONDecodeError as e:
+            return {}, False
+        else:
+            return _casted_obj, True
+
+    def normalize(self, _object: Any) -> Mapping[dict, None]:
 
         """
-            Cast norm_object into JSON, check the type field and apply the appropriate Validator to check the scheme
+            Cast _object into JSON, check the type field and apply the appropriate Validator to check the scheme
             correctness. If ll went without error, the normalized object is returned back.
 
-        :param norm_object: a JSON-deserializable object
+        :param _object: a JSON-deserializable object
         :return: dict if norm_object can be trasnformed into JSON with a valid JSON schema, None otherwise
         """
 
-        raise  NotImplementedError
+
+        # try to deserialize the _object
+        _deser_dict, is_success = self._try_cast(_object)
+
+        # check if the result is successful
+        if not is_success:
+            return None
+
+
+
+        # Find message_type
+        message_type = _deser_dict.get("message_type", None)
+
+        # Check if we have a validator for the type
+        if message_type not in VALIDATOR_MESSAGE_TYPES:
+            return  None
+        else:
+            _validator_class = VALIDATOR_MAPPING[message_type]
+
+
+
+        # Validate the object
+        validator = _validator_class()
+        _is_valid = validator.validate(_deser_dict)
+
+        if _is_valid:
+            return _deser_dict
+        else:
+            return None
+
+
