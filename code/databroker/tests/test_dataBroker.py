@@ -1,5 +1,4 @@
 from unittest import TestCase
-import json
 
 from databroker.model import DataBroker
 

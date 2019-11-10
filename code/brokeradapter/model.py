@@ -1,11 +1,9 @@
-import paho
 import logging
 
 import paho.mqtt.client as mqtt
 
-from typing import List, Callable, Tuple, Any, Mapping
+from typing import List, Callable
 from socket import error as SocketError
-
 
 from config.utils import get_config
 
@@ -17,44 +15,83 @@ CONFIG = get_config()
 
 class BrokerAdapter:
     """
-        Class **BrokerAdapter** is responsible for providing an interface to fetch data from MQTT Message broker and
-            pass data to DataBroker.
+        **BrokerAdapter** is responsible for providing an interface to MQTT Message Broker.
+
+        It allows to specify topics to subscribe, set callbacks to be executed on a new message arrived
+        on the topics. After all subscriptions are specified, BrokerAdapter.serve() can be executed to pool messages
+        from MQTT Message Broker.
+
+        General usage flow
+        ======
+
+        First, instantiate **BrokerAdapter**
+        After an instance of **BrokerAdapter** is created, you should specify topics to subscribe and callbacks to be
+        executed.
+        Then execute .setup() function - that performs all subscription to MQTT MessageBroker.
+        Start message polling via .serve() function. This operation is blocking, so it will release after .stop()
+        will be triggered. .setup() will be executed before .serve(), if it's not done earlier
+
+        Example
+        ======
+
+            >>> adapter = BrokerAdapter()
+            >>> adapter.add_topic("any/topic/#",print)
+
+            >>> adapter.setup()
+            >>> adapter.serve()
     """
 
     def __init__(self):
 
-        """
-            1. _conn - a real connection to MQTT broker
-            2. _topics - a list of topics BrokerAdapter will be listening to
-        """
+        # MQTT client
+        self._conn = mqtt.Client()
 
-        # Initialize MQTT Client object
-        self._conn: paho.mqtt.client.Client = mqtt.Client()
+        # Storage for topic <-> callback mapping
         self._topics: dict = {}
 
-        self._host = CONFIG["brokeradapter"]["host"]
-        self._port = CONFIG["brokeradapter"]["port"]
-        self._user = CONFIG["brokeradapter"]["user"]
-        self._password = CONFIG["brokeradapter"]["password"]
+        # Connection parameters to MQTT Message Broker
+        self._host: str = CONFIG["brokeradapter"]["host"]
+        self._port: int = int(CONFIG["brokeradapter"]["port"])
+        self._user: str = CONFIG["brokeradapter"]["user"]
+        self._password: str = CONFIG["brokeradapter"]["password"]
 
+        # To signal if .setup() was executed before .serve()
         self._is_initialized = False
 
-    def _connect(self) -> bool:
+    def _connect(self,
+                 host: str,
+                 port: int = 1883,
+                 user: str = None,
+                 password: str = None
+                 ) -> bool:
 
         """
-            Initialize connection to MQTT Message Broker server
-        :return: True if connection was established successfully, otherwise raise ConnectionError
-        :raise: ConnectionError if connection is not established
+            Establish connection to MQTT MessageBroker.
+
+            Internally, executes mqtt.connect() function with configured parameters.
+            If connection established, then returns True, if there is timeout, then returns False.
+
+        :param host: argument to specify to which MQTT address to connect.
+
+        :param port: MQTT Message Broker port to connect. Default is 1883.
+
+        :param user: *Not implemented yet*.A user to be identified. If not specified, no authentication is used.
+
+        :param password: *Not implemented yet*. A user's password to authenticate.
+
+        :return: True if successful, False otherwise.
+
         """
 
         try:
             # Connect to MQTT Message Broker
-            clt = self._conn.connect(self._host)
+            self._conn.connect(host=host, port=port,)
             # Enable action logging
             self._conn.enable_logger(logger)
 
         except SocketError as e:
-            # If some errors occurred in this stage
+            # If connection is timed out
+            logger.error(f"Connection to {host} is timed out. {e}")
             return False
         else:
             # Notify that connection is successful
@@ -63,69 +100,73 @@ class BrokerAdapter:
     def setup(self) -> bool:
 
         """
-            Configure connection parameters and instruct a private _connect how to be executed.
-            Then perform all subscriptions and callback function bindings.
 
-            If a ConnectionError raises at _connect, it pass the exception further, so, the program may fail.
+            Configure connection parameters and perform subscriptions.
 
-        :return: None if connection is established, pass ConnectionError from _connect otherwise
+        :return: True, if connection and subscriptions made successfully. False, if connection is timed out.
         """
 
         # Try to establish connection to MQTT Message broker
-        con_res = self._connect()
+        con_res = self._connect(self._host, self._port, self._user, self._password)
 
         # Fail if cannot connect to the server
         if con_res:
             logger.info(f"Connection to MQTT Message Broker server {self._host} is established.")
+
+            # Perform subscription
+            for topic, callback in self._topics.items():
+
+                self._conn.subscribe(topic)
+                self._conn.message_callback_add(topic, callback)
+
+                logger.debug(f"Subscription on topic '{topic}' with function '{callback}' is done.")
+
+            # Set itself as initialized instance
+            self._is_initialized = True
+
+            return True
+
         else:
             logger.error(f"Connection to MQTT Message Broker server {self._host} is not possible!")
             return False
 
-        # Perform subscription
-        for topic, callback in self._topics.items():
-            self._conn.subscribe(topic)
-            self._conn.message_callback_add(topic, callback)
-
-            logger.debug(f"Subscription on topic '{topic}' with function '{callback}' is done.")
-
-        # Set itself as initialized instalce
-        self._is_initialized = True
-
-        return True
-
-    def get_topics(self) -> List[str]:
+    def topics(self) -> List[str]:
 
         """
-            Returns a list of topics which the BrokerAdapter was subscribed and listen messages from MQTT Broker.
-            Internally, the list of topics is presented by _topics variable. This function should take care of
-            the right formatting and checking.
+            Returns a list of registered topics to subscribe.
 
-        :return: A list of topics which were subscribed
+            Internally, the list of topics is presented by *_topics* variable.
+
+            This function should take care of the right formatting and checking.
+
+        :return: A list of topics which to subscribe on.
         """
 
         return list(self._topics.keys())
 
-    def add_topic(self, topic: str, callback: Callable[[str, str, object], None], force: bool = False) -> bool:
+    def add_topic(self, topic: str, callback: Callable[[str, str, object], None], forced: bool = False) -> bool:
 
         """
-            Perform subscription on specific **topic**. A **callback** function will be executed
-            with provided parameters each time a new message is arrived on the topic.
+            Register the *topic* with *callback*.
 
-            Steps:
+            Record the subscription information on specific *topic*. A *callback* function is to be executed
+            with  each time a new message is arrived with the topic.
 
-                1. Execute subscribe function on MQTT connection object.
-                2. Add the new topic to _topics dictionary with values {topic: callback}.
+            If **force** is specified, if the *topic* is already registered in *BrokerAdapter._topics*, change its
+            callback function to *callback*.
 
         :param topic: A string specified a topic path
-        :param callback:  A function or a callable object, which takes three parameters (four in case of class methods).
-        :param force: To set if rewrite an existing topic mapping
-        :return: return True if subscription was made successfully.
+        :param callback:  A function or a callable object, which can take at least three parameters.
+        :param forced: To set if rewrite an existing topic mapping.
+        :return: True if registration is done, False otherwise
         """
+
         # Check if the topic is already subscribed
         if topic in self._topics.keys():
 
-            # Check if it's forced to rewrite the topic:callback mapping
-            if force:
+            # Check if it's forced to rewrite the topic <-> callback mapping.
+            if forced:
+
                 logger.info(f"Rewrite callback for topic '{topic}' to callable '{callback}'")
 
                 # Add topic into internal list
@@ -133,7 +174,7 @@ class BrokerAdapter:
 
                 return True
 
-            # Topic is already subscribed, so, it must first be unsubscribed
+            # Topic is already registered, so nothing to do.
             return False
         else:
 
@@ -146,17 +187,15 @@ class BrokerAdapter:
 
     def del_topic(self, topic: str) -> bool:
         """
-            Exclude the specified topic to be NOT listened from MQTT Broker.
-            If the specified topic is not seen to be listened in _topics, then
-            topic is ignored, returns True.
+            Cancel registration on the *topic*.
 
-            Steps:
+            **Actions**:
 
-                1. Delete subscription on the topic to MQTT Connection
-                1. Delete the topic from _topics variable
+            * Unsubscribe on the topic from MQTT Message broker.
+            * Delete the topic from *_topics*/
 
         :param topic: a string specifies a topic (format : "/my/format/for/any/*")
-        :return: True if unsubscription made successfully, False otherwise
+        :return: True if unsubscribed, False otherwise
 
         """
 
@@ -178,8 +217,13 @@ class BrokerAdapter:
     def serve(self) -> int:
 
         """
-            Run internal loop_forever function. This function is blocking, so function won't return
+            Start pooling topics from MQTT Message Broker.
+
+            Run internal *loop_forever* function in *_conn*.
+
+            This function is blocking, so function won't return
             until disconnect is executed on MQTT connection object
+
         :return: True if loop is stopped
         """
 
@@ -195,15 +239,19 @@ class BrokerAdapter:
         res = self._conn.loop_forever()
 
         # Loop is over
-        logger.info("Loop is over, exiting...")
+        logger.info("Pooling loop is over, exiting...")
         return res
 
     def stop(self) -> int:
         """
-            Stop message pooling
-        :return: True if BrokerAdapter stopped successfully.
+            Stop pooling.
+
+            Execute internal *disconnect* function in *_conn*.
+
+        :return: True if BrokerAdapter stopped.
         """
 
+        logger.info("Disconnect from MQTT Server.")
         res = self._conn.disconnect()
 
         return res

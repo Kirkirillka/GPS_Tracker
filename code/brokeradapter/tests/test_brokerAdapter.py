@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from brokeradapter.model import BrokerAdapter
+from brokeradapter import BrokerAdapter
 
 
 class TestBrokerAdapter(TestCase):
@@ -31,7 +31,7 @@ class TestBrokerAdapter(TestCase):
     def test_get_topics(self):
 
         """
-            Test get_topics() returns exactly the same topic list
+            Test topics() returns exactly the same topic list
         :return:
         """
 
@@ -43,7 +43,7 @@ class TestBrokerAdapter(TestCase):
             mqtt_broker.add_topic(topic, callback)
 
         # Get topics
-        registered_topics = mqtt_broker.get_topics()
+        registered_topics = mqtt_broker.topics()
 
         self.assertListEqual(registered_topics, list(self.TOPICS))
 
