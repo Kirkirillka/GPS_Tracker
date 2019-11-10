@@ -2,8 +2,8 @@ import logging
 
 from typing import Callable, Any
 
-from brokeradapter import BrokerAdapter
-from utils.normalizators import DefaultNormalizer
+from adapters import MQTTBrokerAdapter
+from utils.normalizers import DefaultNormalizer
 from config.utils import get_config
 
 logger = logging.getLogger(__name__)
@@ -23,7 +23,7 @@ class DataBroker:
         This class is to encapsulate possible manipulations on data received from MQTT Message Broker and to specify
         callback function for registered topics.
 
-        The class aggregate *BrokerAdapter* and *StorageAdapter*.
+        The class aggregate *MQTTBrokerAdapter* and *StorageAdapter*.
 
         Usage flow
         ======
@@ -51,7 +51,7 @@ class DataBroker:
 
     def __init__(self):
 
-        self._broker_adapter = BrokerAdapter()
+        self._mqtt_adapter = MQTTBrokerAdapter()
         # TODO: implement StorageAdapter
         self._store_adapter = None
         #
@@ -73,7 +73,7 @@ class DataBroker:
         """
 
         # Try to set topic
-        res = self._broker_adapter.add_topic(topic, callback, forced=True)
+        res = self._mqtt_adapter.add_topic(topic, callback, forced=True)
 
         return res
 
@@ -118,7 +118,7 @@ class DataBroker:
             """
 
             # Force disconnect
-            self._broker_adapter.stop()
+            self._mqtt_adapter.stop()
 
             return None
 
@@ -132,11 +132,11 @@ class DataBroker:
 
     def initialize(self) -> bool:
 
-        """ Setup StorageAdapter and BrokerAdapter.
+        """ Setup StorageAdapter and MQTTBrokerAdapter.
 
             - Establish connection with Storage.
-            - Register all topics and its callback function to BrokerAdapter.
-            - Instruct BrokerAdapter to setup connection to MQTT MessageBroker and subscriptions,
+            - Register all topics and its callback function to MQTTBrokerAdapter.
+            - Instruct MQTTBrokerAdapter to setup connection to MQTT MessageBroker and subscriptions,
 
         :return: True if initialization is completed, False if an error occurred
         """
@@ -149,10 +149,10 @@ class DataBroker:
         # Step 2. Add topics and callback functions
         for topic in self._topics:
             _callback = self.get_callback_func(topic)
-            self._broker_adapter.add_topic(topic, _callback)
+            self._mqtt_adapter.add_topic(topic, _callback)
 
-        # Step 3. Ask BrokerAdapter to make subscriptions
-        broker_setup_res = self._broker_adapter.setup()
+        # Step 3. Ask MQTTBrokerAdapter to make subscriptions
+        broker_setup_res = self._mqtt_adapter.setup()
 
         # Step 4. Set itself as initialized instance
         if broker_setup_res:
@@ -168,8 +168,8 @@ class DataBroker:
         """
             Start processing messages from MQTT Message Broker.
 
-            Internally, it executes *BrokerAdapter.serve()* function. You can stop polling with your callback function
-            and invokes *stop()* on *BrokerAdapter*.
+            Internally, it executes *MQTTBrokerAdapter.serve()* function. You can stop polling with your callback function
+            and invokes *stop()* on *MQTTBrokerAdapter*.
 
             run_loop() is a blocking function.
 
@@ -181,7 +181,7 @@ class DataBroker:
             return False
 
         # run client forever looping
-        res = self._broker_adapter.serve()
+        res = self._mqtt_adapter.serve()
 
         return bool(res)
 

@@ -13,9 +13,9 @@ logging.basicConfig(level=logging.DEBUG)
 CONFIG = get_config()
 
 
-class BrokerAdapter:
+class MQTTBrokerAdapter:
     """
-        **BrokerAdapter** is responsible for providing an interface to MQTT Message Broker.
+        **MQTTBrokerAdapter** is responsible for providing an interface to MQTT Message Broker.
 
         It allows to specify topics to subscribe, set callbacks to be executed on a new message arrived
         on the topics. After all subscriptions are specified, BrokerAdapter.serve() can be executed to pool messages
@@ -34,7 +34,7 @@ class BrokerAdapter:
         Example
         ======
 
-            >>> adapter = BrokerAdapter()
+            >>> adapter = MQTTBrokerAdapter()
             >>> adapter.add_topic("any/topic/#",print)
 
             >>> adapter.setup()
@@ -152,7 +152,7 @@ class BrokerAdapter:
             Record the subscription information on specific *topic*. A *callback* function is to be executed
             with  each time a new message is arrived with the topic.
 
-            If **force** is specified, if the *topic* is already registered in *BrokerAdapter._topics*, change its
+            If **force** is specified, if the *topic* is already registered in *MQTTBrokerAdapter._topics*, change its
             callback function to *callback*.
 
         :param topic: A string specified a topic path
@@ -229,9 +229,9 @@ class BrokerAdapter:
 
         # Check if .setup() was executed first
         if not self._is_initialized:
-            logger.error("BrokerAdapter is not tuned yet. Setting up first.")
+            logger.error("MQTTBrokerAdapter is not tuned yet. Setting up first.")
 
-            # Setting BrokerAdapter
+            # Setting MQTTBrokerAdapter
             self.setup()
 
         # Start looping
@@ -248,7 +248,7 @@ class BrokerAdapter:
 
             Execute internal *disconnect* function in *_conn*.
 
-        :return: True if BrokerAdapter stopped.
+        :return: True if MQTTBrokerAdapter stopped.
         """
 
         logger.info("Disconnect from MQTT Server.")

@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from brokeradapter import BrokerAdapter
+from adapters import MQTTBrokerAdapter
 
 
 class TestBrokerAdapter(TestCase):
@@ -12,12 +12,12 @@ class TestBrokerAdapter(TestCase):
     def test_setup(self):
 
         """
-            Test how BrokerAdapter works on .setup() stage
+            Test how MQTTBrokerAdapter works on .setup() stage
         :return:
         """
 
         # Initialize broker
-        mqtt_broker = BrokerAdapter()
+        mqtt_broker = MQTTBrokerAdapter()
 
         # Add subscription into internal topic lists
         for topic,callback in self.TOPICS.items():
@@ -36,7 +36,7 @@ class TestBrokerAdapter(TestCase):
         """
 
         # Initialize broker
-        mqtt_broker = BrokerAdapter()
+        mqtt_broker = MQTTBrokerAdapter()
 
         # Add subscription into internal topic lists
         for topic,callback in self.TOPICS.items():
@@ -49,7 +49,7 @@ class TestBrokerAdapter(TestCase):
 
     def test_add_topic(self):
 
-        mqtt_broker = BrokerAdapter()
+        mqtt_broker = MQTTBrokerAdapter()
 
         for topic,callback in self.TOPICS.items():
             res = mqtt_broker.add_topic(topic, callback)
@@ -58,7 +58,7 @@ class TestBrokerAdapter(TestCase):
 
     def test_del_topic(self):
 
-        mqtt_broker = BrokerAdapter()
+        mqtt_broker = MQTTBrokerAdapter()
 
         for topic,callback in self.TOPICS.items():
             res_add = mqtt_broker.add_topic(topic, callback)
