@@ -6,7 +6,7 @@ import json
 from deepdiff import DeepDiff
 from jsonschema import Draft7Validator
 
-from utilities import read_schema_from_file
+from .tools import read_schema_from_file
 
 
 class AbstractValidator(ABC):
@@ -130,3 +130,15 @@ class WIFIPayloadValidator(JSONValidator):
         _schema = read_schema_from_file(self.SCHEMA_FILENAME)
 
         super(WIFIPayloadValidator, self).__init__(_schema)
+
+
+# Sets which validator to use on "message_type"
+# message_type is supposed to be included in tuple VALIDATOR_MESSAGE_TYPES
+
+VALIDATOR_MAPPING = {
+    "raw" : RawPayloadValidator,
+    "wifi": WIFIPayloadValidator
+}
+
+# Sets which message types are allowed to be processed
+VALIDATOR_MESSAGE_TYPES = ["raw","wifi"]

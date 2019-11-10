@@ -24,6 +24,13 @@ def time_gen():
 
     return str(datetime.datetime.now().isoformat())
 
+def raw_payload_message_gen():
+
+    return "raw"
+
+
+def wifi_payload_message_gen():
+    return "wifi"
 
 def device_type_gen():
 
@@ -167,6 +174,7 @@ DUMP_PAYLOAD_FIELDS_TEMPLATE = {
 # A field mapping to create a new schema-valid JSON message, but without payload
 RAW_PAYLOAD_FIELDS_TEMPLATE = {
     "time": time_gen,
+    "message_type": raw_payload_message_gen,
     "device.id" : device_id_gen,
     "device.device_type": device_type_gen,
     "longitude": longitude_gen,
@@ -181,9 +189,21 @@ CELLULAR_PAYLOAD_FIELDS_TEMPLATE = {
 }
 
 # A field mapping to create payload for Wifi status message
+# //TODO: reformat field generator to create a structure like:
+#   {
+#        "time" : time_gen,
+#        "field1" : {
+#               "subfield2": gen1,
+#               "subfield3": {
+#                   "subfield4": gen2
+#              }
+#         }
+#   }
+#
+#
+
 # //TODO: find information about what information can be taken from Android and sent in this Wifi payload
 WIFI_PAYLOAD_FIELDS_TEMPLATE = {
-    "info_type": wifi_info_type_gen,
     "ssid": wifi_info_ssid_gen,
     "bssid": wifi_info_bssid_gen,
     "signal.rssi": wifi_info_signal_rssi_gen

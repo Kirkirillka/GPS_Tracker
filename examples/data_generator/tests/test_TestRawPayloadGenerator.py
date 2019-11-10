@@ -1,9 +1,10 @@
-from test_JSONGenerator import TestJSONGenerator
+from utils.tests.test_JSONGenerator import TestJSONGenerator
 
-from validators import RawPayloadValidator
-from generators import RawPayloadGenerator
+from utils.validators import RawPayloadValidator
+from utils.generators import RawPayloadGenerator
 
-from utilities import read_schema_from_file
+from utils.tools import read_schema_from_file
+
 
 class TestRawPayloadGenerator(TestJSONGenerator):
 
