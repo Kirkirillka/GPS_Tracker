@@ -48,7 +48,7 @@ class BrokerAdapter:
             self._conn.enable_logger(logger)
 
         except Exception as e:
-            # If some errors occured in this stage
+            # If some errors occurred in this stage
             return False
         else:
             # Notify that connection is successful
@@ -100,7 +100,7 @@ class BrokerAdapter:
 
         return list(self._topics.keys())
 
-    def add_topic(self, topic: str, callback: Callable[[str, str, object], None]) -> bool:
+    def add_topic(self, topic: str, callback: Callable[[str, str, object], None], force: bool = False) -> bool:
 
         """
             Perform subscription on specific **topic**. A **callback** function will be executed
@@ -113,10 +113,22 @@ class BrokerAdapter:
 
         :param topic: A string specified a topic path
         :param callback:  A function or a callable object, which takes three parameters (four in case of class methods).
+        :param force: To set if rewrite an existing topic mapping
         :return: return True if subscription was made successfully.
         """
         # Check if the topic is already subscribed
         if topic in self._topics.keys():
+
+            # Check if it's forced to rewrite the topic:callback mapping
+            if force:
+
+                logger.info(f"Rewrite callback for topic '{topic}' to callable '{callback}'")
+
+                # Add topic into internal list
+                self._topics[topic] = callback
+
+                return True
+
             # Topic is already subscribed, so, it must first be unsubscribed
             return False
         else:
@@ -147,6 +159,9 @@ class BrokerAdapter:
         # Check if there was an subscription on the topic already
         if topic in self._topics.keys():
 
+            # Unsubscribe
+            self._conn.unsubscribe(topic)
+
             # Delete subscription
             del self._topics[topic]
 
@@ -156,7 +171,7 @@ class BrokerAdapter:
         else:
             return False
 
-    def serve(self) -> bool:
+    def serve(self) -> int:
 
         """
             Run internal loop_forever function. This function is blocking, so function won't return
@@ -166,27 +181,28 @@ class BrokerAdapter:
 
         # Check if .setup() was executed first
         if not self._is_initialized:
-            logger.error("BrokerAdapter is not tuned yet. First .setup() must be executed.")
-            return False
-        # If not, then start looping
-        else:
-            logger.info("Start MQTT Message receiving loop pooling.")
-            self._conn.loop_forever()
+            logger.error("BrokerAdapter is not tuned yet. Setting up first.")
+
+            # Setting BrokerAdapter
+            self.setup()
+
+        # Start looping
+        logger.info("Start MQTT Message receiving loop pooling.")
+        res = self._conn.loop_forever()
 
         # Loop is over
         logger.info("Loop is over, exiting...")
-        return True
+        return res
 
-    def stop(self) -> bool:
+    def stop(self) -> int:
         """
             Stop message pooling
         :return: True if BrokerAdapter stopped successfully.
         """
 
-        self._conn.disconnect()
+        res = self._conn.disconnect()
 
-        return True
-
+        return res
 
 
 class DataBroker:
@@ -208,6 +224,21 @@ class DataBroker:
         self._normalizer = Normalizer()
 
         self._is_initialized = False
+
+    def set_callback_func(self, topic: str, callback: Callable) -> bool:
+
+        """
+            set_callback_func allow to set manually a callback for the specific topic.
+            Must be executed before .setup() is done
+        :param topic: a topic name
+        :param callback: a Callable object which takes 3 parameters
+        :return: True if topic was set successfully, False otherwise
+        """
+
+        # Try to set topic
+        res = self._broker_adapter.add_topic(topic, callback, force=True)
+
+        return  res
 
     def get_callback_func(self, topic: str) -> Callable:
 
@@ -306,7 +337,7 @@ class Normalizer:
     """
 
     # Currently, allow only strings to be normalized
-    ALLOWED_OBJECT_TYPES = (str,)
+    ALLOWED_OBJECT_TYPES = (str,dict, bytes)
 
     def __init__(self):
 
@@ -324,10 +355,24 @@ class Normalizer:
         :return: a tuple {des_obj, True} where des_obj is deserialized object, ({}, False) otherwise
         """
 
+        # Check if 'cast_object' is already dict
+        if isinstance(cast_object, dict):
+            return cast_object, True
+
+        # Check if the object has the allowed type to be casted
         if not any(isinstance(cast_object, _type) for _type in self.ALLOWED_OBJECT_TYPES):
             return {}, False
 
-        # Try to deserialize JSON into dict
+        # Check if the object is bytes, then try transform it into string
+        if isinstance(cast_object, bytes):
+
+            try:
+                cast_object = cast_object.decode()
+            except UnicodeDecodeError as e:
+                return {}, False
+
+
+        # Try to deserialize JSON string into dict
         try:
             _casted_obj = json.loads(cast_object)
         except json.JSONDecodeError as e:
