@@ -1,10 +1,9 @@
-import json
 import logging
 
-from typing import List, Callable, Tuple, Any, Mapping
+from typing import Callable, Any
 
-from utils.validators import VALIDATOR_MAPPING, VALIDATOR_MESSAGE_TYPES
-from brokeradapter.model import BrokerAdapter
+from brokeradapter import BrokerAdapter
+from utils.normalizators import DefaultNormalizer
 from config.utils import get_config
 
 logger = logging.getLogger(__name__)
@@ -12,52 +11,85 @@ logging.basicConfig(level=logging.DEBUG)
 
 CONFIG = get_config()
 
-
+TOPICS = [
+    "/clients",
+    "/messages/#",
+]
 
 
 class DataBroker:
     """ Class DataBroker
 
-        This class is for processing raw messages from MQTT Message Broker Server and save them in Storage.
-    """
+        This class is to encapsulate possible manipulations on data received from MQTT Message Broker and to specify
+        callback function for registered topics.
 
-    _topics = [
-        "/clients",
-        "wifi/#",
-    ]
+        The class aggregate *BrokerAdapter* and *StorageAdapter*.
+
+        Usage flow
+        ======
+
+        - Create an instance of DataBroker.
+        - If required, specify additional topics with callbacks, or rewrite defaut topics with .set_callback_func
+        - Trigger .initialize() to establish connection to Storage and MessageBroker.
+        - Start loop via .run_loop(). Then the messages with the topics will be processed.
+
+        Examples
+        ======
+
+        Create an DataBroker instance, initialize with default topics and run loop.
+
+        >>> dbroker = DataBroker()
+        >>> dbroker.initialize()
+        >>> dbroker.run_loop()
+
+        Register unusual topic
+
+        >>> dbroker.set_callback_func("unusual/topic",
+                        lambda x,y,z: print(x,y,z))
+
+    """
 
     def __init__(self):
 
         self._broker_adapter = BrokerAdapter()
+        # TODO: implement StorageAdapter
         self._store_adapter = None
-        self._normalizer = Normalizer()
+        #
+        self._normalizer = DefaultNormalizer()
+        self._topics = TOPICS
 
         self._is_initialized = False
 
-    def set_callback_func(self, topic: str, callback: Callable) -> bool:
+    def set_callback_func(self, topic: str, callback: Callable[[str, Any,Any], None]) -> bool:
 
-        """
-            set_callback_func allow to set manually a callback for the specific topic.
+        """ Specify unusual topic or rewrite an registered topic with different callback.
+
+            .set_callback_func() allow to set manually a callback for the specific topic.
             Must be executed before .setup() is done
+
         :param topic: a topic name
-        :param callback: a Callable object which takes 3 parameters
+        :param callback: a callback object to be executed on a message with topic
         :return: True if topic was set successfully, False otherwise
         """
 
         # Try to set topic
-        res = self._broker_adapter.add_topic(topic, callback, force=True)
+        res = self._broker_adapter.add_topic(topic, callback, forced=True)
 
         return res
 
-    def get_callback_func(self, topic: str) -> Callable:
+    def get_callback_func(self, topic: str) -> Callable[[str, Any,Any], None]:
 
         """
-            Return callback function
-        :param topic: a topic to create a callback on
-        :return: function
+            Return callback function on a specific *topic*.
+
+            Internally has a mapping *callback_mapping* that specify for what topic which callback to be returned.
+            If the topic is not presented in *callback_mapping*, then *_default_callback* is returned.
+
+        :param topic: a topic to get a callback for.
+        :return: callable object which takes 3 parameters and returns None.
         """
 
-        def _default_callback(client_id: str, userdata: Any, message: Any) -> Any:
+        def _default_callback(client_id: str, userdata: Any, message: Any) -> None:
             """
                 A function used as callback for every message received in the specified topics list. Has quite strict
                 parameter signature.
@@ -73,9 +105,22 @@ class DataBroker:
             logging.debug(f"Userdata: {userdata}")
             logging.debug(f"Message: {message}")
 
-        def _disconnect_callback(*args, **kwargs):
+            return None
+
+        def _disconnect_callback(*args, **kwargs) -> None:
+
+            """
+                A callback function which stops looping by .disconnect from MQTT Message Broker
+
+            :param args: any objects
+            :param kwargs: any objects
+            :return: None
+            """
+
             # Force disconnect
             self._broker_adapter.stop()
+
+            return None
 
         # Store mapping between topic names and corresponding callbacks
         callback_mapping = {
@@ -87,17 +132,19 @@ class DataBroker:
 
     def initialize(self) -> bool:
 
-        """
-            Establish connection with Storage.
-            Instruct BrokerAdapter to establish connection with MQTT,
-            add all topics and its callback function to BrokerAdapter.
-        :return: True if initialization is completed
+        """ Setup StorageAdapter and BrokerAdapter.
+
+            - Establish connection with Storage.
+            - Register all topics and its callback function to BrokerAdapter.
+            - Instruct BrokerAdapter to setup connection to MQTT MessageBroker and subscriptions,
+
+        :return: True if initialization is completed, False if an error occurred
         """
 
         # Step 1. Establish connection with Storage
         # //TODO: implement StorageAdapter
-        logger.debug("Initialization StorageAdapter connection.")
-        self._store_adapter = None
+        #logger.debug("Initialization StorageAdapter connection.")
+        #store_setup_res = self._store_adapter.setup()
 
         # Step 2. Add topics and callback functions
         for topic in self._topics:
@@ -105,26 +152,28 @@ class DataBroker:
             self._broker_adapter.add_topic(topic, _callback)
 
         # Step 3. Ask BrokerAdapter to make subscriptions
-        setup_res = self._broker_adapter.setup()
+        broker_setup_res = self._broker_adapter.setup()
 
         # Step 4. Set itself as initialized instance
-        if setup_res:
+        if broker_setup_res:
             self._is_initialized = True
         else:
             self._is_initialized = False
 
         # Finish
-        return setup_res
+        return broker_setup_res
 
-    def run_loop(self):
+    def run_loop(self) -> bool:
 
         """
-            Starts pooling MQTT server with BrokerAdapter. Internally, executes _broker_adapter serve function. You
-            can stop polling with your callback function and invoke stop() on _broker_adapter.
+            Start processing messages from MQTT Message Broker.
+
+            Internally, it executes *BrokerAdapter.serve()* function. You can stop polling with your callback function
+            and invokes *stop()* on *BrokerAdapter*.
 
             run_loop() is a blocking function.
 
-        :return: True if loop is over, False if error occurred
+        :return: True if loop is over, False if DataBroker is not initialized.
         """
 
         # Check if .setup() first was executed
@@ -134,90 +183,5 @@ class DataBroker:
         # run client forever looping
         res = self._broker_adapter.serve()
 
-        return res
+        return bool(res)
 
-
-class Normalizer:
-    """
-        Class Normalizer
-
-        Transforms serialized object into Python-comparable JSON object and check the validity of JSON scheme.
-    """
-
-    # Currently, allow only strings to be normalized
-    ALLOWED_OBJECT_TYPES = (str, dict, bytes)
-
-    def __init__(self):
-
-        self._object_validators = {}
-
-    def _try_cast(self, cast_object: Any) -> Tuple[dict, bool]:
-
-        """
-            Try to first transform cast_object into JSON  object.
-            If cast_object can be transform, then it returns {dict, True}.
-            If transformation is not possible, then it returns tuple ({}, False).
-
-
-        :param cast_object: a string of serialized JSON object
-        :return: a tuple {des_obj, True} where des_obj is deserialized object, ({}, False) otherwise
-        """
-
-        # Check if 'cast_object' is already dict
-        if isinstance(cast_object, dict):
-            return cast_object, True
-
-        # Check if the object has the allowed type to be casted
-        if not any(isinstance(cast_object, _type) for _type in self.ALLOWED_OBJECT_TYPES):
-            return {}, False
-
-        # Check if the object is bytes, then try transform it into string
-        if isinstance(cast_object, bytes):
-
-            try:
-                cast_object = cast_object.decode()
-            except UnicodeDecodeError as e:
-                return {}, False
-
-        # Try to deserialize JSON string into dict
-        try:
-            _casted_obj = json.loads(cast_object)
-        except json.JSONDecodeError as e:
-            return {}, False
-        else:
-            return _casted_obj, True
-
-    def normalize(self, _object: Any) -> Mapping[dict, None]:
-
-        """
-            Cast _object into JSON, check the type field and apply the appropriate Validator to check the scheme
-            correctness. If ll went without error, the normalized object is returned back.
-
-        :param _object: a JSON-deserializable object
-        :return: dict if norm_object can be trasnformed into JSON with a valid JSON schema, None otherwise
-        """
-
-        # try to deserialize the _object
-        _deser_dict, is_success = self._try_cast(_object)
-
-        # check if the result is successful
-        if not is_success:
-            return None
-
-        # Find message_type
-        message_type = _deser_dict.get("message_type", None)
-
-        # Check if we have a validator for the type
-        if message_type not in VALIDATOR_MESSAGE_TYPES:
-            return None
-        else:
-            _validator_class = VALIDATOR_MAPPING[message_type]
-
-        # Validate the object
-        validator = _validator_class()
-        _is_valid = validator.validate(_deser_dict)
-
-        if _is_valid:
-            return _deser_dict
-        else:
-            return None

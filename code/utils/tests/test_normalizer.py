@@ -3,8 +3,8 @@ from unittest import TestCase
 
 from utils.generators import WIFIPayloadGenerator, RawPayloadGenerator
 
-from databroker.model import Normalizer
-from databroker.test_utils import get_correct_data_with_correct_scheme, get_correct_data_with_wrong_scheme
+from utils.normalizators import DefaultNormalizer
+from databroker.tests.test_utils import get_correct_data_with_correct_scheme, get_correct_data_with_wrong_scheme
 
 
 class TestNormalizer(TestCase):
@@ -15,7 +15,7 @@ class TestNormalizer(TestCase):
     def test_normalize_correct_data_wrong_scheme(self):
         data = get_correct_data_with_wrong_scheme()
 
-        normalizer = Normalizer()
+        normalizer = DefaultNormalizer()
 
         json_dict = normalizer.normalize(data)
 
@@ -25,7 +25,7 @@ class TestNormalizer(TestCase):
     def test_normalize_correct_data_right_scheme(self):
         dataset = get_correct_data_with_correct_scheme()
 
-        normalizer = Normalizer()
+        normalizer = DefaultNormalizer()
 
         for row in dataset:
             json_dict = normalizer.normalize(row)
@@ -33,9 +33,8 @@ class TestNormalizer(TestCase):
             self.assertTrue(isinstance(json_dict, dict))
             self.assertGreater(len(json_dict), 0)
 
-
     def test_normalize_from_generators(self):
-        normalizer = Normalizer()
+        normalizer = DefaultNormalizer()
 
         # For each registered JSON-valid generators
         for g_class in (WIFIPayloadGenerator, RawPayloadGenerator):
