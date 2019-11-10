@@ -3,7 +3,7 @@ from unittest import TestCase
 
 from utils.generators import WIFIPayloadGenerator, RawPayloadGenerator
 
-from databroker.classes import Normalizer
+from databroker.model import Normalizer
 from databroker.test_utils import get_correct_data_with_correct_scheme, get_correct_data_with_wrong_scheme
 
 

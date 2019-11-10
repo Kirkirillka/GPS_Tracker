@@ -1,7 +1,7 @@
 from unittest import TestCase
 import json
 
-from databroker.classes import DataBroker
+from databroker.model import DataBroker
 
 from utils.field_gens import device_id_gen, generate_dict_by_mapping, WIFI_PAYLOAD_FIELDS_TEMPLATE
 

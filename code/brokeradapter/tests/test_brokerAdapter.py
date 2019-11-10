@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from databroker.classes import BrokerAdapter
+from brokeradapter.model import BrokerAdapter
 
 
 class TestBrokerAdapter(TestCase):
