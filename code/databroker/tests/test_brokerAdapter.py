@@ -66,35 +66,3 @@ class TestBrokerAdapter(TestCase):
 
             res_del = mqtt_broker.del_topic(topic)
             self.assertTrue(res_del)
-
-    def test_serve_not_tuned(self):
-
-        """
-            Check that BrokerAdapter must not serve until .setup() is executed.
-            It expects there are topics to subscribe on, and callback functions properly set.
-        :return:
-        """
-
-        mqtt_broker = BrokerAdapter()
-
-        res = mqtt_broker.serve()
-
-        self.assertFalse(res)
-
-    def test_serve(self):
-
-        """
-        Check that BrokerAdapter serves correctly after setup() is executed.
-        :return:
-        """
-
-        mqtt_broker = BrokerAdapter()
-
-        for topic,callback in self.TOPICS.items():
-            mqtt_broker.add_topic(topic, callback)
-
-        mqtt_broker.setup()
-
-        res = mqtt_broker.serve()
-
-        self.assertTrue(res)

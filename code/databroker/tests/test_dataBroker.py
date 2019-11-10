@@ -33,8 +33,17 @@ class TestDataBroker(TestCase):
 
         dbroker = DataBroker()
 
-        res = dbroker.initialize()
+        # Get callback to stop the loop
+        disconnect_callback = dbroker.get_callback_func("disconnect")
 
-        dbroker.run_loop()
+        # On system messages, stop listening
+        sub_topic = "$SYS/#"
+        dbroker.set_callback_func(sub_topic, disconnect_callback)
+
+        # Start looping. Must exit at any message with True
+        dbroker.initialize()
+        res = dbroker.run_loop()
+
+        self.assertTrue(res)
 
 
