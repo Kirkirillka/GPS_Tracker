@@ -50,10 +50,10 @@ class MQTTBrokerAdapter:
         self._topics: dict = {}
 
         # Connection parameters to MQTT Message Broker
-        self._host: str = CONFIG["brokeradapter"]["host"]
-        self._port: int = int(CONFIG["brokeradapter"]["port"])
-        self._user: str = CONFIG["brokeradapter"]["user"]
-        self._password: str = CONFIG["brokeradapter"]["password"]
+        self._host: str = CONFIG["mqtt"]["host"]
+        self._port: int = int(CONFIG["mqtt"]["port"])
+        self._user: str = CONFIG["mqtt"]["user"]
+        self._password: str = CONFIG["mqtt"]["password"]
 
         # To signal if .setup() was executed before .serve()
         self._is_initialized = False

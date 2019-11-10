@@ -1,3 +1,3 @@
-from .model import MQTTBrokerAdapter
+from .models import MQTTBrokerAdapter
 
 __all__ = [MQTTBrokerAdapter]
