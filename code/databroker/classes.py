@@ -5,11 +5,15 @@ import logging
 import paho.mqtt.client as mqtt
 
 from typing import List, Callable, Tuple, Any, Mapping
+from socket import error as SocketError
 
 from utils.validators import VALIDATOR_MAPPING, VALIDATOR_MESSAGE_TYPES
+from config.utils import get_config
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG)
+
+CONFIG = get_config()
 
 
 class BrokerAdapter:
@@ -29,7 +33,10 @@ class BrokerAdapter:
         self._conn: paho.mqtt.client.Client = mqtt.Client()
         self._topics: dict = {}
 
-        self._host = "localhost"
+        self._host = CONFIG["brokeradapter"]["host"]
+        self._port = CONFIG["brokeradapter"]["port"]
+        self._user = CONFIG["brokeradapter"]["user"]
+        self._password = CONFIG["brokeradapter"]["password"]
 
         self._is_initialized = False
 
@@ -47,7 +54,7 @@ class BrokerAdapter:
             # Enable action logging
             self._conn.enable_logger(logger)
 
-        except Exception as e:
+        except SocketError as e:
             # If some errors occurred in this stage
             return False
         else:
@@ -77,7 +84,7 @@ class BrokerAdapter:
             return False
 
         # Perform subscription
-        for topic, callback  in self._topics.items():
+        for topic, callback in self._topics.items():
             self._conn.subscribe(topic)
             self._conn.message_callback_add(topic, callback)
 
@@ -121,7 +128,6 @@ class BrokerAdapter:
 
             # Check if it's forced to rewrite the topic:callback mapping
             if force:
-
                 logger.info(f"Rewrite callback for topic '{topic}' to callable '{callback}'")
 
                 # Add topic into internal list
@@ -206,7 +212,6 @@ class BrokerAdapter:
 
 
 class DataBroker:
-
     """ Class DataBroker
 
         This class is for processing raw messages from MQTT Message Broker Server and save them in Storage.
@@ -219,7 +224,7 @@ class DataBroker:
 
     def __init__(self):
 
-        self._broker_adapter =  BrokerAdapter()
+        self._broker_adapter = BrokerAdapter()
         self._store_adapter = None
         self._normalizer = Normalizer()
 
@@ -238,7 +243,7 @@ class DataBroker:
         # Try to set topic
         res = self._broker_adapter.add_topic(topic, callback, force=True)
 
-        return  res
+        return res
 
     def get_callback_func(self, topic: str) -> Callable:
 
@@ -249,7 +254,6 @@ class DataBroker:
         """
 
         def _default_callback(client_id: str, userdata: Any, message: Any) -> Any:
-
             """
                 A function used as callback for every message received in the specified topics list. Has quite strict
                 parameter signature.
@@ -260,13 +264,12 @@ class DataBroker:
             """
 
             logging.debug("Entered in callback function")
-            logging.debug(f"Can access self argument {self}",)
+            logging.debug(f"Can access self argument {self}", )
             logging.debug(f"ClientID: {client_id}")
             logging.debug(f"Userdata: {userdata}")
             logging.debug(f"Message: {message}")
 
         def _disconnect_callback(*args, **kwargs):
-
             # Force disconnect
             self._broker_adapter.stop()
 
@@ -294,7 +297,6 @@ class DataBroker:
 
         # Step 2. Add topics and callback functions
         for topic in self._topics:
-
             _callback = self.get_callback_func(topic)
             self._broker_adapter.add_topic(topic, _callback)
 
@@ -302,7 +304,10 @@ class DataBroker:
         setup_res = self._broker_adapter.setup()
 
         # Step 4. Set itself as initialized instance
-        self._is_initialized = True
+        if setup_res:
+            self._is_initialized = True
+        else:
+            self._is_initialized = False
 
         # Finish
         return setup_res
@@ -329,7 +334,6 @@ class DataBroker:
 
 
 class Normalizer:
-
     """
         Class Normalizer
 
@@ -337,7 +341,7 @@ class Normalizer:
     """
 
     # Currently, allow only strings to be normalized
-    ALLOWED_OBJECT_TYPES = (str,dict, bytes)
+    ALLOWED_OBJECT_TYPES = (str, dict, bytes)
 
     def __init__(self):
 
@@ -371,7 +375,6 @@ class Normalizer:
             except UnicodeDecodeError as e:
                 return {}, False
 
-
         # Try to deserialize JSON string into dict
         try:
             _casted_obj = json.loads(cast_object)
@@ -390,7 +393,6 @@ class Normalizer:
         :return: dict if norm_object can be trasnformed into JSON with a valid JSON schema, None otherwise
         """
 
-
         # try to deserialize the _object
         _deser_dict, is_success = self._try_cast(_object)
 
@@ -398,18 +400,14 @@ class Normalizer:
         if not is_success:
             return None
 
-
-
         # Find message_type
         message_type = _deser_dict.get("message_type", None)
 
         # Check if we have a validator for the type
         if message_type not in VALIDATOR_MESSAGE_TYPES:
-            return  None
+            return None
         else:
             _validator_class = VALIDATOR_MAPPING[message_type]
-
-
 
         # Validate the object
         validator = _validator_class()
@@ -419,5 +417,3 @@ class Normalizer:
             return _deser_dict
         else:
             return None
-
-
