@@ -1,9 +1,10 @@
-from test_JSONGenerator import TestJSONGenerator
+from utils.tests.test_JSONGenerator import TestJSONGenerator
 
-from validators import WIFIPayloadValidator
-from generators import WIFIPayloadGenerator
 
-from utilities import read_schema_from_file
+from utils.validators import WIFIPayloadValidator
+from utils.generators import WIFIPayloadGenerator
+
+from utils.tools import read_schema_from_file
 
 
 class TestWIFIPayloadGenerator(TestJSONGenerator):

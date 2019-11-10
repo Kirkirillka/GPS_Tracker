@@ -1,10 +1,10 @@
 from unittest import TestCase
 
-from validators import JSONValidator
-from generators import JSONGenerator
-from field_gens import DUMP_PAYLOAD_FIELDS_TEMPLATE
+from utils.validators import JSONValidator
+from utils.generators import JSONGenerator
+from utils.field_gens import DUMP_PAYLOAD_FIELDS_TEMPLATE
 
-from utilities import read_schema_from_file, read_payload_from_file
+from utils.tools import read_schema_from_file, read_payload_from_file
 
 
 def return_incorrect_payload(*args, **kwargs):
