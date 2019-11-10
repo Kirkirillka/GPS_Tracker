@@ -11,6 +11,8 @@ logging.basicConfig(level=logging.DEBUG)
 
 CONFIG = get_config()
 
+# Currently, allow only strings to be normalized
+ALLOWED_OBJECT_TYPES = (str, dict, bytes)
 
 class DefaultNormalizer:
     """
@@ -22,9 +24,6 @@ class DefaultNormalizer:
         =====
         In Python a JSON object is presented as dictionary, so, let me call this as **JSON Python dictionary**
     """
-
-    # Currently, allow only strings to be normalized
-    ALLOWED_OBJECT_TYPES = (str, dict, bytes)
 
     def __init__(self):
 
@@ -51,7 +50,7 @@ class DefaultNormalizer:
             return cast_object, True
 
         # Check if the object has the allowed type to be casted
-        if not any(isinstance(cast_object, _type) for _type in self.ALLOWED_OBJECT_TYPES):
+        if not any(isinstance(cast_object, _type) for _type in ALLOWED_OBJECT_TYPES):
             return {}, False
 
         # Check if the object is bytes, then try transform it into string
