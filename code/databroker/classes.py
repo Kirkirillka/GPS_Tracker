@@ -2,6 +2,8 @@ import paho
 import json
 import logging
 
+import paho.mqtt.client as mqtt
+
 from typing import List, Callable, Tuple, Any, Mapping
 
 from utils.validators import VALIDATOR_MAPPING, VALIDATOR_MESSAGE_TYPES
@@ -23,8 +25,13 @@ class BrokerAdapter:
             2. _topics - a list of topics BrokerAdapter will be listening to
         """
 
-        self._conn = None
-        self._topics = {}
+        # Initialize MQTT Client object
+        self._conn: paho.mqtt.client.Client = mqtt.Client()
+        self._topics: dict = {}
+
+        self._host = "localhost"
+
+        self._is_initialized = False
 
     def _connect(self) -> bool:
 
@@ -34,9 +41,20 @@ class BrokerAdapter:
         :raise: ConnectionError if connection is not established
         """
 
-        raise NotImplementedError
+        try:
+            # Connect to MQTT Message Broker
+            clt = self._conn.connect(self._host)
+            # Enable action logging
+            self._conn.enable_logger(logger)
 
-    def setup(self) -> None:
+        except Exception as e:
+            # If some errors occured in this stage
+            return False
+        else:
+            # Notify that connection is successful
+            return True
+
+    def setup(self) -> bool:
 
         """
             Configure connection parameters and instruct a private _connect how to be executed.
@@ -48,7 +66,27 @@ class BrokerAdapter:
         :raise: ConnectionError
         """
 
-        raise NotImplementedError
+        # Try to establish connection to MQTT Message broker
+        con_res = self._connect()
+
+        # Fail if cannot connect to the server
+        if con_res:
+            logger.info(f"Connection to MQTT Message Broker server {self._host} is established.")
+        else:
+            logger.error(f"Connection to MQTT Message Broker server {self._host} is not possible!")
+            return False
+
+        # Perform subscription
+        for topic, callback  in self._topics.items():
+            self._conn.subscribe(topic)
+            self._conn.message_callback_add(topic, callback)
+
+            logger.debug(f"Subscription on topic '{topic}' with function '{callback}' is done.")
+
+        # Set itself as initialized instalce
+        self._is_initialized = True
+
+        return True
 
     def get_topics(self) -> List[str]:
 
@@ -60,7 +98,7 @@ class BrokerAdapter:
         :return: A list of topics which were subscribed
         """
 
-        raise NotImplementedError
+        return list(self._topics.keys())
 
     def add_topic(self, topic: str, callback: Callable[[str, str, object], None]) -> bool:
 
@@ -77,8 +115,18 @@ class BrokerAdapter:
         :param callback:  A function or a callable object, which takes three parameters (four in case of class methods).
         :return: return True if subscription was made successfully.
         """
+        # Check if the topic is already subscribed
+        if topic in self._topics.keys():
+            # Topic is already subscribed, so, it must first be unsubscribed
+            return False
+        else:
 
-        raise NotImplementedError
+            logger.info(f"Added a new subscriber to  '{topic}'.")
+
+            # Add topic into internal list
+            self._topics.setdefault(topic, callback)
+
+            return True
 
     def del_topic(self, topic: str) -> bool:
         """
@@ -96,7 +144,17 @@ class BrokerAdapter:
 
         """
 
-        raise NotImplementedError
+        # Check if there was an subscription on the topic already
+        if topic in self._topics.keys():
+
+            # Delete subscription
+            del self._topics[topic]
+
+            logger.info(f"Subscription on the topic {topic} is finished.")
+
+            return True
+        else:
+            return False
 
     def serve(self) -> bool:
 
@@ -106,7 +164,29 @@ class BrokerAdapter:
         :return: True if loop is stopped
         """
 
-        raise NotImplementedError
+        # Check if .setup() was executed first
+        if not self._is_initialized:
+            logger.error("BrokerAdapter is not tuned yet. First .setup() must be executed.")
+            return False
+        # If not, then start looping
+        else:
+            logger.info("Start MQTT Message receiving loop pooling.")
+            self._conn.loop_forever()
+
+        # Loop is over
+        logger.info("Loop is over, exiting...")
+        return True
+
+    def stop(self) -> bool:
+        """
+            Stop message pooling
+        :return: True if BrokerAdapter stopped successfully.
+        """
+
+        self._conn.disconnect()
+
+        return True
+
 
 
 class DataBroker:
@@ -116,40 +196,85 @@ class DataBroker:
         This class is for processing raw messages from MQTT Message Broker Server and save them in Storage.
     """
 
+    _topics = [
+        "/clients",
+        "wifi/#",
+    ]
+
     def __init__(self):
 
-        self._broker_adapter = None
+        self._broker_adapter =  BrokerAdapter()
         self._store_adapter = None
-        self._normalizer = None
+        self._normalizer = Normalizer()
 
-        raise NotImplementedError
+        self._is_initialized = False
 
-    def _normalize(self, serialized_object: Any) -> dict:
-
-        """Try to convert an object into an dict with follows a schema. The schema
-         and checkers are defined in Normalizer, which actually performs all checks.
-
-        :param serialized_object: An serializer JSON object string
-        :return: The deserialized string as a dict if string was successfully converted
-        :raises:
-            :raise json.JSONDecodeError if the string cannot be deserialized
-            :raise ValueError if the object has not valid schema
-        """
-
-        raise NotImplementedError
-
-    def _store_message_callback(self, client_id: str, userdata: Any, message: Any) -> Any:
+    def get_callback_func(self, topic: str) -> Callable:
 
         """
-            A function used as callback for every message received in the specified topics list. Has quite strict
-            parameter signature. You can use any function as a callback function provided that it received 3 parameters.
-        :param client_id: An client ID.
-        :param userdata: ?
-        :param message: Message sent in the topic. It has topic name, payload.
-        :return: None
+            Return callback function
+        :param topic: a topic to create a callback on
+        :return: function
         """
 
-        raise NotImplementedError
+        def _default_callback(client_id: str, userdata: Any, message: Any) -> Any:
+
+            """
+                A function used as callback for every message received in the specified topics list. Has quite strict
+                parameter signature.
+            :param client_id: An client ID.
+            :param userdata: ?
+            :param message: Message sent in the topic. It has topic name, payload.
+            :return: None
+            """
+
+            logging.debug("Entered in callback function")
+            logging.debug(f"Can access self argument {self}",)
+            logging.debug(f"ClientID: {client_id}")
+            logging.debug(f"Userdata: {userdata}")
+            logging.debug(f"Message: {message}")
+
+        def _disconnect_callback(*args, **kwargs):
+
+            # Force disconnect
+            self._broker_adapter.stop()
+
+        # Store mapping between topic names and corresponding callbacks
+        callback_mapping = {
+            "disconnect": _disconnect_callback
+        }
+
+        # return a callback by key, otherwise return the default callback
+        return callback_mapping.get(topic, _default_callback)
+
+    def initialize(self) -> bool:
+
+        """
+            Establish connection with Storage.
+            Instruct BrokerAdapter to establish connection with MQTT,
+            add all topics and its callback function to BrokerAdapter.
+        :return: True if initialization is completed
+        """
+
+        # Step 1. Establish connection with Storage
+        # //TODO: implement StorageAdapter
+        logger.debug("Initialization StorageAdapter connection.")
+        self._store_adapter = None
+
+        # Step 2. Add topics and callback functions
+        for topic in self._topics:
+
+            _callback = self.get_callback_func(topic)
+            self._broker_adapter.add_topic(topic, _callback)
+
+        # Step 3. Ask BrokerAdapter to make subscriptions
+        setup_res = self._broker_adapter.setup()
+
+        # Step 4. Set itself as initialized instance
+        self._is_initialized = True
+
+        # Finish
+        return setup_res
 
     def run_loop(self):
 
@@ -159,10 +284,17 @@ class DataBroker:
 
             run_loop() is a blocking function.
 
-        :return: None
+        :return: True if loop is over, False if error occurred
         """
 
-        raise NotImplementedError
+        # Check if .setup() first was executed
+        if not self._is_initialized:
+            return False
+
+        # run client forever looping
+        res = self._broker_adapter.serve()
+
+        return res
 
 
 class Normalizer:
