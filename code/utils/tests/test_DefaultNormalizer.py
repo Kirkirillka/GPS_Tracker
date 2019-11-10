@@ -7,7 +7,7 @@ from utils.normalizators import DefaultNormalizer
 from databroker.tests.test_utils import get_correct_data_with_correct_scheme, get_correct_data_with_wrong_scheme
 
 
-class TestNormalizer(TestCase):
+class TestDefaultNormalizer(TestCase):
 
     def setUp(self) -> None:
         pass
