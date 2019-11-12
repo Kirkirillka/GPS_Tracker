@@ -2,15 +2,6 @@
 
 ## Available git branches
 
-- **master** - main branch
-- **develop** - developing system
-- **feature/telemetry** - information about messaging (GPS, Cellular Network quality signal, etc.) between clients and server
-- **feature/code_examples** - stores all source code, documentation about how to use frameworks, techs, etc. with simple code examples
-    - **feature/mqtt** - how to use MQTT with Python
-    - **feature/mongodb** - how to use MongoDB with Python
-    - **feature/protobuf** - examples how to compile, install and use Protobuf with Python3
-    - **feature/data_generator** - classes to generate a fake data from ClientApps (like Wifi status, Raw Payload messages)
-
 ## Available pages
 
 - [Information on the project](DESCRIPTION.md)
