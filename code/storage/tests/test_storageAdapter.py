@@ -75,6 +75,21 @@ class TestStorageAdapter(TestCase):
 
         self.assertEqual(available_messages, messages)
 
+    def test_get_last_message(self):
 
+        # Prepare message
+        messages = [RawPayloadGenerator().get() for _ in range(4)]
+
+        # Save added messages
+        self.generated_messages.extend(messages)
+
+        # Add these messages into database
+        for message in messages:
+            self.adapter.save_message(message)
+
+        last_message = self.adapter.get_last_message()
+        expected_message = messages[-1]
+
+        self.assertDictEqual(last_message, expected_message)
 
 

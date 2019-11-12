@@ -13,7 +13,6 @@ CONFIG = get_config()
 
 
 class StorageAdapter:
-
     """
         Class StorageAdapter
 
@@ -133,7 +132,7 @@ class StorageAdapter:
         """
 
         # Check if message indeed is dictionary
-        if not isinstance(message,dict):
+        if not isinstance(message, dict):
             raise TypeError('Message must be dictionary')
 
         # Check if not initialized yet
@@ -161,7 +160,7 @@ class StorageAdapter:
         """
 
         # Check if message indeed is dictionary
-        if not isinstance(message,dict):
+        if not isinstance(message, dict):
             raise TypeError('Message must be dictionary')
 
         # Check if not initialized yet
@@ -172,7 +171,7 @@ class StorageAdapter:
         collection = self._db_conn[self.collection_name]
 
         # Find, delete and return _id of
-        res_id = collection.find_one_and_delete(message).get("_id",None)
+        res_id = collection.find_one_and_delete(message).get("_id", None)
         if res_id is not None:
             logger.debug(f"Delete a record with ID '{res_id}' in collection '{self.collection_name}'")
         else:
@@ -202,3 +201,34 @@ class StorageAdapter:
 
         return records
 
+    def get_last_message(self) -> dict:
+
+        """
+            Return the last saved message.
+
+            Example
+            ======
+
+            Enter three records with time:
+
+            - 2019-11-12T15:30:09.510003
+            - 2019-11-12T15:30:10.2341
+            - 2019-11-12T15:30:10.344
+
+            The returned record is with time = 2019-11-12T15:30:10.344
+
+
+        :return: A saved JSON Python dictionary
+        """
+
+        # Check if not initialized yet
+        if not self.is_initialized:
+            raise EnvironmentError("Please, setup StorageAdapter before first usage!")
+
+        collection = self._db_conn[self.collection_name]
+
+        # Return cursor
+        last_message = collection.find_one(sort=[("time", pymongo.DESCENDING)])
+
+        # Convert cursor into list and return the last one
+        return last_message
