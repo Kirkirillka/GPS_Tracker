@@ -10,6 +10,9 @@ class TestStorageAdapter(TestCase):
 
         self.adapter = StorageAdapter()
 
+        # Modify default collection_name
+        self.adapter.collection_name = "test"
+
         self.test_setup()
 
         self.generated_messages = []
@@ -19,7 +22,8 @@ class TestStorageAdapter(TestCase):
         # Check if corresponding test is working properly
         self.test_del_message()
 
-        for message in self.generated_messages:
+        while self.generated_messages:
+            message = self.generated_messages.pop()
             self.adapter.del_message(message)
 
     def test_setup(self):
@@ -53,6 +57,23 @@ class TestStorageAdapter(TestCase):
         deleted_id = self.adapter.del_message(message)
 
         self.assertEqual(added_id, deleted_id)
+
+    def test_get_all_messages(self):
+
+        # Prepare message
+        messages = [RawPayloadGenerator().get() for _ in range(30)]
+
+        # Save added messages
+        self.generated_messages.extend(messages)
+
+        # Add these messages into database
+        for message in messages:
+            self.adapter.save_message(message)
+
+        # Fetch added messages
+        available_messages = self.adapter.get_all_messages()
+
+        self.assertEqual(available_messages, messages)
 
 
 
