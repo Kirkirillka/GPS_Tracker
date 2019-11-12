@@ -75,7 +75,14 @@ class TestStorageAdapter(TestCase):
 
         self.assertEqual(available_messages, messages)
 
-    def test_get_last_message(self):
+    def test_get_last_messages(self):
+
+        # I don't know how to implememnt it properly :(
+        # Please, Rustam
+        raise NotImplementedError
+
+
+    def test_get_registered_clients(self):
 
         # Prepare message
         messages = [RawPayloadGenerator().get() for _ in range(4)]
@@ -87,9 +94,7 @@ class TestStorageAdapter(TestCase):
         for message in messages:
             self.adapter.save_message(message)
 
-        last_message = self.adapter.get_last_message()
-        expected_message = messages[-1]
+        clients = self.adapter.get_registered_clients()
 
-        self.assertDictEqual(last_message, expected_message)
-
-
+        self.assertTrue(isinstance(clients,list))
+        self.assertTrue(len(clients)> 0)

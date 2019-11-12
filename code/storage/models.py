@@ -201,24 +201,68 @@ class StorageAdapter:
 
         return records
 
-    def get_last_message(self) -> dict:
+    def get_last_messages(self) -> dict:
 
         """
-            Return the last saved message.
+            Return the last saved message (with the newest date) for each of clients.
 
             Example
             ======
 
-            Enter three records with time:
+            There are three clients with "device.id" = [1,2,3]. There are three records for each of clients in the
+            time points:
 
             - 2019-11-12T15:30:09.510003
             - 2019-11-12T15:30:10.2341
             - 2019-11-12T15:30:10.344
 
-            The returned record is with time = 2019-11-12T15:30:10.344
+            The returned value must be something like:
+
+            [
+                {
+                ...
+                date: "2019-11-12T15:30:10.344",
+                    "device": {
+                        "id" = 1
+                        ...
+                    }
+                    ...
+                },
+                {
+                ...
+                date: "2019-11-12T15:30:10.344",
+                    "device": {
+                        "id" = 2
+                        ...
+                    }
+                    ...
+                },
+                {
+                ...
+                date: "2019-11-12T15:30:10.344",
+                    "device": {
+                        "id" = 3
+                        ...
+                    }
+                    ...
+                }
+            ]
+
+        Where "..." means there are other fields contained in the scheme.
 
 
         :return: A saved JSON Python dictionary
+        """
+
+        # TODO: Implement StorageAdapter.get_last_message
+
+        raise NotImplementedError
+
+    def get_registered_clients(self) -> List[str]:
+
+        """
+            Returns "device.id" from all stored messages
+        :return:
         """
 
         # Check if not initialized yet
@@ -227,8 +271,9 @@ class StorageAdapter:
 
         collection = self._db_conn[self.collection_name]
 
-        # Return cursor
-        last_message = collection.find_one(sort=[("time", pymongo.DESCENDING)])
+        clients = collection.find({}, {"device.id": 1})
 
-        # Convert cursor into list and return the last one
-        return last_message
+        # Fetch 'device.id' field and trasform into list
+        clients = [r['device']['id'] for r in clients]
+
+        return list(clients)
