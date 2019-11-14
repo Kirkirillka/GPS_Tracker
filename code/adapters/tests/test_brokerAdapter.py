@@ -31,7 +31,7 @@ class TestBrokerAdapter(TestCase):
     def test_get_topics(self):
 
         """
-            Test topics() returns exactly the same topic list
+            Test get_topics() returns exactly the same topic list
         :return:
         """
 
@@ -42,8 +42,8 @@ class TestBrokerAdapter(TestCase):
         for topic,callback in self.TOPICS.items():
             mqtt_broker.add_topic(topic, callback)
 
-        # Get topics
-        registered_topics = mqtt_broker.topics()
+        # Get get_topics
+        registered_topics = mqtt_broker.get_topics()
 
         self.assertListEqual(registered_topics, list(self.TOPICS))
 
@@ -66,3 +66,14 @@ class TestBrokerAdapter(TestCase):
 
             res_del = mqtt_broker.del_topic(topic)
             self.assertTrue(res_del)
+
+    def test_publish(self):
+
+        mqtt_broker = MQTTBrokerAdapter()
+
+        topic = "simple/topic/name"
+        message = {"a":1, "b":2}
+
+        res = mqtt_broker.publish(topic, message)
+
+        self.assertTrue(res)
