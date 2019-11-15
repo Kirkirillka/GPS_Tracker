@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from adapters import MQTTBrokerAdapter
-from generators import WIFIPayloadGenerator
+from utils.generators import WIFIPayloadGenerator
 
 
 import logging
