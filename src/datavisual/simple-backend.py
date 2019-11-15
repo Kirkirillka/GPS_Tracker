@@ -15,7 +15,7 @@ def sanitize_json(json_data):
 @app.route("/messages/all", methods=["GET"])
 def all_messages():
 
-    records = app.storage.get_all_messages()
+    records = app.storage.get_all_msgs()
 
     sanitized_records = sanitize_json(records)
 
@@ -25,7 +25,7 @@ def all_messages():
 @app.route("/messages/last", methods=["GET"])
 def last_messages():
 
-    records = app.storage.get_last_messages()
+    records = app.storage.get_last_msgs()
 
     sanitized_records = sanitize_json(records)
 
@@ -35,7 +35,7 @@ def last_messages():
 @app.route("/clients/all", methods=['GET'])
 def all_clients():
 
-    clients = app.storage.get_registered_clients()
+    clients = app.storage.get_clients()
 
     return jsonify(clients)
 

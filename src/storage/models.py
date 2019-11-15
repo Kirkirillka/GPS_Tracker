@@ -4,7 +4,7 @@ from pymongo.errors import ConnectionFailure
 from abc import ABC, abstractmethod
 import logging
 
-from typing import List, Dict, Mapping
+from typing import List, Dict, Tuple
 from config.utils import get_config
 
 logger = logging.getLogger(__name__)
@@ -14,7 +14,6 @@ CONFIG = get_config()
 
 
 class AbstractStorageAdapter(ABC):
-
     """
         Class AbstractStorageAdapter is an abstract class to define the interface to access Storage, however of what
         exactly DB is used.
@@ -26,33 +25,38 @@ class AbstractStorageAdapter(ABC):
             * get_last_msgs - return the last received messages (sort by time arrived) from clients in <key-value> format.
             * get_coords_by_client_id - get all messages for specific client_id, return a path of coordinates.
             * get_last_coords - get the last received messages from clients, return their coordinates.
-            * save -take and store a message in DB.
+            * get_clients - find all unique clients ID in messages and return them.
+            * save - take and store a message in DB.
+            * delete - take an item by Unique ID (may be different, either built-in, like _id, or manually added.
 
     """
 
     @abstractmethod
     def get_all_msgs(self) -> List[dict]:
-
         return
 
     @abstractmethod
     def get_last_msgs(self) -> List[dict]:
-
         return
 
     @abstractmethod
-    def get_coords_by_client_id(self) -> List[float, float]:
-
+    def get_coords_by_client_id(self) -> List[Tuple[float, float]]:
         return
 
     @abstractmethod
-    def get_last_coords(self) -> Dict[str, List[float, float]]:
-
+    def get_last_coords(self) -> Dict[str, List[Tuple[float, float]]]:
         return
 
     @abstractmethod
     def save(self, message: dict) -> bool:
+        return
 
+    @abstractmethod
+    def delete(self, id: str) -> bool:
+        return
+
+    @abstractmethod
+    def get_clients(self) -> List[str]:
         return
 
 
@@ -75,15 +79,15 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         Add a record:
 
         >>> record_to_save  = {"username":"Max"}
-        >>> saved_id = adapter.save_message({"username":"Max"})
+        >>> saved_id = adapter.save({"username":"Max"})
 
         Delete the added record:
 
         >>> record_to_delete = {"username":"Max"}
         >>> record_by_id = {"_id": saved_id}
 
-        >>> del_id = adapter.del_message(record_to_delete)
-        >>> del2_id = adapter.del_message(record_by_id)
+        >>> del_id = adapter.delete(record_to_delete)
+        >>> del2_id = adapter.delete(record_by_id)
 
         >>> assert del_id == del2_id
 
@@ -128,7 +132,8 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         try:
 
-            logger.info(f"Establish connection to MongoDB instance on {self.host}:{self.port} as '{self._username}' ")
+            logger.info(f"Try to establish connection to MongoDB instance on {self.host}:{self.port} as "
+                        f"'{self._username}' ")
 
             connection = pymongo.MongoClient("mongodb://%s:%s@%s:%s" % (
                 self._username,
@@ -139,7 +144,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
             # Ensure that we connected
             _data = connection.server_info()
-            logger.debug(f"Connected to {_data}",)
+            logger.debug(f"Connected to {_data}", )
 
         except ConnectionFailure as e:
             raise ConnectionError(f"Cannot connect to MongoDB instance at {self.host}:{self.port}!") from e
@@ -147,57 +152,15 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
             # Save our connection if try block went without errors
             self._db_conn = connection[self.db_name]
 
-    def save_message(self, message: dict) -> str:
+    def get_last_coords(self) -> Dict[str, List[Tuple[float, float]]]:
 
-        """
-            Add a JSON Python dictionary in MongoDB database
+        raise NotImplementedError
 
-        :param message: A Python dictionary
-        :return: An ID of saved record. If _id is not presented in the record, then it will be set
-         automatically by MongoDB.
-        """
+    def get_coords_by_client_id(self) -> List[Tuple[float, float]]:
 
-        # Check if message indeed is dictionary
-        if not isinstance(message, dict):
-            raise TypeError('Message must be dictionary')
+        raise NotImplementedError
 
-        # Get collection to write to
-        collection = self._db_conn[self.collection_name]
-
-        # Save record and return ID of the saved record
-        res_id = collection.insert_one(message).inserted_id
-
-        logger.debug(f"Saved a record with id '{res_id} in collection '{self.collection_name}'")
-
-        return res_id
-
-    def del_message(self, message: dict) -> str:
-
-        """
-            Delete a record by specified filter.
-
-        :param message: A Python dictionary which represent either the record itself or fields to first find the record
-            and delete it.
-        :return: An ID of deleted record. if not fould, then return None
-        """
-
-        # Check if message indeed is dictionary
-        if not isinstance(message, dict):
-            raise TypeError('Message must be dictionary')
-
-        # Get collection to write to
-        collection = self._db_conn[self.collection_name]
-
-        # Find, delete and return _id of
-        res_id = collection.find_one_and_delete(message).get("_id", None)
-        if res_id is not None:
-            logger.debug(f"Delete a record with ID '{res_id}' in collection '{self.collection_name}'")
-        else:
-            logger.debug(f"A record with ID '{res_id}'  to be deleted in collection '{self.collection_name}' is "
-                         f"not found.")
-        return res_id
-
-    def get_all_messages(self) -> List[Dict]:
+    def get_all_msgs(self) -> List[Dict]:
 
         """
             Fetch all records in database for connection_name.
@@ -215,7 +178,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         return records
 
-    def get_last_messages(self) -> dict:
+    def get_last_msgs(self) -> dict:
 
         """
             Return the last saved message (with the newest date) for each of clients.
@@ -272,7 +235,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         raise NotImplementedError
 
-    def get_registered_clients(self) -> List[str]:
+    def get_clients(self) -> List[str]:
 
         """
             Returns "device.id" from all stored messages
@@ -287,3 +250,53 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         clients = [r['device']['id'] for r in clients]
 
         return list(clients)
+
+    def save(self, message: dict) -> str:
+
+        """
+            Add a JSON Python dictionary in MongoDB database
+
+        :param message: A Python dictionary
+        :return: An ID of saved record. If _id is not presented in the record, then it will be Tuple
+         automatically by MongoDB.
+        """
+
+        # Check if message indeed is dictionary
+        if not isinstance(message, dict):
+            raise TypeError('Message must be dictionary')
+
+        # Get collection to write to
+        collection = self._db_conn[self.collection_name]
+
+        # Save record and return ID of the saved record
+        res_id = collection.insert_one(message).inserted_id
+
+        logger.debug(f"Saved a record with id '{res_id} in collection '{self.collection_name}'")
+
+        return res_id
+
+    def delete(self, message: dict) -> str:
+
+        """
+            Delete a record by specified filter.
+
+        :param message: A Python dictionary which represent either the record itself or fields to first find the record
+            and delete it.
+        :return: An ID of deleted record. if not fould, then return None
+        """
+
+        # Check if message indeed is dictionary
+        if not isinstance(message, dict):
+            raise TypeError('Message must be dictionary')
+
+        # Get collection to write to
+        collection = self._db_conn[self.collection_name]
+
+        # Find, delete and return _id of
+        res_id = collection.find_one_and_delete(message).get("_id", None)
+        if res_id is not None:
+            logger.debug(f"Delete a record with ID '{res_id}' in collection '{self.collection_name}'")
+        else:
+            logger.debug(f"A record with ID '{res_id}'  to be deleted in collection '{self.collection_name}' is "
+                         f"not found.")
+        return res_id

@@ -4,7 +4,7 @@ from typing import Callable, Any
 from paho.mqtt.client import Client, MQTTMessage
 
 from adapters import MQTTBrokerAdapter
-from storage import StorageAdapter
+from storage import MongoDBStorageAdapter
 from utils.normalizers import DefaultNormalizer
 from config.utils import get_config
 
@@ -25,7 +25,7 @@ class DataBroker:
         This class is to encapsulate possible manipulations on data received from MQTT Message Broker and to specify
         callback function for registered get_topics.
 
-        The class aggregate *MQTTBrokerAdapter* and *StorageAdapter*.
+        The class aggregate *MQTTBrokerAdapter* and *MongoDBStorageAdapter*.
 
         Usage flow
         ======
@@ -54,7 +54,7 @@ class DataBroker:
     def __init__(self):
 
         self._mqtt_adapter = MQTTBrokerAdapter()
-        self._store_adapter = StorageAdapter()
+        self._store_adapter = MongoDBStorageAdapter()
         #
         self._normalizer = DefaultNormalizer()
         self._topics = TOPICS
@@ -93,7 +93,7 @@ class DataBroker:
             normalized_message = self._normalizer.normalize(message.payload)
             if normalized_message:
                 logging.debug("Message is normalized, save in DB.")
-                self._store_adapter.save_message(normalized_message)
+                self._store_adapter.save(normalized_message)
             else:
                 logging.error("Cannot normalize the message!")
 
@@ -144,7 +144,7 @@ class DataBroker:
 
     def initialize(self) -> bool:
 
-        """ Setup StorageAdapter and MQTTBrokerAdapter.
+        """ Setup internal components.
 
             - Establish connection with Storage.
             - Register all get_topics and its callback function to MQTTBrokerAdapter.
