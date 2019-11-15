@@ -38,7 +38,3 @@ class WIFIClientAppMock(AbstractClientAppMock):
         res = self._mqtt_adapter.publish(topic_name, msg)
 
         return res
-
-
-
-

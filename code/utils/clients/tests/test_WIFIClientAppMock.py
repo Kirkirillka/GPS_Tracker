@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from utils.clients import WIFIClientAppMock
+from utils.clients.models import WIFIClientAppMock
 
 
 class TestWIFIClientAppMock(TestCase):
