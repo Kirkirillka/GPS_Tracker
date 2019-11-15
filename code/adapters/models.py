@@ -120,7 +120,7 @@ class MQTTBrokerAdapter:
 
         res, _ = self._conn.publish(topic, converted_msg)
 
-        return res is 0
+        return res == 0
 
     def add_topic(self, topic: str, callback: Callable[[str, str, object], None], forced: bool = False) -> bool:
 
