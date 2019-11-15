@@ -1,0 +1,35 @@
+version: "3.4"
+services:
+  mqtt_broker:
+    image: eclipse-mosquitto:1.6.7
+    ports:
+      - 1883:1883
+      - 9001:9001
+
+  mongodb:
+    image: mongo:4
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - 27017:27017
+
+  wifi-client-mock:
+    build:
+      context: src
+      target: final-stage
+    command: ["python","runners/wifi_payload_client_runner.py"]
+
+  databroker:
+    build:
+      context: src
+      target: final-stage
+    command: ["python","runners/databroker_runner.py"]
+
+  visual-backend:
+    build:
+      context: src
+      target: final-stage
+    ports:
+      - 5000:5000
+    command: ["python","datavisual/simple-backend.py"]

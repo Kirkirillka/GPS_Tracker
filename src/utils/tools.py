@@ -60,3 +60,15 @@ def get_wifi_payload_schema():
     _schema_name = "wifi_payload_schema.json"
 
     return read_schema_from_file(_schema_name)
+
+
+def convert_to_str(obj):
+
+    if isinstance(obj, str):
+
+        return obj
+
+    if isinstance(obj, dict):
+        return json.dumps(obj)
+
+    raise NotImplementedError
