@@ -1,1 +1,1 @@
-from .models import StorageAdapter
+from .models import MongoDBStorageAdapter

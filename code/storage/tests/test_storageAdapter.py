@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from storage.models import StorageAdapter
+from storage.models import MongoDBStorageAdapter
 from utils.generators import RawPayloadGenerator
 
 
@@ -8,7 +8,7 @@ class TestStorageAdapter(TestCase):
 
     def setUp(self) -> None:
 
-        self.adapter = StorageAdapter()
+        self.adapter = MongoDBStorageAdapter()
 
         # Modify default collection_name
         self.adapter.collection_name = "test"

@@ -23,7 +23,7 @@ class DataBroker:
         This class is to encapsulate possible manipulations on data received from MQTT Message Broker and to specify
         callback function for registered topics.
 
-        The class aggregate *MQTTBrokerAdapter* and *StorageAdapter*.
+        The class aggregate *MQTTBrokerAdapter* and *MongoDBStorageAdapter*.
 
         Usage flow
         ======
@@ -52,7 +52,7 @@ class DataBroker:
     def __init__(self):
 
         self._mqtt_adapter = MQTTBrokerAdapter()
-        # TODO: implement StorageAdapter
+        # TODO: implement MongoDBStorageAdapter
         self._store_adapter = None
         #
         self._normalizer = DefaultNormalizer()
@@ -132,7 +132,7 @@ class DataBroker:
 
     def initialize(self) -> bool:
 
-        """ Setup StorageAdapter and MQTTBrokerAdapter.
+        """ Setup MongoDBStorageAdapter and MQTTBrokerAdapter.
 
             - Establish connection with Storage.
             - Register all topics and its callback function to MQTTBrokerAdapter.
@@ -142,8 +142,8 @@ class DataBroker:
         """
 
         # Step 1. Establish connection with Storage
-        # //TODO: implement StorageAdapter
-        #logger.debug("Initialization StorageAdapter connection.")
+        # //TODO: implement MongoDBStorageAdapter
+        #logger.debug("Initialization MongoDBStorageAdapter connection.")
         #store_setup_res = self._store_adapter.setup()
 
         # Step 2. Add topics and callback functions

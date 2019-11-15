@@ -1,9 +1,10 @@
 import pymongo
 from pymongo.errors import ConnectionFailure
 
+from abc import ABC, abstractmethod
 import logging
 
-from typing import List, Dict
+from typing import List, Dict, Mapping
 from config.utils import get_config
 
 logger = logging.getLogger(__name__)
@@ -12,7 +13,50 @@ logging.basicConfig(level=logging.DEBUG)
 CONFIG = get_config()
 
 
-class StorageAdapter:
+class AbstractStorageAdapter(ABC):
+
+    """
+        Class AbstractStorageAdapter is an abstract class to define the interface to access Storage, however of what
+        exactly DB is used.
+
+
+        Members
+        ======
+            * get_all_msgs - return a list of saved messages in <key-value> format.
+            * get_last_msgs - return the last received messages (sort by time arrived) from clients in <key-value> format.
+            * get_coords_by_client_id - get all messages for specific client_id, return a path of coordinates.
+            * get_last_coords - get the last received messages from clients, return their coordinates.
+            * save -take and store a message in DB.
+
+    """
+
+    @abstractmethod
+    def get_all_msgs(self) -> List[dict]:
+
+        return
+
+    @abstractmethod
+    def get_last_msgs(self) -> List[dict]:
+
+        return
+
+    @abstractmethod
+    def get_coords_by_client_id(self) -> List[float, float]:
+
+        return
+
+    @abstractmethod
+    def get_last_coords(self) -> Dict[str, List[float, float]]:
+
+        return
+
+    @abstractmethod
+    def save(self, message: dict) -> bool:
+
+        return
+
+
+class MongoDBStorageAdapter(AbstractStorageAdapter):
     """
         Class StorageAdapter
 
@@ -32,7 +76,7 @@ class StorageAdapter:
 
         Perform connection to DB:
 
-        >>> adapter = StorageAdapter()
+        >>> adapter = MongoDBStorageAdapter()
         >>> adapter.setup()
 
         Add a record:
@@ -111,7 +155,7 @@ class StorageAdapter:
 
     def setup(self) -> bool:
 
-        logger.info("Setting up StorageAdapter")
+        logger.info("Setting up MongoDBStorageAdapter")
         # Try to establish connection to MongoDB.
         res = self._connect()
 
@@ -137,7 +181,7 @@ class StorageAdapter:
 
         # Check if not initialized yet
         if not self.is_initialized:
-            raise EnvironmentError("Please, setup StorageAdapter before first usage!")
+            raise EnvironmentError("Please, setup MongoDBStorageAdapter before first usage!")
 
         # Get collection to write to
         collection = self._db_conn[self.collection_name]
@@ -165,7 +209,7 @@ class StorageAdapter:
 
         # Check if not initialized yet
         if not self.is_initialized:
-            raise EnvironmentError("Please, setup StorageAdapter before first usage!")
+            raise EnvironmentError("Please, setup MongoDBStorageAdapter before first usage!")
 
         # Get collection to write to
         collection = self._db_conn[self.collection_name]
@@ -189,7 +233,7 @@ class StorageAdapter:
 
         # Check if not initialized yet
         if not self.is_initialized:
-            raise EnvironmentError("Please, setup StorageAdapter before first usage!")
+            raise EnvironmentError("Please, setup MongoDBStorageAdapter before first usage!")
 
         # Get collection to write to
         collection = self._db_conn[self.collection_name]
@@ -254,7 +298,7 @@ class StorageAdapter:
         :return: A saved JSON Python dictionary
         """
 
-        # TODO: Implement StorageAdapter.get_last_message
+        # TODO: Implement MongoDBStorageAdapter.get_last_message
 
         raise NotImplementedError
 
@@ -267,7 +311,7 @@ class StorageAdapter:
 
         # Check if not initialized yet
         if not self.is_initialized:
-            raise EnvironmentError("Please, setup StorageAdapter before first usage!")
+            raise EnvironmentError("Please, setup MongoDBStorageAdapter before first usage!")
 
         collection = self._db_conn[self.collection_name]
 
