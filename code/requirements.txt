@@ -1,0 +1,6 @@
+jsonschema
+deepdiff
+paho-mqtt
+pymongo
+configparser
+pyte
