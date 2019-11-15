@@ -9,25 +9,6 @@ class TestBrokerAdapter(TestCase):
         "one/two/three": lambda x, y, z: print(x, y, z),
     }
 
-    def test_setup(self):
-
-        """
-            Test how MQTTBrokerAdapter works on .setup() stage
-        :return:
-        """
-
-        # Initialize broker
-        mqtt_broker = MQTTBrokerAdapter()
-
-        # Add subscription into internal topic lists
-        for topic,callback in self.TOPICS.items():
-            mqtt_broker.add_topic(topic, callback)
-
-        # Make connection to Storage, MQTT and perform subscription
-        res = mqtt_broker.setup()
-
-        self.assertTrue(res)
-
     def test_get_topics(self):
 
         """

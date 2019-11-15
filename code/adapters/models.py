@@ -56,14 +56,9 @@ class MQTTBrokerAdapter:
         self._password: str = CONFIG["mqtt"]["password"]
 
         # Setup the connection
-        self.setup()
+        self._connect()
 
-    def _connect(self,
-                 host: str,
-                 port: int = 1883,
-                 user: str = None,
-                 password: str = None
-                 ) -> bool:
+    def _connect(self) -> bool:
 
         """
             Establish connection to MQTT MessageBroker.
@@ -85,50 +80,17 @@ class MQTTBrokerAdapter:
 
         try:
             # Connect to MQTT Message Broker
-            self._conn.connect(host=host, port=port,)
+            self._conn.connect(host=self._host, port=self._port,)
             # Enable action logging
             self._conn.enable_logger(logger)
 
         except SocketError as e:
             # If connection is timed out
-            logger.error(f"Connection to {host} is timed out. {e}")
+            logger.error(f"Connection to {self._host} is timed out. {e}")
             return False
         else:
             # Notify that connection is successful
             return True
-
-    def setup(self) -> bool:
-
-        """
-
-            Configure connection parameters and perform subscriptions.
-
-        :return: True, if connection and subscriptions made successfully. otherwise, raise ConnectionError.
-        :raises:
-            :raise ConnectionError - connection to provided MQTT Message Broker address is not possible.
-        """
-
-        # Try to establish connection to MQTT Message broker
-        con_res = self._connect(self._host, self._port, self._user, self._password)
-
-        # Fail if cannot connect to the server
-        if con_res:
-            logger.info(f"Connection to MQTT Message Broker server {self._host} is established.")
-
-            # Perform subscription
-            for topic, callback in self._topics.items():
-
-                self._conn.subscribe(topic)
-                self._conn.message_callback_add(topic, callback)
-
-                logger.debug(f"Subscription on topic '{topic}' with function '{callback}' is done.")
-
-            # Set itself as initialized instance
-            self._is_initialized = True
-
-            return True
-        else:
-            raise ConnectionError(f"Connection to MQTT Message Broker server {self._host} is not possible!")
 
     def get_topics(self) -> List[str]:
 
@@ -188,6 +150,13 @@ class MQTTBrokerAdapter:
                 # Add topic into internal list
                 self._topics[topic] = callback
 
+                # Re-subscribe on the topic
+                self._conn.unsubscribe(topic)
+                self._conn.subscribe(topic)
+                self._conn.message_callback_add(topic, callback)
+
+                logger.debug(f"The topic '{topic}' has been updated with function '{callback}'.")
+
                 return True
 
             # Topic is already registered, so nothing to do.
@@ -198,6 +167,14 @@ class MQTTBrokerAdapter:
 
             # Add topic into internal list
             self._topics.setdefault(topic, callback)
+
+            # Perform subscription
+
+            self._conn.subscribe(topic)
+            self._conn.message_callback_add(topic, callback)
+
+            logger.debug(f"Subscription on topic '{topic}' with function '{callback}' is done.")
+
 
             return True
 
