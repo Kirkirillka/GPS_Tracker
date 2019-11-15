@@ -2,7 +2,8 @@ from unittest import TestCase
 
 from databroker import DataBroker
 
-from utils.field_gens import device_id_gen, generate_dict_by_mapping, WIFI_PAYLOAD_FIELDS_TEMPLATE
+from utils.generators import WIFIPayloadGenerator
+from utils.field_gens import device_id_gen
 
 
 class TestDataBroker(TestCase):
@@ -12,21 +13,13 @@ class TestDataBroker(TestCase):
 
         test_topic = "/uri/to/topic"
         client_id = device_id_gen()
-        userdata = generate_dict_by_mapping(WIFI_PAYLOAD_FIELDS_TEMPLATE)
-        message = userdata
+        message = WIFIPayloadGenerator().get()
 
         callback = dbroker.get_callback_func(test_topic)
 
-        res = callback(client_id, userdata, message)
+        res = callback(client_id, None, message)
 
         self.assertEqual(res, None)
-
-    def test_initialize(self):
-
-        dbroker = DataBroker()
-        res = dbroker.initialize()
-
-        self.assertTrue(res)
 
     def test_run_loop(self):
 
