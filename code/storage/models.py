@@ -18,14 +18,8 @@ class StorageAdapter:
 
         This class to contain convenient interface to access MongoDB Database.
 
-        As other adapters, **StorageAdapter** requires initialization after an object of that class is instantiated.
-        However, it's not guaranteed that the requirement will be still preserved.
-
         To connect to MongoDB instance, **StorageAdapter** uses configuration parameters under *[storage]* section in
         default *config.ini*
-
-        If during the initialization connection to MongoDB is not possible, default *pymongo.ConnectionFailure* is
-        raised.
 
         Examples
         =======
@@ -33,7 +27,6 @@ class StorageAdapter:
         Perform connection to DB:
 
         >>> adapter = StorageAdapter()
-        >>> adapter.setup()
 
         Add a record:
 
@@ -75,15 +68,16 @@ class StorageAdapter:
         self.db_name = CONFIG['storage']['db_name']
         self.collection_name = CONFIG['storage']['collection_name']
 
-        self.is_initialized = False
+        # Setup connection to DB
+        self._connect()
 
-    def _connect(self) -> bool:
+    def _connect(self) -> None:
 
         """
             Establish connection to MongoDB instance with provided parameters.
 
         :returns:
-         :return: True if connection is successful.
+         :return: None if no errors occurred.
         :raises:
          :raise ConnectionFailure if connection is timed out.
         """
@@ -99,27 +93,15 @@ class StorageAdapter:
                 self.port,
             ))
 
+            # Ensure that we connected
+            _data = connection.server_info()
+            logger.debug(f"Connected to {_data}",)
+
         except ConnectionFailure as e:
-            logger.error("Connection to MongoDB failed! Timed out.")
-            raise e
+            raise ConnectionError(f"Cannot connect to MongoDB instance at {self.host}:{self.port}!") from e
         else:
             # Save our connection if try block went without errors
             self._db_conn = connection[self.db_name]
-            self.is_initialized = True
-
-            return True
-
-    def setup(self) -> bool:
-
-        logger.info("Setting up StorageAdapter")
-        # Try to establish connection to MongoDB.
-        res = self._connect()
-
-        # If established, then mark itself as successfully initialized.
-        if res:
-            self.is_initialized = True
-
-        return res
 
     def save_message(self, message: dict) -> str:
 
@@ -134,10 +116,6 @@ class StorageAdapter:
         # Check if message indeed is dictionary
         if not isinstance(message, dict):
             raise TypeError('Message must be dictionary')
-
-        # Check if not initialized yet
-        if not self.is_initialized:
-            raise EnvironmentError("Please, setup StorageAdapter before first usage!")
 
         # Get collection to write to
         collection = self._db_conn[self.collection_name]
@@ -163,10 +141,6 @@ class StorageAdapter:
         if not isinstance(message, dict):
             raise TypeError('Message must be dictionary')
 
-        # Check if not initialized yet
-        if not self.is_initialized:
-            raise EnvironmentError("Please, setup StorageAdapter before first usage!")
-
         # Get collection to write to
         collection = self._db_conn[self.collection_name]
 
@@ -186,10 +160,6 @@ class StorageAdapter:
 
         :return: A list of Python dictionaries
         """
-
-        # Check if not initialized yet
-        if not self.is_initialized:
-            raise EnvironmentError("Please, setup StorageAdapter before first usage!")
 
         # Get collection to write to
         collection = self._db_conn[self.collection_name]
@@ -264,10 +234,6 @@ class StorageAdapter:
             Returns "device.id" from all stored messages
         :return:
         """
-
-        # Check if not initialized yet
-        if not self.is_initialized:
-            raise EnvironmentError("Please, setup StorageAdapter before first usage!")
 
         collection = self._db_conn[self.collection_name]
 

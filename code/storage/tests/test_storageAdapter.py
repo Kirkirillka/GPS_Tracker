@@ -13,8 +13,6 @@ class TestStorageAdapter(TestCase):
         # Modify default collection_name
         self.adapter.collection_name = "test"
 
-        self.test_setup()
-
         self.generated_messages = []
 
     def tearDown(self) -> None:
@@ -26,11 +24,6 @@ class TestStorageAdapter(TestCase):
             message = self.generated_messages.pop()
             self.adapter.del_message(message)
 
-    def test_setup(self):
-
-        res = self.adapter.setup()
-
-        self.assertTrue(res)
 
     def test_save_message(self):
 
