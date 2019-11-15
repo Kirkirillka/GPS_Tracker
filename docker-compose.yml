@@ -16,12 +16,20 @@ services:
 
   wifi-client-mock:
     build:
-      context: ./code
+      context: src
       target: final-stage
     command: ["python","runners/wifi_payload_client_runner.py"]
 
   databroker:
     build:
-      context: ./code
+      context: src
       target: final-stage
     command: ["python","runners/databroker_runner.py"]
+
+  visual-backend:
+    build:
+      context: src
+      target: final-stage
+    ports:
+      - 5000:5000
+    command: ["python","datavisual/simple-backend.py"]

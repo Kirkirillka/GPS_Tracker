@@ -1,5 +1,4 @@
 from flask import Flask, jsonify, json
-from flask_cors import CORS
 
 from storage import StorageAdapter
 
@@ -42,5 +41,4 @@ def all_clients():
 
 
 if __name__ == '__main__':
-    app.storage.setup()
-    app.run(debug=True)
+    app.run(host="0.0.0.0",port=5000,debug=True)

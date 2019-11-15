@@ -3,4 +3,6 @@ deepdiff
 paho-mqtt
 pymongo
 configparser
-pyte
+pytest
+flask
+pandas
