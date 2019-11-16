@@ -1,8 +1,12 @@
+# Python library import
 from abc import ABC, abstractmethod
 
-from utils.field_gens import generate_dict_by_mapping, RAW_PAYLOAD_FIELDS_TEMPLATE, WIFI_PAYLOAD_FIELDS_TEMPLATE
+# Project modules
+from utils.field_gens import generate_dict_by_mapping, \
+    RAW_PAYLOAD_FIELDS_TEMPLATE,\
+    WIFI_PAYLOAD_FIELDS_TEMPLATE
 
-from utils.field_gens import raw_payload_message_gen, wifi_payload_message_gen
+from utils.field_gens import wifi_payload_message_gen
 
 
 class AbstractGenerator(ABC):

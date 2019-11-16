@@ -1,12 +1,14 @@
-from abc import ABC, abstractmethod
-from typing import  Mapping
-
+# Python library import
 import json
+from abc import ABC, abstractmethod
+from typing import Mapping
 
+# 3-td party libraries
 from deepdiff import DeepDiff
 from jsonschema import Draft7Validator
 
-from .tools import read_schema_from_file
+# Project modules
+from utils.tools import read_schema_from_file
 
 
 class AbstractValidator(ABC):
