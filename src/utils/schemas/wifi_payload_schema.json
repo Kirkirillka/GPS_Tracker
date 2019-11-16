@@ -38,8 +38,8 @@
       "type": "string"
     },
     "payload": {
-      "type": "array",
-      "items": {
+      "type": "object",
+      "properties": {
         "$schema": "http://json-schema.org/schema#",
         "type": "object",
         "properties": {

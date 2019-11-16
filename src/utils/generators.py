@@ -114,6 +114,6 @@ class WIFIPayloadGenerator(RawPayloadGenerator):
         body["message_type"] = wifi_payload_message_gen()
 
         # Update payload in main message
-        body['payload'].append(wifi)
+        body['payload']=wifi
 
         return body
