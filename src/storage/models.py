@@ -33,37 +33,44 @@ class AbstractStorageAdapter(ABC):
             * get_last_coords - get the last received messages from clients, return their coordinates.
             * get_clients - find all unique clients ID in messages and return them.
             * save - take and store a message in DB.
-            * delete - take an item by Unique ID (may be different, either built-in, like _id, or manually added.
+            * delete - take an item by a Record Identification (may be different, either built-in, like _id, or manually added.
 
     """
 
     @abstractmethod
     def get_all_msgs(self) -> List[dict]:
-        return
+
+        raise NotImplementedError
 
     @abstractmethod
     def get_last_msgs(self) -> List[dict]:
-        return
+
+        raise NotImplementedError
 
     @abstractmethod
     def get_coords_by_client_id(self) -> List[Tuple[float, float]]:
-        return
+
+        raise NotImplementedError
 
     @abstractmethod
     def get_last_coords(self) -> Dict[str, List[Tuple[float, float]]]:
-        return
+
+        raise NotImplementedError
 
     @abstractmethod
     def save(self, message: dict) -> bool:
-        return
+
+        raise NotImplementedError
 
     @abstractmethod
-    def delete(self, id: str) -> bool:
-        return
+    def delete(self, ident: Any) -> bool:
+
+        raise NotImplementedError
 
     @abstractmethod
     def get_clients(self) -> List[str]:
-        return
+
+        raise NotImplementedError
 
 
 class MongoDBStorageAdapter(AbstractStorageAdapter):
@@ -284,7 +291,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
     def delete(self, message: dict) -> str:
 
         """
-            Delete a record by specified filter.
+            Delete a record by record itself.
 
         :param message: A Python dictionary which represent either the record itself or fields to first find the record
             and delete it.
