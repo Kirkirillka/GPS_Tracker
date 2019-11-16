@@ -34,16 +34,35 @@ def wifi_payload_message_gen():
 
 
 def device_type_gen():
-    available_types = ["handy", "UAV"]
+    available_types = ["handy"]
 
     return random.choice(available_types)
 
 
-def device_id_gen():
-    return str(uuid.uuid4())
+def device_id_gen(use_uuid=False):
+    PREDEFINED_UID = [
+        "021e4c97-f61a-4983-82b5-a7b4d7bd6b97",
+        "68ffd193-ca72-4990-ad10-9ee0f4d2e0bf",
+        "7f85b2bb-f93c-4e6e-9403-bcf86cf08d94",
+        "319e666a-c85d-40d9-8e66-94192f34afa9",
+        "6c0273ce-443b-470b-aadb-7300e558761d",
+        "eb1a5132-f764-4ed6-a8dc-af2c40deb5a5",
+        "38330305-c27b-46f0-a493-7d1b514ee6bd",
+        "9e9f1f3d-6523-4492-b60f-ef09b8a5c6b0",
+        "a7191008-a177-4eff-b20d-bef3aea603d8",
+        "e6a4fac6-ebfd-4792-8dc2-8a5eed013d86",
+        "b4a44df7-6aad-4bf5-b423-db33bcaeeb8a",
+        "c9dff19e-c344-4cb1-a33f-e21ce1b00a15",
+        "68eaec53-9451-4e2d-8255-4928bb73d82f",
+    ]
+
+    if use_uuid:
+        return str(uuid.uuid4())
+    else:
+        return random.choice(PREDEFINED_UID)
 
 
-def longitude_gen() -> str:
+def longitude_gen():
     base_longitude = 50.6806218
 
     offset = random.gauss(1, 2)
@@ -52,7 +71,7 @@ def longitude_gen() -> str:
     return str(base_longitude + offset * math.cos(radians))
 
 
-def latitude_gen() -> str:
+def latitude_gen():
     base_latitude = 10.9324852
 
     offset = random.gauss(1, 2)
@@ -105,10 +124,9 @@ def wifi_info_signal_rssi_gen():
 
 
 def empty_payload_gen():
-    return []
+    return {}
 
 
-#
 # Utilities
 #
 

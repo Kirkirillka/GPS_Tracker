@@ -1,0 +1,12 @@
+jsonschema
+deepdiff
+paho-mqtt
+pymongo
+configparser
+pytest
+flask
+pandas
+geopandas
+shapely
+descartes
+geoplot
