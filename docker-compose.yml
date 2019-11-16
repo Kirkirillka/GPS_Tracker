@@ -19,12 +19,18 @@ services:
       context: src
       target: final-stage
     command: ["python","runners/wifi_payload_client_runner.py"]
+    depends_on:
+      - mqtt_broker
+      - mongodb
 
   databroker:
     build:
       context: src
       target: final-stage
     command: ["python","runners/databroker_runner.py"]
+    depends_on:
+      - mqtt_broker
+      - mongodb
 
   visual-backend:
     build:
@@ -33,3 +39,6 @@ services:
     ports:
       - 5000:5000
     command: ["python","datavisual/simple-backend.py"]
+    depends_on:
+      - mqtt_broker
+      - mongodb
