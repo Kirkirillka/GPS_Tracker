@@ -5,7 +5,7 @@ from configparser import ConfigParser
 config_file = "config.ini"
 
 
-def get_config(config_path = None) -> dict:
+def get_project_config(config_path = None) -> dict:
 
     """
         Returns ConfigParser object which is set to return configuration from file 'config_path'
