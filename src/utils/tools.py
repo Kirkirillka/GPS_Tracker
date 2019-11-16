@@ -30,8 +30,8 @@ def read_schema_from_file(schema_filename):
 
     try:
         module_path = os.path.dirname(os.path.abspath(__file__))
-        scheme_path = os.path.join(module_path,"schemas")
-        abs_path = os.path.join(scheme_path,schema_filename)
+        scheme_path = os.path.join(module_path, "schemas")
+        abs_path = os.path.join(scheme_path, schema_filename)
         with open(abs_path) as file:
             schema = json.load(file)
 
@@ -44,7 +44,6 @@ def read_schema_from_file(schema_filename):
 
 
 def get_dump_schema():
-
     _schema_name = "dump_payload_schema.json"
 
     return read_schema_from_file(_schema_name)
@@ -63,9 +62,7 @@ def get_wifi_payload_schema():
 
 
 def convert_to_str(obj):
-
     if isinstance(obj, str):
-
         return obj
 
     if isinstance(obj, dict):

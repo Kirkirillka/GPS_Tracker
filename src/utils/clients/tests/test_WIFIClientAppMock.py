@@ -14,16 +14,16 @@ class TestWIFIClientAppMock(TestCase):
             self.assertTrue(res)
 
 
-    def test_gen_and_send_30(self):
+    def test_gen_and_send_3(self):
 
-        self.test_gen_and_send_number(30)
-
-
-    def test_gen_and_send_60(self):
-
-        self.test_gen_and_send_number(60)
+        self.test_gen_and_send_number(3)
 
 
-    def test_gen_and_send_90(self):
+    def test_gen_and_send_6(self):
 
-        self.test_gen_and_send_number(90)
+        self.test_gen_and_send_number(6)
+
+
+    def test_gen_and_send_9(self):
+
+        self.test_gen_and_send_number(9)

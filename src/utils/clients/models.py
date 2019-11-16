@@ -34,10 +34,10 @@ class WIFIClientAppMock(AbstractClientAppMock):
 
         topic_name = "/messages/"
 
-        logging.debug("Take a message from generator")
+        #logger.debug(f"Take a message from generator {str(self._generator.__class__)}")
         msg = self._generator.get()
 
-        logging.debug("Sending the message to MQTT Broker")
+        #logger.debug("Sending the message to MQTT Broker)
         res = self._mqtt_adapter.publish(topic_name, msg)
 
         return res

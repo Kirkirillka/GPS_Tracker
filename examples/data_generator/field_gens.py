@@ -12,11 +12,11 @@ import math
 
 random.seed()
 
+
 #
 # Field generators for Raw Empty sample
 #
 def time_gen():
-
     """
         generate value for "time" field
     :return:
@@ -24,38 +24,35 @@ def time_gen():
 
     return str(datetime.datetime.now().isoformat())
 
-def raw_payload_message_gen():
 
+def raw_payload_message_gen():
     return "raw"
 
 
 def wifi_payload_message_gen():
     return "wifi"
 
-def device_type_gen():
 
+def device_type_gen():
     available_types = ["handy", "UAV"]
 
     return random.choice(available_types)
 
 
 def device_id_gen():
-
     return str(uuid.uuid4())
 
 
-def longitude_gen():
-
+def longitude_gen() -> str:
     base_longitude = 50.6806218
 
-    offset = random.gauss(1,2)
-    radians = random.randint(0,360) * math.pi / 180
+    offset = random.gauss(1, 2)
+    radians = random.randint(0, 360) * math.pi / 180
 
     return str(base_longitude + offset * math.cos(radians))
 
 
-def latitude_gen():
-
+def latitude_gen() -> str:
     base_latitude = 10.9324852
 
     offset = random.gauss(1, 2)
@@ -63,19 +60,18 @@ def latitude_gen():
 
     return str(base_latitude + offset * math.sin(radians))
 
+
 #
 # Generators for WiFi status fields
 #
 
 def wifi_info_type_gen():
-
     choices = ["wifi"]
 
     return random.choice(choices)
 
 
 def wifi_info_ssid_gen():
-
     number_of_aps = 10
     ap_name_template = "AP #{}"
 
@@ -85,20 +81,18 @@ def wifi_info_ssid_gen():
 
 
 def wifi_info_bssid_gen():
-
     mac_manufacturer_prefix = "02:00:00:"
 
     # https://stackoverflow.com/questions/8484877/mac-address-generator-in-python
 
     postfix = "%02x:%02x:%02x" % (random.randint(0, 255),
-                                 random.randint(0, 255),
-                                 random.randint(0, 255))
+                                  random.randint(0, 255),
+                                  random.randint(0, 255))
 
     return mac_manufacturer_prefix + postfix
 
 
 def wifi_info_signal_rssi_gen():
-
     min_signal = -100
     max_signal = -20
 
@@ -111,16 +105,7 @@ def wifi_info_signal_rssi_gen():
 
 
 def empty_payload_gen():
-
     return []
-
-
-def generate_wifi_status_payload():
-
-    wifi_status_limits = {
-        "min": -30,
-        "max": -90
-    }
 
 
 #
@@ -128,7 +113,6 @@ def generate_wifi_status_payload():
 #
 
 def generate_dict_by_mapping(field_map: dict):
-
     """
         Generates an empty dictionary, based on mapping, provided in a way
 
@@ -166,16 +150,16 @@ def generate_dict_by_mapping(field_map: dict):
 
 # A dump mapping to test if our JSONGenerator and JSONParser works correctly
 DUMP_PAYLOAD_FIELDS_TEMPLATE = {
-    "firstName": lambda : "John",
-    "lastName": lambda : 'Doe',
-    "age": lambda : 1
+    "firstName": lambda: "John",
+    "lastName": lambda: 'Doe',
+    "age": lambda: 1
 }
 
 # A field mapping to create a new schema-valid JSON message, but without payload
 RAW_PAYLOAD_FIELDS_TEMPLATE = {
     "time": time_gen,
     "message_type": raw_payload_message_gen,
-    "device.id" : device_id_gen,
+    "device.id": device_id_gen,
     "device.device_type": device_type_gen,
     "longitude": longitude_gen,
     "latitude": latitude_gen,
@@ -208,4 +192,3 @@ WIFI_PAYLOAD_FIELDS_TEMPLATE = {
     "bssid": wifi_info_bssid_gen,
     "signal.rssi": wifi_info_signal_rssi_gen
 }
-

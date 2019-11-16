@@ -34,7 +34,8 @@ class DefaultNormalizer:
 
         self._object_validators = {}
 
-    def _try_cast(self, cast_object: Any) -> Tuple[dict, bool]:
+    @classmethod
+    def _try_cast(cls, cast_object: Any) -> Tuple[dict, bool]:
 
         """
             Try to transform *cast_object* into JSON Python dictionary.

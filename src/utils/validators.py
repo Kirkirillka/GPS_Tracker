@@ -12,7 +12,6 @@ from utils.tools import read_schema_from_file
 
 
 class AbstractValidator(ABC):
-
     """
         AbstractValidator class contains naming for methods as a validator, which is used to check the validity of data
         provided by GPS devices.
@@ -38,7 +37,6 @@ class AbstractValidator(ABC):
 
 
 class JSONValidator(AbstractValidator):
-
     """
         Validate an provided object to be a valid JSON Schema based object.
 
@@ -99,7 +97,7 @@ class JSONValidator(AbstractValidator):
             try:
                 normalized_sample = json.loads(sample)
             except Exception as e:
-                raise ValueError("A supplied string is not a valid JSON object")
+                raise ValueError("A supplied string is not a valid JSON object") from e
 
             sample = normalized_sample
 
@@ -114,12 +112,9 @@ class JSONValidator(AbstractValidator):
 
 
 class RawPayloadValidator(JSONValidator):
-
     SCHEMA_FILENAME = "raw_payload_schema.json"
 
-
     def __init__(self):
-
         _schema = read_schema_from_file(self.SCHEMA_FILENAME)
 
         super(RawPayloadValidator, self).__init__(_schema)
@@ -138,9 +133,9 @@ class WIFIPayloadValidator(JSONValidator):
 # message_type is supposed to be included in tuple VALIDATOR_MESSAGE_TYPES
 
 VALIDATOR_MAPPING = {
-    "raw" : RawPayloadValidator,
+    "raw": RawPayloadValidator,
     "wifi": WIFIPayloadValidator
 }
 
 # Sets which message types are allowed to be processed
-VALIDATOR_MESSAGE_TYPES = ["raw","wifi"]
+VALIDATOR_MESSAGE_TYPES = ["raw", "wifi"]
