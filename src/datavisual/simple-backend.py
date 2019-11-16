@@ -1,9 +1,9 @@
 from flask import Flask, jsonify, json
 
-from storage import StorageAdapter
+from storage import MongoDBStorageAdapter
 
 app = Flask(__name__)
-app.storage = StorageAdapter()
+app.storage = MongoDBStorageAdapter()
 
 
 def sanitize_json(json_data):
