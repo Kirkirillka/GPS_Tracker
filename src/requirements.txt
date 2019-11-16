@@ -6,3 +6,7 @@ configparser
 pytest
 flask
 pandas
+geopandas
+shapely
+descartes
+geoplot
