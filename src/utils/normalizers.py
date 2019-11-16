@@ -1,18 +1,23 @@
+# Python library import
 import json
-import logging
-
 from typing import Tuple, Any
 
+# Project modules
+from config.utils import get_project_config
 from utils.validators import VALIDATOR_MAPPING, VALIDATOR_MESSAGE_TYPES
-from config.utils import get_config
 
+# Logging section
+import logging.config
+from utils.logs.tools import read_logging_config
+logging.config.dictConfig(read_logging_config())
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
 
-CONFIG = get_config()
+# Project configuration
+CONFIG = get_project_config()
 
 # Currently, allow only strings to be normalized
 ALLOWED_OBJECT_TYPES = (str, dict, bytes)
+
 
 class DefaultNormalizer:
     """

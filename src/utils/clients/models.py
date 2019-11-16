@@ -1,11 +1,14 @@
+# Python library import
 from abc import ABC, abstractmethod
 
+# Project modules
 from adapters import MQTTBrokerAdapter
 from utils.generators import WIFIPayloadGenerator
 
-
-import logging
-
+# Logging section
+import logging.config
+from utils.logs.tools import read_logging_config
+logging.config.dictConfig(read_logging_config())
 logger = logging.getLogger(__name__)
 
 

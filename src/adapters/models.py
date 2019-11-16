@@ -1,17 +1,22 @@
-import logging
+# Python library import
+from socket import error as SocketError
+from typing import List, Callable, Any
 
+# 3-td party libraries
 import paho.mqtt.client as mqtt
 
-from typing import List, Callable, Any
-from socket import error as SocketError
-
-from config.utils import get_config
+# Project modules
+from config.utils import get_project_config
 from utils.tools import convert_to_str
 
+# Logging section
+import logging.config
+from utils.logs.tools import read_logging_config
+logging.config.dictConfig(read_logging_config())
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
 
-CONFIG = get_config()
+# Project configuration
+CONFIG = get_project_config()
 
 
 class MQTTBrokerAdapter:

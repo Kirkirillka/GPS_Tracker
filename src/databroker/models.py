@@ -1,18 +1,25 @@
-import logging
+# Python library import
+from typing import Callable
 
-from typing import Callable, Any
+# 3-td party libraries
 from paho.mqtt.client import Client, MQTTMessage
 
+# Project modules
 from adapters import MQTTBrokerAdapter
 from storage import MongoDBStorageAdapter
 from utils.normalizers import DefaultNormalizer
-from config.utils import get_config
+from config.utils import get_project_config
 
+# Logging section
+import logging.config
+from utils.logs.tools import read_logging_config
+logging.config.dictConfig(read_logging_config())
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
 
-CONFIG = get_config()
+# Project configuration
+CONFIG = get_project_config()
 
+# Default topics to subscribe
 TOPICS = [
     "/clients",
     "/messages/#",
@@ -71,6 +78,9 @@ class DataBroker:
         """
 
         # Try to set topic
+
+        logger.info(f"The topic {topic} was rewritten be {callback} function")
+
         res = self._mqtt_adapter.add_topic(topic, callback, forced=True)
 
         return res
@@ -89,13 +99,13 @@ class DataBroker:
 
         def _store_in_db(client: Client, userdata: None, message: MQTTMessage) -> None:
 
-            logging.debug(f"Received a message on the topic {message}.")
+            logger.debug(f"Received a message on the topic {message}.")
             normalized_message = self._normalizer.normalize(message.payload)
             if normalized_message:
-                logging.debug("Message is normalized, save in DB.")
+                logger.debug("Message is normalized, save in DB.")
                 self._store_adapter.save(normalized_message)
             else:
-                logging.error("Cannot normalize the message!")
+                logger.error("Cannot normalize the message!")
 
         def _default_callback(client: Client, userdata: None, message: MQTTMessage) -> None:
             """
@@ -107,11 +117,11 @@ class DataBroker:
             :return: None
             """
 
-            logging.debug("Entered in callback function")
-            logging.debug(f"Can access self argument {self}", )
-            logging.debug(f"ClientID: {client}")
-            logging.debug(f"Userdata: {userdata}")
-            logging.debug(f"Message: {message}")
+            logger.debug("Entered in callback function")
+            logger.debug(f"Can access self argument {self}", )
+            logger.debug(f"ClientID: {client}")
+            logger.debug(f"Userdata: {userdata}")
+            logger.debug(f"Message: {message}")
 
             return None
 
@@ -126,8 +136,8 @@ class DataBroker:
             :return: None
             """
 
-            logging.debug(f"Received a message on topic {message.topic}")
-            logging.debug("Forced to disconnect.")
+            logger.debug(f"Received a message on topic {message.topic}")
+            logger.debug("Forced to disconnect.")
             # Force disconnect
             self._mqtt_adapter.stop()
 
@@ -140,7 +150,11 @@ class DataBroker:
         }
 
         # return a callback by key, otherwise return the default callback
-        return callback_mapping.get(topic, _default_callback)
+        mapped_callback = callback_mapping.get(topic, _default_callback)
+
+        logger.debug(f"Callback for topic '{topic}' is '{mapped_callback}'")
+
+        return mapped_callback
 
     def initialize(self) -> bool:
 
@@ -153,10 +167,14 @@ class DataBroker:
         :return: True if initialization is completed, False if an error occurred
         """
 
+        logger.info("Start DataBroker configuration.")
+
         # Step 1. Add get_topics and callback functions
         for topic in self._topics:
             _callback = self.get_callback_func(topic)
             self._mqtt_adapter.add_topic(topic, _callback)
+
+        logger.info("All components were initialized successfully.")
 
         return True
 
@@ -173,6 +191,7 @@ class DataBroker:
         :return: True if loop is over, False if DataBroker is not initialized.
         """
 
+        logger.info("Start message pooling loop. Enter the blocked section.")
         # run client forever looping
         res = self._mqtt_adapter.serve()
 
