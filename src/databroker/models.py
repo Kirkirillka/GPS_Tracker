@@ -197,3 +197,16 @@ class DataBroker:
 
         return bool(res)
 
+    def stop_loop(self) -> None:
+
+        """
+            Force to stop the loop
+        :return: None
+        """
+
+        logger.debug("Interrupting the pooling loop.")
+        self._mqtt_adapter.stop()
+        logger.info("Running loop was stoped.")
+
+        return
+
