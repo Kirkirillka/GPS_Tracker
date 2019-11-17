@@ -1,4 +1,5 @@
 # Python library import
+import numpy as np
 from abc import ABC, abstractmethod
 
 # Project modules
@@ -78,11 +79,11 @@ class RawPayloadGenerator(JSONGenerator):
 
     def __init__(self):
         # Initialize JSON Generator to generate an empty sample
-        self.empty_body_generator = JSONGenerator(RAW_PAYLOAD_FIELDS_TEMPLATE)
+        super(RawPayloadGenerator, self).__init__(RAW_PAYLOAD_FIELDS_TEMPLATE)
 
     def get(self):
         # Don't add any other logic, just pass through default JSONGenerator and empty field mapping
-        return self.empty_body_generator.get()
+        return super(RawPayloadGenerator, self).get()
 
 
 class WIFIPayloadGenerator(RawPayloadGenerator):
@@ -100,12 +101,14 @@ class WIFIPayloadGenerator(RawPayloadGenerator):
 
     def __init__(self):
         # Initialize JSON Generator to generate an empty sample
-        self.empty_body_generator = JSONGenerator(RAW_PAYLOAD_FIELDS_TEMPLATE)
+
+        super(WIFIPayloadGenerator, self).__init__()
+
         self.wifi_payload_generator = JSONGenerator(WIFI_PAYLOAD_FIELDS_TEMPLATE)
 
     def get(self):
         # Generate empty body
-        body = self.empty_body_generator.get()
+        body = super(WIFIPayloadGenerator, self).get()
 
         # Generate WIFI status payload
         wifi = self.wifi_payload_generator.get()
@@ -114,7 +117,7 @@ class WIFIPayloadGenerator(RawPayloadGenerator):
         body["message_type"] = wifi_payload_message_gen()
 
         # Update payload in main message
-        body['payload']=wifi
+        body['payload'] = wifi
 
         return body
 
