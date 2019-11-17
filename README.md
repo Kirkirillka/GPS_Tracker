@@ -17,7 +17,14 @@ docker version
 docker-compose --version
 ``` 
 
-If they are installed, then type:
+If they are installed, first you need get required base images or build them from Dockerfiles:
+
+```bash
+docker-compose pull
+docker-compose build
+```
+ 
+Then type:
 
 ```bash
 docker-compose up -d
