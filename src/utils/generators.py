@@ -1,12 +1,9 @@
 # Python library import
+import numpy as np
 from abc import ABC, abstractmethod
 
 # Project modules
-from utils.field_gens import generate_dict_by_mapping, \
-    RAW_PAYLOAD_FIELDS_TEMPLATE,\
-    WIFI_PAYLOAD_FIELDS_TEMPLATE
-
-from utils.field_gens import wifi_payload_message_gen
+from utils.field_gens import *
 
 
 class AbstractGenerator(ABC):
@@ -82,11 +79,11 @@ class RawPayloadGenerator(JSONGenerator):
 
     def __init__(self):
         # Initialize JSON Generator to generate an empty sample
-        self.empty_body_generator = JSONGenerator(RAW_PAYLOAD_FIELDS_TEMPLATE)
+        super(RawPayloadGenerator, self).__init__(RAW_PAYLOAD_FIELDS_TEMPLATE)
 
     def get(self):
         # Don't add any other logic, just pass through default JSONGenerator and empty field mapping
-        return self.empty_body_generator.get()
+        return super(RawPayloadGenerator, self).get()
 
 
 class WIFIPayloadGenerator(RawPayloadGenerator):
@@ -104,12 +101,14 @@ class WIFIPayloadGenerator(RawPayloadGenerator):
 
     def __init__(self):
         # Initialize JSON Generator to generate an empty sample
-        self.empty_body_generator = JSONGenerator(RAW_PAYLOAD_FIELDS_TEMPLATE)
+
+        super(WIFIPayloadGenerator, self).__init__()
+
         self.wifi_payload_generator = JSONGenerator(WIFI_PAYLOAD_FIELDS_TEMPLATE)
 
     def get(self):
         # Generate empty body
-        body = self.empty_body_generator.get()
+        body = super(WIFIPayloadGenerator, self).get()
 
         # Generate WIFI status payload
         wifi = self.wifi_payload_generator.get()
@@ -118,6 +117,48 @@ class WIFIPayloadGenerator(RawPayloadGenerator):
         body["message_type"] = wifi_payload_message_gen()
 
         # Update payload in main message
-        body['payload']=wifi
+        body['payload'] = wifi
 
         return body
+
+
+class RealisticClientPayloadGenerator(WIFIPayloadGenerator):
+
+    def __init__(self):
+        super(RealisticClientPayloadGenerator, self).__init__()
+
+        self.uuid = device_id_gen(use_uuid=True)
+        self.ssid = wifi_info_ssid_gen()
+
+        amount = 100
+
+        self.base_longitude = longitude_gen()
+        self.base_latitude = latitude_gen()
+
+        offset = np.random.normal(2, 5)
+
+        self._x_plane = np.linspace(-1 - offset, 1 + offset, amount)
+        self._y_plane = np.linspace(-1 - offset, 1 + offset, amount)
+        self._radius = 20
+
+    def _get_signal(self, x, y):
+        return - (y ** 2 + x ** 2 + self._radius)
+
+    def get(self):
+        _x = np.random.choice(self._x_plane)
+        _y = np.random.choice(self._y_plane)
+
+        latitude = _x + float(self.base_latitude)
+        longitude = _y + float(self.base_longitude)
+
+        signal_quality = self._get_signal(_x, _y)
+
+        dump_wifi_payload = super(RealisticClientPayloadGenerator, self).get()
+
+        dump_wifi_payload["device"]["id"] = self.uuid
+        dump_wifi_payload['longitude'] = str(longitude)
+        dump_wifi_payload['latitude'] = str(latitude)
+        dump_wifi_payload["payload"]["ssid"] = self.ssid
+        dump_wifi_payload["payload"]["signal"]["rssi"] = signal_quality
+
+        return dump_wifi_payload
