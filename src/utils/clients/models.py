@@ -12,7 +12,7 @@ logging.config.dictConfig(read_logging_config())
 logger = logging.getLogger(__name__)
 
 
-class AbstractClientAppMock(ABC):
+class AbstractClientApp(ABC):
 
     def __init__(self):
         pass
@@ -22,7 +22,7 @@ class AbstractClientAppMock(ABC):
         pass
 
 
-class WIFIClientAppMock(AbstractClientAppMock):
+class WIFIClientAppMock(AbstractClientApp):
 
 
     def __init__(self):
