@@ -1,6 +1,7 @@
 # Python library import
 import numpy as np
 from abc import ABC, abstractmethod
+from typing import Any
 
 # Project modules
 from utils.field_gens import *
@@ -17,8 +18,10 @@ class AbstractGenerator(ABC):
 
     """
 
+    field_map = {}
+
     @abstractmethod
-    def get(self):
+    def get(self) -> Any:
         """
         Generates one sample of valid data
 
@@ -27,11 +30,11 @@ class AbstractGenerator(ABC):
         pass
 
     @abstractmethod
-    def __iter__(self):
+    def __iter__(self) -> Any:
         pass
 
     @abstractmethod
-    def __next__(self):
+    def __next__(self) -> Any:
         pass
 
 
@@ -41,16 +44,16 @@ class JSONGenerator(AbstractGenerator):
     """
 
     def __init__(self, field_mapping: dict):
-        self._map = field_mapping
+        self.field_map = field_mapping
 
-    def get(self):
+    def get(self) -> dict:
         """
             Return one sample in valid JSON Schema
         :return: dict
         """
 
         # Take a new sample
-        sample = generate_dict_by_mapping(self._map)
+        sample = generate_dict_by_mapping(self._field_map)
 
         return sample
 
@@ -70,23 +73,28 @@ class JSONGenerator(AbstractGenerator):
         return self.get()
 
 
-class RawPayloadGenerator(JSONGenerator):
+class RawPayloadGenerator(AbstractGenerator):
     """
         Class EmptySampleGenerator generates samples with GPS positions, but without any payload.
     """
 
-    FIELD_MAP = RAW_PAYLOAD_FIELDS_TEMPLATE
+    def __iter__(self) -> Any:
+        return self
+
+    def __next__(self) -> Any:
+        return self.get()
 
     def __init__(self):
+        self.field_map = RAW_PAYLOAD_FIELDS_TEMPLATE
         # Initialize JSON Generator to generate an empty sample
-        super(RawPayloadGenerator, self).__init__(RAW_PAYLOAD_FIELDS_TEMPLATE)
+        self._empty_body_generator = JSONGenerator(self.field_map)
 
     def get(self):
         # Don't add any other logic, just pass through default JSONGenerator and empty field mapping
-        return super(RawPayloadGenerator, self).get()
+        return self._empty_body_generator.get()
 
 
-class WIFIPayloadGenerator(RawPayloadGenerator):
+class WIFIPayloadGenerator(AbstractGenerator):
     """
         Class WifiInfoGenerator returns a sample with GPS coordinates and Wifi connection status in this area.
 
@@ -97,21 +105,25 @@ class WIFIPayloadGenerator(RawPayloadGenerator):
         - Update a "payload" array, insert into empty body message
     """
 
-    FIELD_MAP = WIFI_PAYLOAD_FIELDS_TEMPLATE
+    def __iter__(self) -> Any:
+        return self
+
+    def __next__(self) -> Any:
+        return self.get()
 
     def __init__(self):
-        # Initialize JSON Generator to generate an empty sample
 
-        super(WIFIPayloadGenerator, self).__init__()
+        self.field_map = WIFI_PAYLOAD_FIELDS_TEMPLATE
 
-        self.wifi_payload_generator = JSONGenerator(WIFI_PAYLOAD_FIELDS_TEMPLATE)
+        self._body_generator = RawPayloadGenerator()
+        self._payload_generator = JSONGenerator(self.field_map)
 
     def get(self):
         # Generate empty body
-        body = super(WIFIPayloadGenerator, self).get()
+        body = self._body_generator.get()
 
         # Generate WIFI status payload
-        wifi = self.wifi_payload_generator.get()
+        wifi = self._payload_generator.get()
 
         # Set payload type
         body["message_type"] = wifi_payload_message_gen()
