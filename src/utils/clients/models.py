@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 # Project modules
 from adapters import MQTTBrokerAdapter
-from utils.generators import WIFIPayloadGenerator
+from utils.generators import RealisticClientPayloadGenerator
 
 # Logging section
 import logging.config
@@ -27,17 +27,17 @@ class WIFIClientAppMock(AbstractClientAppMock):
 
     def __init__(self):
 
-        self._generator = WIFIPayloadGenerator()
+        self._generator = RealisticClientPayloadGenerator()
         self._mqtt_adapter = MQTTBrokerAdapter()
 
     def gen_and_send(self) -> bool:
 
         topic_name = "/messages/"
 
-        #logger.debug(f"Take a message from generator {str(self._generator.__class__)}")
+        logger.debug(f"Take a message from generator {str(self._generator.__class__)}")
         msg = self._generator.get()
 
-        #logger.debug("Sending the message to MQTT Broker)
+        logger.debug("Sending the message to MQTT Broker: ", msg)
         res = self._mqtt_adapter.publish(topic_name, msg)
 
         return res
