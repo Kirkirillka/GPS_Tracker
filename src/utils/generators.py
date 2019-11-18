@@ -53,7 +53,7 @@ class JSONGenerator(AbstractGenerator):
         """
 
         # Take a new sample
-        sample = generate_dict_by_mapping(self._field_map)
+        sample = generate_dict_by_mapping(self.field_map)
 
         return sample
 
