@@ -1,11 +1,13 @@
 from abc import ABC, abstractmethod
-import yaml
-import datetime
+from typing import Any
 
-from analyzer.placement_algorithm_example.solvers.utils import OptimizationScenario
-from analyzer.placement_algorithm_example.solvers.models import UAVPositionSolver
+import datetime, time
+
+from placement.solvers.utils import OptimizationScenario
+from placement.solvers.models import UAVPositionSolver
 
 from storage.models import MongoDBStorageAdapter
+
 
 class AbstractAnalyzer(ABC):
 
@@ -15,95 +17,67 @@ class AbstractAnalyzer(ABC):
     Every *Analyzer* is a object that gets information from Storage via StorageAdapter, process the data somehow, and saves
     the result into Storage back.
 
-    Properties
-    ----------
-
-    wait_time: int
-        returns a time in seconds to wait after each processing step.
 
 
     Methods
     ----------
 
-    - loop: None
-        Start a continuous loop in which it fetches data, makes an analysis, and saves the result.
+    - analyze (data: OptimizationScenario): Perform one analysis step.
 
     """
 
-    @property
     @abstractmethod
-    def wait_time(self):
-        """
-            returns a time in seconds to wait after each processing step.
-
-        :return: int
-        """
+    def analyze(self, data: Any):
 
         raise NotImplementedError
 
-    @abstractmethod
-    def loop(self):
 
-        """
-            Start a continuous loop in which it fetches data, makes an analysis, and saves the result
+class UAVLocationAnalyzer(AbstractAnalyzer):
 
-        :return: None
-        """
+    """
+    Performs analysis on the best placement for UAVs.
+    As optimization technique, use the power of UAVPositionSolver's optimization interface.
+    """
 
-        raise  NotImplementedError
-
-
-class BestLocationAnalyser(AbstractAnalyzer):
-
+    TARGET = "uav"
     MESSAGE_TYPE = "estimation"
 
-    def __init__(self):
+    def analyze(self, scenario: OptimizationScenario):
 
-        # Read config from YAML
-        with open("config.yml") as file:
-            config = yaml.safe_load(file)
+        # ask solver to estimate the optimum position for UAVs
+        solver = UAVPositionSolver(scenario)
+        optimized_uavs_pos = solver.solve()
 
-            scenario = OptimizationScenario(**config)
+        return optimized_uavs_pos
 
-            self.scenario = scenario
 
-        # Init connection to a DB
-        self.store = MongoDBStorageAdapter()
+class AnalyzerRunner:
+
+    """
+        Class AnalyzerRunner is responsible for running Analyzers in production.
+
+        Having an Analyzer instance, AnalyzeRunner supply all necessary params for .analyze
+        method, save the result in the DB.
+
+        Besides, is responsible for continuous running of algorithm in order to provide stream-based
+        analysis pipeline.
+
+        Strictly dependent on concrete MongoDBStorageAdapter logic.
+
+    """
+
+    BASE_WAIT_TIME = 0.5
 
     @property
     def wait_time(self):
         # Analyze each 1 second
-        return 1
+        return self.BASE_WAIT_TIME
 
-    def analyze_uavs_pos(self, last_coords: dict):
+    def __init__(self, analyzer: UAVLocationAnalyzer):
 
-        # Prepare data in format [(x1,y1)]
-        only_positions = [(record['latitude'], record['longitude']) for record in last_coords]
-
-        # update local copy of optimization scenario
-        current_scenario = self.scenario.copy()
-        current_scenario.nodes_locations = only_positions
-
-        # ask solver to estimate the optimum position for UAVs
-        solver = UAVPositionSolver(**self.scenario)
-        optimized_uavs_pos = solver.solve()
-
-        # Enrich data with clients (device) ID and time for estimation
-        databulk = [{
-            "time": datetime.datetime.now(),
-            "type": self.MESSAGE_TYPE,
-            "payload":{
-                "method": self.scenario.method,
-                "target": "uav",
-                "latitude": r[0],
-                "longitude": r[1]
-            }
-        } for r in optimized_uavs_pos]
-
-        return databulk
-
-
-
+        # Init connection to a DB
+        self.store = MongoDBStorageAdapter()
+        self.analyzer = analyzer
 
     def loop(self):
 
@@ -113,10 +87,32 @@ class BestLocationAnalyser(AbstractAnalyzer):
             # Phase 1. Fetch and prepare the client's UE last positions
             records = self.store.get_last_coords()
 
-            ## Phase 2. Ask solver to optimize
-            bulk = self.analyze_uavs_pos(records)
+            # Prepare data in format [(x1,y1)]
+            only_positions = [(record['latitude'], record['longitude']) for record in records]
 
-            ## Phase 3. Save bulk into Storage
-            for estimation in bulk:
+            # Phase 2. Ask solver to optimize
+            optimized_results = self.analyzer.analyze(only_positions)
 
-                self.store.add_estimation
+            # Phase 3. Save bulk into Storage
+
+            # Anchor to the current time
+            estimation_time = datetime.datetime.now()
+
+            # Enrich data with clients (device) ID and time for estimation
+            databulk = [{
+                "time": estimation_time,
+                "message_type": self.MESSAGE_TYPE,
+                "payload": {
+                    "method": self.analyzer.scenario.method,
+                    "target": self.analyzer.TARGET,
+                    "latitude": r[0],
+                    "longitude": r[1]
+                }
+            } for r in optimized_results]
+
+
+            for estimation in databulk:
+                self.store.add_estimation(estimation)
+
+            # Phase 4. Sleep
+            time.sleep(self.analyzer.wait_time)
