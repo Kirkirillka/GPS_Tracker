@@ -325,4 +325,13 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         :return:
         """
 
-        raise NotImplementedError
+        # Use custom name to save estimation in a different collection
+        collection_name = 'estimations'
+
+        collection = self._db_conn[collection_name]
+
+        # Save record
+        collection.insert_one(record)
+
+        return True
+
