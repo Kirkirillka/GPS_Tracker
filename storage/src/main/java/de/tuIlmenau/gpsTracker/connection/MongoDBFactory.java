@@ -1,5 +1,7 @@
 package de.tuIlmenau.gpsTracker.connection;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
@@ -7,11 +9,13 @@ import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import de.tuIlmenau.gpsTracker.dao.XMLGregorianCalendarDeserializer;
 import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +44,7 @@ public class MongoDBFactory {
     private static final int CONNECTION_PER_HOST = 30;
 
     private static String user = "user";
-    private static String database = "test";
+    private static String database = "gps";
     private static String host = "localhost";
     private static int port = 27017;
     private static char[] password = "password".toCharArray();
@@ -120,5 +124,13 @@ public class MongoDBFactory {
 
     public static MongoCollection<Document> getCollection(String tableName) {
         return MongoDBFactory.getInstance().getCollection(tableName);
+    }
+
+    public static Gson getParser() {
+        return new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                .registerTypeAdapter(
+                        XMLGregorianCalendar.class,
+                        new XMLGregorianCalendarDeserializer())
+                .create();
     }
 }

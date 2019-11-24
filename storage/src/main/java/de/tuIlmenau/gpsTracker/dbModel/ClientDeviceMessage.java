@@ -2,19 +2,14 @@ package de.tuIlmenau.gpsTracker.dbModel;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.SerializedName;
 
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.util.List;
+
 
 
 public class ClientDeviceMessage {
 
-    @JsonProperty("_id")
-    @SerializedName("_id")
-    private String id;
-
-    @JsonProperty("time")
+    @JsonProperty(ClientDeviceMessageFields.TIME)
     private XMLGregorianCalendar time;
 
     public enum MessageType {
@@ -67,7 +62,7 @@ public class ClientDeviceMessage {
     private double latitude;
 
     @JsonProperty("payload")
-    private List<Block> payload;
+    private Block payload;
 
 
     public static class Block {
@@ -173,19 +168,11 @@ public class ClientDeviceMessage {
         this.latitude = latitude;
     }
 
-    public List<Block> getPayload() {
+    public Block getPayload() {
         return payload;
     }
 
-    public void setPayload(List<Block> payload) {
+    public void setPayload(Block payload) {
         this.payload = payload;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 }
