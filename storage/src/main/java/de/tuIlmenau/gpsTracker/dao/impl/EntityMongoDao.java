@@ -2,14 +2,14 @@ package de.tuIlmenau.gpsTracker.dao.impl;
 
 import com.mongodb.client.FindIterable;
 import de.tuIlmenau.gpsTracker.connection.MongoDBFactory;
-import de.tuIlmenau.gpsTracker.dao.UserDao;
+import de.tuIlmenau.gpsTracker.dao.EntityDao;
 import de.tuIlmenau.gpsTracker.dbModel.GpsEntity;
 import org.bson.Document;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
 
-public class UserMongoDao extends UserDao {
+public class EntityMongoDao implements EntityDao {
     private static final String TABLENAME = "test";
 
     @Override
@@ -21,21 +21,21 @@ public class UserMongoDao extends UserDao {
 
     @Override
     public List<GpsEntity> getAllRecords() {
-throw new NotImplementedException("not inpl");
+        throw new NotImplementedException();//TODO
     }
 
     @Override
     public GpsEntity getRecordById(String id) {
-        return null;
+        throw new NotImplementedException();//TODO
     }
 
     @Override
     public GpsEntity addRecord(GpsEntity entity) {
-        return null;
+        throw new NotImplementedException();//TODO
     }
 
     @Override
     public GpsEntity remove(GpsEntity entity) {
-        return null;
+        throw new NotImplementedException();//TODO
     }
 }

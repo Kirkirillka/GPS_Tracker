@@ -4,7 +4,7 @@ import de.tuIlmenau.gpsTracker.dbModel.GpsEntity;
 
 import java.util.List;
 
-public interface UserDao {
+public interface EntityDao {
     public GpsEntity getLast();
 
     public List<GpsEntity> getAllRecords();
