@@ -313,3 +313,16 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
             logger.debug(f"A record with ID '{res_id}'  to be deleted in collection '{self.collection_name}' is "
                          f"not found.")
         return res_id
+
+    def add_estimation(self, record: dict) -> bool:
+
+        """
+            Save an estimation generated from Analyzers classes (inherited from AbstractAnalyzer).
+
+            // TODO: 24.11.2019. Describe the requirement for the function and implement this.
+
+        :param record:
+        :return:
+        """
+
+        raise NotImplementedError
