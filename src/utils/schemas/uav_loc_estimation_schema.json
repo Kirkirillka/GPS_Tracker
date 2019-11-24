@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "estimation"
+      ]
+    },
+    "payload": {
+      "$schema": "http://json-schema.org/schema#",
+      "type": "object",
+      "properties": {
+        "method": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "longitude": {
+          "type": "string"
+        },
+        "latitude": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "method",
+        "longitude",
+        "latitude"
+      ]
+    }
+  },
+  "required": [
+    "time",
+    "payload",
+    "message_type"
+  ]
+}
