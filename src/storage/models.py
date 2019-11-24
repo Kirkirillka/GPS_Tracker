@@ -320,12 +320,12 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
                          f"not found.")
         return str(res_id)
 
-    def add_estimation(self, record: dict) -> bool:
+    def add_estimation(self, record: dict) -> str:
 
         """
             Save an estimation generated from Analyzers classes (inherited from AbstractAnalyzer).
 
-            // TODO: 24.11.2019. Describe the requirement for the function and implement this.
+            .add_estimation implicitly uses .save() method with different collection_name.
 
         :param record:
         :return:
@@ -334,10 +334,5 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         # Use custom name to save estimation in a different collection
         collection_name = 'estimations'
 
-        collection = self._db_conn[collection_name]
-
-        # Save record
-        collection.insert_one(record)
-
-        return True
+        return self.save(record, collection_name)
 
