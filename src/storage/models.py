@@ -24,16 +24,15 @@ class AbstractStorageAdapter(ABC):
         Class AbstractStorageAdapter is an abstract class to define the interface to access Storage, however of what
         exactly DB is used.
 
-
-        Members
-        ======
-            * get_all_msgs - return a list of saved messages in <key-value> format.
-            * get_last_msgs - return the last received messages (sort by time arrived) from clients in <key-value> format.
-            * get_coords_by_client_id - get all messages for specific client_id, return a path of coordinates.
-            * get_last_coords - get the last received messages from clients, return their coordinates.
-            * get_clients - find all unique clients ID in messages and return them.
-            * save - take and store a message in DB.
-            * delete - take an item by a Record Identification (may be different, either built-in, like _id, or manually added.
+        Methods
+        -------
+        get_all_msgs - return a list of saved messages in <key-value> format.
+        get_last_msgs - return the last received messages (sort by time arrived) from clients in <key-value> format.
+        get_coords_by_client_id - get all messages for specific client_id, return a path of coordinates.
+        get_last_coords - get the last received messages from clients, return their coordinates.
+        get_clients - find all unique clients ID in messages and return them.
+        save - take and store a message in DB.
+        delete - take an item by a Record Identification (may be different, either built-in, like _id, or manually added.
 
     """
 
@@ -259,17 +258,19 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         clients = collection.find({}, {"device.id": 1})
 
-        # Fetch 'device.id' field and trasform into list
+        # Fetch 'device.id' field and transform into list
         clients = [r['device']['id'] for r in clients]
 
         return list(clients)
 
-    def save(self, message: dict) -> str:
+    def save(self, message: dict, collection_name: str = None) -> str:
 
         """
             Add a JSON Python dictionary in MongoDB database
 
         :param message: A Python dictionary
+        :param collection_name: A name of collection to write a message to. Default is None. if None,
+        then use default collection_name.
         :return: An ID of saved record. If _id is not presented in the record, then it will be Tuple
          automatically by MongoDB.
         """
@@ -279,22 +280,27 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
             raise TypeError('Message must be dictionary')
 
         # Get collection to write to
-        collection = self._db_conn[self.collection_name]
+        if collection_name is None:
+            collection_name = self.collection_name
+
+        collection = self._db_conn[collection_name]
 
         # Save record and return ID of the saved record
         res_id = collection.insert_one(message).inserted_id
 
         logger.debug(f"Saved a record with id '{res_id} in collection '{self.collection_name}'")
 
-        return res_id
+        return str(res_id)
 
-    def delete(self, message: dict) -> str:
+    def delete(self, message: dict, collection_name: str = None) -> str:
 
         """
             Delete a record by record itself.
 
         :param message: A Python dictionary which represent either the record itself or fields to first find the record
             and delete it.
+        :param collection_name: A name of collection to delete a message from. Default is None.
+        if None, then use default collection_name.
         :return: An ID of deleted record. if not fould, then return None
         """
 
@@ -312,7 +318,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         else:
             logger.debug(f"A record with ID '{res_id}'  to be deleted in collection '{self.collection_name}' is "
                          f"not found.")
-        return res_id
+        return str(res_id)
 
     def add_estimation(self, record: dict) -> bool:
 

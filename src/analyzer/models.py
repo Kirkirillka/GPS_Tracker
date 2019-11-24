@@ -39,7 +39,10 @@ class UAVLocationAnalyzer(AbstractAnalyzer):
     As optimization technique, use the power of UAVPositionSolver's optimization interface.
     """
 
+    # For what kind of objects analysis is made
     TARGET = "uav"
+
+    # What the Analyzer tries to do
     MESSAGE_TYPE = "estimation"
 
     def analyze(self, scenario: OptimizationScenario):
@@ -66,6 +69,7 @@ class AnalyzerRunner:
 
     """
 
+    # How long to wait between each analysis steps
     BASE_WAIT_TIME = 0.5
 
     @property
