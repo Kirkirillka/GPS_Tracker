@@ -12,6 +12,7 @@ from config.utils import get_project_config
 # Logging section
 import logging.config
 from utils.logs.tools import read_logging_config
+
 logging.config.dictConfig(read_logging_config())
 logger = logging.getLogger(__name__)
 
@@ -39,37 +40,30 @@ class AbstractStorageAdapter(ABC):
 
     @abstractmethod
     def get_all_msgs(self) -> List[dict]:
-
         raise NotImplementedError
 
     @abstractmethod
     def get_last_msgs(self) -> List[dict]:
-
         raise NotImplementedError
 
     @abstractmethod
     def get_coords_by_client_id(self) -> List[Tuple[float, float]]:
-
         raise NotImplementedError
 
     @abstractmethod
     def get_last_coords(self) -> Dict[str, List[Tuple[float, float]]]:
-
         raise NotImplementedError
 
     @abstractmethod
     def save(self, message: dict) -> bool:
-
         raise NotImplementedError
 
     @abstractmethod
     def delete(self, ident: Any) -> bool:
-
         raise NotImplementedError
 
     @abstractmethod
     def get_clients(self) -> List[str]:
-
         raise NotImplementedError
 
 
@@ -240,13 +234,29 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         Where "..." means there are other fields contained in the scheme.
 
-
+        # db.data
+        # .aggregate([
+        #     {"$sort": {"time": -1}},
+        #     {
+        # $group: {
+        #     _id: "$device.id",
+        #     device: { $first: "$$ROOT"}
+        #
+        # }
+        # }])
         :return: A saved JSON Python dictionary
         """
+        # Get collection to write to
+        collection = self._db_conn[self.collection_name]
 
-        # TODO: Implement MongoDBStorageAdapter.get_last_message
+        # Convert from cursor iterator to list
+        records = list(collection.aggregate([{"$sort": {"time", -1}},
+                                             {"$group": {"_id": "$device.id", "device": {"$first": "$$ROOT"}}}]))
+        records = [r['device'] for r in records]
 
-        raise NotImplementedError
+        logger.debug(f"Fetched {1} records from {self.collection_name}.")
+
+        return records
 
     def get_clients(self) -> List[str]:
 
@@ -313,3 +323,41 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
             logger.debug(f"A record with ID '{res_id}'  to be deleted in collection '{self.collection_name}' is "
                          f"not found.")
         return res_id
+
+    def get_coords_by_client_id(self, id) -> List[Tuple[float, float]]:
+        # Get collection to write to
+        collection = self._db_conn[self.collection_name]
+
+        # Convert from cursor iterator to list
+        records = list(
+            collection.find({"device.id": id}).projection({"latitude": 1, "longitude": 1}).sort({"time", -1}))
+        records = [(coordinate['latitude'], coordinate['longitude']) for coordinate in records]
+        logger.debug(f"Fetched {len(records)} records from {self.collection_name}.")
+
+        return records
+
+    def get_last_coords(self) -> Dict[str, List[Tuple[float, float]]]:
+        # db.data
+        # .aggregate([
+        #     {"$sort": {"time": -1}},
+        #     {
+        # $group: {
+        #     _id: "$device.id",
+        #     coords: { $push: {"latitude": "$latitude", "longitude": "$longitude", time: "$time"}}
+        #
+        # }
+        # }])
+        # Get collection to write to
+        collection = self._db_conn[self.collection_name]
+
+        # Convert from cursor iterator to list
+        records = list(collection.aggregate([{"$sort": {"time", -1}},
+                                             {"$group": {"_id": "device.id", "coords":
+                                                 {"$push": {"latitude": "$latitude", "longitude": "$longitude"}}}
+                                              }
+                                             ]))
+        records_map = {r['_id']: [(coordinate['latitude'], coordinate['longitude']) for coordinate in r['coords']] for r
+                       in records}
+
+        logger.debug(f"Fetched {1} records from {self.collection_name}.")
+        return records_map

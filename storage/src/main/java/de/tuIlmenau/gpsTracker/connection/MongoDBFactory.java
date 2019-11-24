@@ -5,25 +5,19 @@ import com.google.gson.GsonBuilder;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import de.tuIlmenau.gpsTracker.dao.XMLGregorianCalendarDeserializer;
 import org.apache.log4j.Logger;
 import org.bson.Document;
-import org.bson.codecs.configuration.CodecRegistry;
-import org.bson.codecs.pojo.PojoCodecProvider;
+
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.Properties;
 
-import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
-import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 public class MongoDBFactory {
     private final static Logger logger = Logger.getLogger(MongoDBFactory.class); //TODO create some util for logger class
@@ -47,7 +41,7 @@ public class MongoDBFactory {
     private static String database = "gps";
     private static String host = "localhost";
     private static int port = 27017;
-    private static char[] password = "password".toCharArray();
+    private static String password = "password";
 
     private MongoDBFactory() {
     }
@@ -87,12 +81,9 @@ public class MongoDBFactory {
     }
 
     private static MongoClient getMongoClient() {
-        if (System.getProperty("mongo") != null) {
-            loadDbConfig();
-        }
         /*return new MongoClientURI(new ServerAddress(host, port),
                 Collections.singletonList(MongoCredential.createScramSha1Credential(user, database, password)),*/
-        MongoClientURI uri = new MongoClientURI("mongodb://user:password@localhost:27017",
+        MongoClientURI uri = new MongoClientURI(String.format("mongodb://%s:%s@%s:%s", user, password, host, port),
                 new MongoClientOptions.Builder()
                         .connectTimeout(0).connectionsPerHost(CONNECTION_PER_HOST)
                         .cursorFinalizerEnabled(false));
@@ -105,12 +96,12 @@ public class MongoDBFactory {
         port = Integer.parseInt(credProp.getProperty(PORT));
         database = credProp.getProperty(DBNAME);
         user = credProp.getProperty(USERNAME);
-        password = credProp.getProperty(PASSWORD).toCharArray();
+        password = credProp.getProperty(PASSWORD);
     }
 
     private static Properties loadConfigFromLocalFile() {
         Properties properties = new Properties();
-        try (InputStream in = new FileInputStream(FILE)) {
+        try (InputStream in = MongoDBFactory.class.getClassLoader().getResourceAsStream((FILE))) {
             properties.load(in);
         } catch (final IOException e) {
             logger.debug("cannot load configurations from local file");

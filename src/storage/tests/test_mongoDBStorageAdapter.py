@@ -47,6 +47,7 @@ class TestMongoDBStorageAdapter(TestCase):
         self.assertEqual(available_messages, messages)
 
     def test_get_last_msgs(self):
+        available_messages = self.adapter.get_last_msgs()
         self.fail()
 
     def test_get_clients(self):

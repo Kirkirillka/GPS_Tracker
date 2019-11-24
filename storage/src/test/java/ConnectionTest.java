@@ -1,25 +1,30 @@
-import com.google.gson.Gson;
-import com.mongodb.client.FindIterable;
-import de.tuIlmenau.gpsTracker.connection.MongoDBFactory;
+
+import de.tuIlmenau.gpsTracker.dao.ClientDeviceMessageDao;
+import de.tuIlmenau.gpsTracker.dao.impl.ClientDeviceMessageMongoDao;
 import de.tuIlmenau.gpsTracker.dbModel.ClientDeviceMessage;
-import org.bson.Document;
+import de.tuIlmenau.gpsTracker.dbModel.Coordinate;
 
-import java.util.UUID;
+import java.util.List;
+import java.util.Map;
 
-public class ConnectionTest {
+public class ConnectionTest { //TODO it is necessary to write tests
     public static void main(String[] args) {
-        String id = UUID.randomUUID().toString();
+        ClientDeviceMessageDao dao = new ClientDeviceMessageMongoDao();
+        Map<String, List<Coordinate>> lastCoords = dao.getLastCoords();
+        List<ClientDeviceMessage> lastAll = dao.getLastAll();
+        lastCoords.get("f");
+       /* String id = UUID.randomUUID().toString();
         ClientDeviceMessage message = new ClientDeviceMessage();
         message.setLatitude(123);
         message.setLongitude(123);
         Gson gson = MongoDBFactory.getParser();
         Document doc = Document.parse(gson.toJson(message));
         message.setMessageType(ClientDeviceMessage.MessageType.raw);
-      /*  MongoDBFactory.getInstance().getCollection("test")
+      *//*  MongoDBFactory.getInstance().getCollection("test")
                 .updateOne(new Document("_id", id), new Document("$set", doc),
 //                .updateOne(new Document("_id", id),
 //                        new Document("$set", new Document().append("user", "1")),
-                        new UpdateOptions().upsert(true));*/
+                        new UpdateOptions().upsert(true));*//*
         FindIterable<Document> iterable = MongoDBFactory.getCollection("data")
                 .find().sort(new Document("time", -1));
         if (iterable != null) {
@@ -29,6 +34,6 @@ public class ConnectionTest {
                 System.out.println(item);
                 MongoDBFactory.getCollection("test").deleteOne(new Document("_id", id));
             }
-        }
+        }*/
     }
 }

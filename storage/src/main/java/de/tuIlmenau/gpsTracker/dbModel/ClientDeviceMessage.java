@@ -6,8 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 
-
-public class ClientDeviceMessage {
+public class ClientDeviceMessage extends Coordinate {
 
     @JsonProperty(ClientDeviceMessageFields.TIME)
     private XMLGregorianCalendar time;
@@ -54,12 +53,6 @@ public class ClientDeviceMessage {
             this.deviceType = deviceType;
         }
     }
-
-    @JsonProperty("longitude")
-    private double longitude;
-
-    @JsonProperty("latitude")
-    private double latitude;
 
     @JsonProperty("payload")
     private Block payload;
@@ -150,22 +143,6 @@ public class ClientDeviceMessage {
 
     public void setDevice(Device device) {
         this.device = device;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
     }
 
     public Block getPayload() {
