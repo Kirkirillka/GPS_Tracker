@@ -13,7 +13,7 @@ class TestMongoDBStorageAdapter(TestCase):
         self.adapter = MongoDBStorageAdapter()
 
         # Modify default collection_name
-        self.adapter.collection_name = "test"
+        #self.adapter.collection_name = "test"
 
         self.generated_messages = []
 
@@ -22,6 +22,10 @@ class TestMongoDBStorageAdapter(TestCase):
         while self.generated_messages:
             message = self.generated_messages.pop()
             self.adapter.delete(message)
+
+    def test_get_time_last_msgs_by_clients(self):
+
+        print(self.adapter.get_time_last_msgs_by_clients())
 
     def test_get_last_coords(self):
         self.fail()

@@ -1,6 +1,7 @@
 # Python library import
 from abc import ABC, abstractmethod
 from typing import List, Dict, Tuple, Any
+from bson.son import SON
 
 # 3-td party libraries
 import pymongo
@@ -12,6 +13,7 @@ from config.utils import get_project_config
 # Logging section
 import logging.config
 from utils.logs.tools import read_logging_config
+
 logging.config.dictConfig(read_logging_config())
 logger = logging.getLogger(__name__)
 
@@ -38,37 +40,30 @@ class AbstractStorageAdapter(ABC):
 
     @abstractmethod
     def get_all_msgs(self) -> List[dict]:
-
         raise NotImplementedError
 
     @abstractmethod
     def get_last_msgs(self) -> List[dict]:
-
         raise NotImplementedError
 
     @abstractmethod
     def get_coords_by_client_id(self) -> List[Tuple[float, float]]:
-
         raise NotImplementedError
 
     @abstractmethod
     def get_last_coords(self) -> Dict[str, List[Tuple[float, float]]]:
-
         raise NotImplementedError
 
     @abstractmethod
     def save(self, message: dict) -> bool:
-
         raise NotImplementedError
 
     @abstractmethod
     def delete(self, ident: Any) -> bool:
-
         raise NotImplementedError
 
     @abstractmethod
     def get_clients(self) -> List[str]:
-
         raise NotImplementedError
 
 
@@ -144,7 +139,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         try:
 
-            logger.info(f"Try to establish connection to MongoDB instance on {self.host}:{self.port} as "
+            logger.debug(f"Try to establish connection to MongoDB instance on {self.host}:{self.port} as "
                         f"'{self._username}' ")
 
             connection = pymongo.MongoClient("mongodb://%s:%s@%s:%s" % (
@@ -156,7 +151,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
             # Ensure that we connected
             _data = connection.server_info()
-            logger.debug(f"Connected to {_data}", )
+            logger.info(f"Connected to {_data}", )
 
         except ConnectionFailure as e:
             raise ConnectionError(f"Cannot connect to MongoDB instance at {self.host}:{self.port}!") from e
@@ -164,7 +159,30 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
             # Save our connection if try block went without errors
             self._db_conn = connection[self.db_name]
 
+    def get_time_last_msgs_by_clients(self) -> List[Tuple[str,str]]:
+
+
+
+        collection = self._db_conn[self.collection_name]
+        pipeline = [
+            {"$group": {"_id": "$device.id", "last_msg_time": {"$last": "$time"}}},
+            {"$sort": SON([("_id", 1)]),}
+        ]
+
+        res = list(collection.aggregate(pipeline))
+
+        clients_ids = self.get_clients()
+        last_times = [row["last_msg_time"] for row in res]
+
+        last_msgs = collection.find({
+             "time": {"$in": last_times}
+        })
+
+        return list(last_msgs)
+
     def get_last_coords(self) -> Dict[str, List[Tuple[float, float]]]:
+
+        collection = self._db_conn[self.collection_name]
 
         raise NotImplementedError
 
