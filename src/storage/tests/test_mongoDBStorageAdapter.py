@@ -1,3 +1,4 @@
+import itertools
 from unittest import TestCase
 
 from unittest import TestCase
@@ -24,6 +25,23 @@ class TestMongoDBStorageAdapter(TestCase):
             self.adapter.delete(message)
 
     def test_get_last_coords(self):
+        # Prepare message
+        messages = [RawPayloadGenerator().get() for _ in range(30)]
+        # Save added messages
+        self.generated_messages.extend(messages)
+
+        # Add these messages into database
+        for message in messages:
+            self.adapter.save(message)
+
+        messages.sort('time', True)
+        records_map = [{key: [(r['latitude'], r['longitude']) for r in list(group)]} for key, group in
+                       itertools.groupby(messages, key=lambda x: x['device']['id'])]
+
+        # Fetch added messages
+        available_messages = self.adapter.get_last_coords()
+
+        self.assertEqual(available_messages, records_map)
         self.fail()
 
     def test_get_coords_by_client_id(self):

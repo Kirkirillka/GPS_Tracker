@@ -47,7 +47,7 @@ class AbstractStorageAdapter(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_coords_by_client_id(self) -> List[Tuple[float, float]]:
+    def get_coords_by_client_id(self, id) -> List[Tuple[float, float]]:
         raise NotImplementedError
 
     @abstractmethod
@@ -163,9 +163,6 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         raise NotImplementedError
 
-    def get_coords_by_client_id(self) -> List[Tuple[float, float]]:
-
-        raise NotImplementedError
 
     def get_all_msgs(self) -> List[Dict]:
 
@@ -250,7 +247,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         collection = self._db_conn[self.collection_name]
 
         # Convert from cursor iterator to list
-        records = list(collection.aggregate([{"$sort": {"time", -1}},
+        records = list(collection.aggregate([{"$sort": {"time": -1}},
                                              {"$group": {"_id": "$device.id", "device": {"$first": "$$ROOT"}}}]))
         records = [r['device'] for r in records]
 
@@ -351,7 +348,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         collection = self._db_conn[self.collection_name]
 
         # Convert from cursor iterator to list
-        records = list(collection.aggregate([{"$sort": {"time", -1}},
+        records = list(collection.aggregate([{"$sort": {"time": -1}},
                                              {"$group": {"_id": "device.id", "coords":
                                                  {"$push": {"latitude": "$latitude", "longitude": "$longitude"}}}
                                               }
