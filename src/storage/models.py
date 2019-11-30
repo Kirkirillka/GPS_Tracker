@@ -267,9 +267,9 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         collection = self._db_conn[self.collection_name]
 
-        clients = collection.find({}, {"device.id": 1}).distinct("device.id")
+        clients = collection.find({}).distinct("device.id")
 
-        return clients
+        return [{"device.id": value} for value in clients]
 
     def save(self, message: dict) -> str:
 
@@ -373,7 +373,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
                                                  {"$push": {"time": "$time","latitude": "$latitude", "longitude": "$longitude"}}}
                                               }
                                              ]))
-        records_map = {r['_id']: [(coordinate['time'], coordinate['latitude'], coordinate['longitude']) for coordinate in r['coords']] for r
+        records_map = {r['_id']: [( float(coordinate['latitude']), float(coordinate['longitude'])) for coordinate in r['coords']] for r
                        in records}
 
         logger.debug(f"Fetched {1} records from {self.collection_name}.")
