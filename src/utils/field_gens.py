@@ -63,7 +63,7 @@ def device_id_gen(use_uuid=False):
 
 
 def longitude_gen():
-    base_longitude = 50.6806218
+    base_longitude = 10.9324852
 
     offset = random.gauss(1, 2)
     radians = random.randint(0, 360) * math.pi / 180
@@ -72,7 +72,7 @@ def longitude_gen():
 
 
 def latitude_gen():
-    base_latitude = 10.9324852
+    base_latitude = 50.6806218
 
     offset = random.gauss(1, 2)
     radians = random.randint(0, 360) * math.pi / 180

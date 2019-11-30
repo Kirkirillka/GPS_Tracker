@@ -1,6 +1,7 @@
 # Python library import
 from abc import ABC, abstractmethod
 from typing import List, Dict, Tuple, Any
+from bson.son import SON
 
 # 3-td party libraries
 import pymongo
@@ -139,7 +140,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         try:
 
-            logger.info(f"Try to establish connection to MongoDB instance on {self.host}:{self.port} as "
+            logger.debug(f"Try to establish connection to MongoDB instance on {self.host}:{self.port} as "
                         f"'{self._username}' ")
 
             connection = pymongo.MongoClient("mongodb://%s:%s@%s:%s" % (
@@ -151,7 +152,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
             # Ensure that we connected
             _data = connection.server_info()
-            logger.debug(f"Connected to {_data}", )
+            logger.info(f"Connected to {_data}", )
 
         except ConnectionFailure as e:
             raise ConnectionError(f"Cannot connect to MongoDB instance at {self.host}:{self.port}!") from e
@@ -271,12 +272,14 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         return [{"device.id": value} for value in clients]
 
-    def save(self, message: dict) -> str:
+    def save(self, message: dict, collection_name: str = None) -> str:
 
         """
             Add a JSON Python dictionary in MongoDB database
 
         :param message: A Python dictionary
+        :param collection_name: A name of collection to write a message to. Default is None. if None,
+        then use default collection_name.
         :return: An ID of saved record. If _id is not presented in the record, then it will be Tuple
          automatically by MongoDB.
         """
@@ -286,22 +289,27 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
             raise TypeError('Message must be dictionary')
 
         # Get collection to write to
-        collection = self._db_conn[self.collection_name]
+        if collection_name is None:
+            collection_name = self.collection_name
+
+        collection = self._db_conn[collection_name]
 
         # Save record and return ID of the saved record
         res_id = collection.insert_one(message).inserted_id
 
         logger.debug(f"Saved a record with id '{res_id} in collection '{self.collection_name}'")
 
-        return res_id
+        return str(res_id)
 
-    def delete(self, message: dict) -> str:
+    def delete(self, message: dict, collection_name: str = None) -> str:
 
         """
             Delete a record by record itself.
 
         :param message: A Python dictionary which represent either the record itself or fields to first find the record
             and delete it.
+        :param collection_name: A name of collection to delete a message from. Default is None.
+        if None, then use default collection_name.
         :return: An ID of deleted record. if not fould, then return None
         """
 
@@ -319,7 +327,25 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         else:
             logger.debug(f"A record with ID '{res_id}'  to be deleted in collection '{self.collection_name}' is "
                          f"not found.")
-        return res_id
+        return str(res_id)
+
+    def add_estimation(self, record: dict) -> str:
+
+        """
+            Save an estimation generated from Analyzers classes (inherited from AbstractAnalyzer).
+
+            .add_estimation implicitly uses .save() method with different collection_name.
+
+        :param record:
+        :return:
+        """
+
+        # Use custom name to save estimation in a different collection
+        collection_name = 'estimations'
+
+        return self.save(record, collection_name)
+
+
 
     def get_coords_by_client_id(self, id) -> List[Tuple[float, float]]:
         # Get collection to write to

@@ -4,7 +4,6 @@ ADD requirements.txt .
 RUN pip install -r requirements.txt
 
 FROM build-stage as preparation-stage
-COPY . /app
 ENV PYTHONPATH "${PYTONPATH}:/app"
 
 
