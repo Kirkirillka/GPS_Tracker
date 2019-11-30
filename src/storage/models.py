@@ -159,7 +159,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
             # Save our connection if try block went without errors
             self._db_conn = connection[self.db_name]
 
-    def get_last_coords(self) -> Dict[str, List[Tuple[float, float]]]:
+    def get_coords_by_client_id(self) -> List[Tuple[float, float]]:
 
         raise NotImplementedError
 
@@ -230,16 +230,17 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         Where "..." means there are other fields contained in the scheme.
 
-        # db.data
-        # .aggregate([
-        #     {"$sort": {"time": -1}},
-        #     {
-        # $group: {
-        #     _id: "$device.id",
-        #     device: { $first: "$$ROOT"}
-        #
-        # }
-        # }])
+        >>> db.data
+        >>> .aggregate([
+        >>>     {"$sort": {"time": -1}},
+        >>>     {
+        >>> $group: {
+        >>>     _id: "$device.id",
+        >>>     device: { $first: "$$ROOT"}
+        >>>
+        >>> }
+        >>> }])
+
         :return: A saved JSON Python dictionary
         """
         # Get collection to write to
@@ -257,8 +258,11 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
     def get_clients(self) -> List[str]:
 
         """
-            Returns "device.id" from all stored messages
-        :return:
+            Returns ID for all registered clients.
+
+            Registration for an ID means there is at least one message is received with the ID.
+
+        :return: list of str
         """
 
         collection = self._db_conn[self.collection_name]
@@ -330,16 +334,36 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         return records
 
     def get_all_coords(self) -> Dict[str, List[Tuple[str, float, float]]]:
-        # db.data
-        # .aggregate([
-        #     {"$sort": {"time": -1}},
-        #     {
-        # $group: {
-        #     _id: "$device.id",
-        #     coords: { $push: {"latitude": "$latitude", "longitude": "$longitude", time: "$time"}}
-        #
-        # }
-        # }])
+
+        """
+            Return a list of all GPS coordinates for every client.
+
+            Message format:
+
+            >>> {
+            >>>    "$device.id" : [
+            >>>                ("$payload.latitude", "$payload.longitude"),
+            >>>                 ...
+            >>>                ("$payload.latitude", "$payload.longitude")
+            >>>                  ],
+            >>>    ...
+            >>> }
+
+
+            >>> db.data
+            >>> .aggregate([
+            >>>     {"$sort": {"time": -1}},
+            >>>     {
+            >>> $group: {
+            >>>     _id: "$device.id",
+            >>>     coords: { $push: {"latitude": "$latitude", "longitude": "$longitude", time: "$time"}}
+            >>>
+            >>> }
+            >>> }])
+
+        :return:
+        """
+
         # Get collection to read from
         collection = self._db_conn[self.collection_name]
 
@@ -356,6 +380,21 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         return records_map
 
     def get_last_coords(self) -> Dict[str, List[Tuple[str, float, float]]]:
+
+        """
+            Return the most recent location with the message time for each of clients
+
+            Message format:
+
+            >>> {
+            >>>    "$device.id" : ( "$payload.latitude", "$payload.longitude"),
+            >>>    "$device.id" : ( "$payload.latitude", "$payload.longitude"),
+            >>>    ...
+            >>> }
+
+
+        :return: dict
+        """
 
         # Get all coordinates
         all_coords = self.get_all_coords()
