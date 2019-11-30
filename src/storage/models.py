@@ -48,10 +48,6 @@ class AbstractStorageAdapter(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_coords_by_client_id(self, id) -> List[Tuple[float, float]]:
-        raise NotImplementedError
-
-    @abstractmethod
     def get_last_coords(self) -> Dict[str, List[Tuple[float, float]]]:
         raise NotImplementedError
 
@@ -159,10 +155,6 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         else:
             # Save our connection if try block went without errors
             self._db_conn = connection[self.db_name]
-
-    def get_coords_by_client_id(self) -> List[Tuple[float, float]]:
-
-        raise NotImplementedError
 
     def get_all_msgs(self) -> List[Dict]:
 
