@@ -333,7 +333,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         return records
 
-    def get_last_coords(self) -> Dict[str, List[Tuple[float, float]]]:
+    def get_all_coords(self) -> Dict[str, List[Tuple[str, float, float]]]:
         # db.data
         # .aggregate([
         #     {"$sort": {"time": -1}},
@@ -344,17 +344,29 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         #
         # }
         # }])
-        # Get collection to write to
+        # Get collection to read from
         collection = self._db_conn[self.collection_name]
 
         # Convert from cursor iterator to list
         records = list(collection.aggregate([{"$sort": {"time": -1}},
-                                             {"$group": {"_id": "device.id", "coords":
-                                                 {"$push": {"latitude": "$latitude", "longitude": "$longitude"}}}
+                                             {"$group": {"_id": "$device.id", "coords":
+                                                 {"$push": {"time": "$time","latitude": "$latitude", "longitude": "$longitude"}}}
                                               }
                                              ]))
-        records_map = {r['_id']: [(coordinate['latitude'], coordinate['longitude']) for coordinate in r['coords']] for r
+        records_map = {r['_id']: [(coordinate['time'], coordinate['latitude'], coordinate['longitude']) for coordinate in r['coords']] for r
                        in records}
 
         logger.debug(f"Fetched {1} records from {self.collection_name}.")
         return records_map
+
+    def get_last_coords(self) -> Dict[str, List[Tuple[str, float, float]]]:
+
+        # Get all coordinates
+        all_coords = self.get_all_coords()
+
+        # Get only one value for each key
+        one_shot_coords = {key: value.pop() for key,value in all_coords.items()}
+
+        return one_shot_coords
+
+
