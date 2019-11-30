@@ -163,7 +163,6 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         raise NotImplementedError
 
-
     def get_all_msgs(self) -> List[Dict]:
 
         """
@@ -264,12 +263,9 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         collection = self._db_conn[self.collection_name]
 
-        clients = collection.find({}, {"device.id": 1})
+        clients = collection.find({}, {"device.id": 1}).distinct("device.id")
 
-        # Fetch 'device.id' field and trasform into list
-        clients = [r['device']['id'] for r in clients]
-
-        return list(clients)
+        return clients
 
     def save(self, message: dict) -> str:
 
