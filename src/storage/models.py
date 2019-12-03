@@ -29,27 +29,10 @@ class AbstractStorageAdapter(ABC):
 
         Members
         ======
-            * get_all_msgs - return a list of saved messages in <key-value> format.
-            * get_last_msgs - return the last received messages (sort by time arrived) from clients in <key-value> format.
-            * get_coords_by_client_id - get all messages for specific client_id, return a path of coordinates.
-            * get_last_coords - get the last received messages from clients, return their coordinates.
-            * get_clients - find all unique clients ID in messages and return them.
             * save - take and store a message in DB.
             * delete - take an item by a Record Identification (may be different, either built-in, like _id, or manually added.
 
     """
-
-    @abstractmethod
-    def get_all_msgs(self) -> List[dict]:
-        raise NotImplementedError
-
-    @abstractmethod
-    def get_last_msgs(self) -> List[dict]:
-        raise NotImplementedError
-
-    @abstractmethod
-    def get_last_coords(self) -> Dict[str, List[Tuple[float, float]]]:
-        raise NotImplementedError
 
     @abstractmethod
     def save(self, message: dict) -> bool:
@@ -57,10 +40,6 @@ class AbstractStorageAdapter(ABC):
 
     @abstractmethod
     def delete(self, ident: Any) -> bool:
-        raise NotImplementedError
-
-    @abstractmethod
-    def get_clients(self) -> List[str]:
         raise NotImplementedError
 
 
@@ -137,7 +116,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         try:
 
             logger.debug(f"Try to establish connection to MongoDB instance on {self.host}:{self.port} as "
-                        f"'{self._username}' ")
+                         f"'{self._username}' ")
 
             connection = pymongo.MongoClient("mongodb://%s:%s@%s:%s" % (
                 self._username,
@@ -156,10 +135,68 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
             # Save our connection if try block went without errors
             self._db_conn = connection[self.db_name]
 
-    def get_all_msgs(self) -> List[Dict]:
+    def save(self, message: dict, collection_name: str = None) -> str:
+
+        """
+            Add a JSON Python dictionary in MongoDB database
+
+        :param message: A Python dictionary
+        :param collection_name: A name of collection to write a message to. Default is None. if None,
+        then use default collection_name.
+        :return: An ID of saved record. If _id is not presented in the record, then it will be Tuple
+         automatically by MongoDB.
+        """
+
+        # Check if message indeed is dictionary
+        if not isinstance(message, dict):
+            raise TypeError('Message must be dictionary')
+
+        # Get collection to write to
+        if collection_name is None:
+            collection_name = self.collection_name
+
+        collection = self._db_conn[collection_name]
+
+        # Save record and return ID of the saved record
+        res_id = collection.insert_one(message).inserted_id
+
+        logger.debug(f"Saved a record with id '{res_id} in collection '{self.collection_name}'")
+
+        return str(res_id)
+
+    def delete(self, message: dict, collection_name: str = None) -> str:
+
+        """
+            Delete a record by record itself.
+
+        :param message: A Python dictionary which represent either the record itself or fields to first find the record
+            and delete it.
+        :param collection_name: A name of collection to delete a message from. Default is None.
+        if None, then use default collection_name.
+        :return: An ID of deleted record. if not fould, then return None
+        """
+
+        # Check if message indeed is dictionary
+        if not isinstance(message, dict):
+            raise TypeError('Message must be dictionary')
+
+        # Get collection to write to
+        collection = self._db_conn[self.collection_name]
+
+        # Find, delete and return _id of
+        res_id = collection.find_one_and_delete(message).get("_id", None)
+        if res_id is not None:
+            logger.debug(f"Delete a record with ID '{res_id}' in collection '{self.collection_name}'")
+        else:
+            logger.debug(f"A record with ID '{res_id}'  to be deleted in collection '{self.collection_name}' is "
+                         f"not found.")
+        return str(res_id)
+
+    def get_raw_msgs(self) -> List[Dict]:
 
         """
             Fetch all records in database for connection_name.
+            Records are returned as they stored in the DB, e.g. in 'raw' format.
 
         :return: A list of Python dictionaries
         """
@@ -174,10 +211,11 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         return records
 
-    def get_last_msgs(self) -> dict:
+    def get_last_raw_msgs(self) -> dict:
 
         """
             Return the last saved message (with the newest date) for each of clients.
+            Records are returned as they stored in the DB, e.g. in 'raw' format.
 
             Example
             ======
@@ -248,7 +286,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         return records
 
-    def get_clients(self) -> List[str]:
+    def get_clients_list(self) -> List[str]:
 
         """
             Returns ID for all registered clients.
@@ -260,66 +298,14 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         collection = self._db_conn[self.collection_name]
 
-        clients = collection.find({}).distinct("device.id")
+        # Convert from cursor iterator to list
+        clients = collection.aggregate([
+            {"$sort": {"time": -1}},
+            {"$group": {"_id": "$device.id"}},
+            {"$project": {"_id": 0, "device.id": "$_id"}}
+        ])
 
-        return [{"device.id": value} for value in clients]
-
-    def save(self, message: dict, collection_name: str = None) -> str:
-
-        """
-            Add a JSON Python dictionary in MongoDB database
-
-        :param message: A Python dictionary
-        :param collection_name: A name of collection to write a message to. Default is None. if None,
-        then use default collection_name.
-        :return: An ID of saved record. If _id is not presented in the record, then it will be Tuple
-         automatically by MongoDB.
-        """
-
-        # Check if message indeed is dictionary
-        if not isinstance(message, dict):
-            raise TypeError('Message must be dictionary')
-
-        # Get collection to write to
-        if collection_name is None:
-            collection_name = self.collection_name
-
-        collection = self._db_conn[collection_name]
-
-        # Save record and return ID of the saved record
-        res_id = collection.insert_one(message).inserted_id
-
-        logger.debug(f"Saved a record with id '{res_id} in collection '{self.collection_name}'")
-
-        return str(res_id)
-
-    def delete(self, message: dict, collection_name: str = None) -> str:
-
-        """
-            Delete a record by record itself.
-
-        :param message: A Python dictionary which represent either the record itself or fields to first find the record
-            and delete it.
-        :param collection_name: A name of collection to delete a message from. Default is None.
-        if None, then use default collection_name.
-        :return: An ID of deleted record. if not fould, then return None
-        """
-
-        # Check if message indeed is dictionary
-        if not isinstance(message, dict):
-            raise TypeError('Message must be dictionary')
-
-        # Get collection to write to
-        collection = self._db_conn[self.collection_name]
-
-        # Find, delete and return _id of
-        res_id = collection.find_one_and_delete(message).get("_id", None)
-        if res_id is not None:
-            logger.debug(f"Delete a record with ID '{res_id}' in collection '{self.collection_name}'")
-        else:
-            logger.debug(f"A record with ID '{res_id}'  to be deleted in collection '{self.collection_name}' is "
-                         f"not found.")
-        return str(res_id)
+        return list(clients)
 
     def add_estimation(self, record: dict) -> str:
 
@@ -337,48 +323,20 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         return self.save(record, collection_name)
 
-
-
-    def get_coords_by_client_id(self, id) -> List[Tuple[float, float]]:
-        # Get collection to write to
-        collection = self._db_conn[self.collection_name]
-
-        # Convert from cursor iterator to list
-        records = list(
-            collection.find({"device.id": id}).projection({"latitude": 1, "longitude": 1}).sort({"time", -1}))
-        records = [(coordinate['latitude'], coordinate['longitude']) for coordinate in records]
-        logger.debug(f"Fetched {len(records)} records from {self.collection_name}.")
-
-        return records
-
-    def get_all_coords(self) -> Dict[str, List[Tuple[str, float, float]]]:
+    def get_aggr_per_client(self, limit_to: int = -1) -> List[Dict]:
 
         """
-            Return a list of all GPS coordinates for every client.
+            Returns records aggregated per a client.
+            Records are filtered to be "wifi" message_type.
 
-            Message format:
+            For each of clients there is information
 
-            >>> {
-            >>>    "$device.id" : [
-            >>>                ("$payload.latitude", "$payload.longitude"),
-            >>>                 ...
-            >>>                ("$payload.latitude", "$payload.longitude")
-            >>>                  ],
-            >>>    ...
-            >>> }
+            - time of record
+            - received RSSI signal
+            - longitude
+            - latitude
 
-
-            >>> db.data
-            >>> .aggregate([
-            >>>     {"$sort": {"time": -1}},
-            >>>     {
-            >>> $group: {
-            >>>     _id: "$device.id",
-            >>>     coords: { $push: {"latitude": "$latitude", "longitude": "$longitude", time: "$time"}}
-            >>>
-            >>> }
-            >>> }])
-
+        :param limit_to: set the maximum number of records for a client is returned. If -1, then all records will be returned.
         :return:
         """
 
@@ -386,40 +344,27 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         collection = self._db_conn[self.collection_name]
 
         # Convert from cursor iterator to list
-        records = list(collection.aggregate([{"$sort": {"time": -1}},
-                                             {"$group": {"_id": "$device.id", "coords":
-                                                 {"$push": {"time": "$time","latitude": "$latitude", "longitude": "$longitude"}}}
-                                              }
-                                             ]))
-        records_map = {r['_id']: [( float(coordinate['latitude']), float(coordinate['longitude'])) for coordinate in r['coords']] for r
-                       in records}
+        records = collection.aggregate([{"$sort": {"time": -1}},
+                                        {"$match": {"message_type": "wifi"}},
+                                        {"$group": {"_id": "$device.id",
+                                                    "data":
+                                                        {"$push": {"time": "$time",
+                                                                   "latitude": "$latitude",
+                                                                   "longitude": "$longitude",
+                                                                   "signal": "$payload.signal.rssi",
+                                                                   "ap": "$payload.bssi",
 
-        logger.debug(f"Fetched {1} records from {self.collection_name}.")
-        return records_map
+                                                                   },
+                                                         },
 
-    def get_last_coords(self) -> Dict[str, List[Tuple[str, float, float]]]:
+                                                    }
+                                         },
+                                        {"$project": {
+                                            "_id": 0,
+                                            "device.id": "$_id",
+                                            "data": { "$slice" : ["$data", limit_to]},
+                                        }},
+                                        {"$sort": {"device.id": 1, "device.data.time": -1}},
+                                        ])
 
-        """
-            Return the most recent location with the message time for each of clients
-
-            Message format:
-
-            >>> {
-            >>>    "$device.id" : ( "$payload.latitude", "$payload.longitude"),
-            >>>    "$device.id" : ( "$payload.latitude", "$payload.longitude"),
-            >>>    ...
-            >>> }
-
-
-        :return: dict
-        """
-
-        # Get all coordinates
-        all_coords = self.get_all_coords()
-
-        # Get only one value for each key
-        one_shot_coords = {key: value.pop() for key,value in all_coords.items()}
-
-        return one_shot_coords
-
-
+        return list(records)
