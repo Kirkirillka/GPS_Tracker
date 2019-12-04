@@ -11,6 +11,15 @@ public class ClientDeviceMessage extends Coordinate {
     @JsonProperty(ClientDeviceMessageFields.TIME)
     private XMLGregorianCalendar time;
 
+    private ClientDeviceMessage(Builder builder) {
+        setLongitude(builder.longitude);
+        setLatitude(builder.latitude);
+        setTime(builder.time);
+        setMessageType(builder.messageType);
+        setDevice(builder.device);
+        setPayload(builder.payload);
+    }
+
     public enum MessageType {
         raw,
         wifi
@@ -21,38 +30,6 @@ public class ClientDeviceMessage extends Coordinate {
 
     @JsonProperty("device")
     private Device device;
-
-
-    public static class Device {
-
-        @JsonProperty("id")
-        private String id;
-
-        private enum DeviceType {
-            handy,
-            UAV
-        }
-
-        @JsonProperty("device_type")
-        private DeviceType deviceType;
-
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public DeviceType getDeviceType() {
-            return deviceType;
-        }
-
-        public void setDeviceType(DeviceType deviceType) {
-            this.deviceType = deviceType;
-        }
-    }
 
     @JsonProperty("payload")
     private Block payload;
@@ -151,5 +128,51 @@ public class ClientDeviceMessage extends Coordinate {
 
     public void setPayload(Block payload) {
         this.payload = payload;
+    }
+
+    public static final class Builder {
+        private double longitude;
+        private double latitude;
+        private XMLGregorianCalendar time;
+        private MessageType messageType;
+        private Device device;
+        private Block payload;
+
+        public Builder() {
+        }
+
+        public Builder longitude(double val) {
+            longitude = val;
+            return this;
+        }
+
+        public Builder latitude(double val) {
+            latitude = val;
+            return this;
+        }
+
+        public Builder time(XMLGregorianCalendar val) {
+            time = val;
+            return this;
+        }
+
+        public Builder messageType(MessageType val) {
+            messageType = val;
+            return this;
+        }
+
+        public Builder device(Device val) {
+            device = val;
+            return this;
+        }
+
+        public Builder payload(Block val) {
+            payload = val;
+            return this;
+        }
+
+        public ClientDeviceMessage build() {
+            return new ClientDeviceMessage(this);
+        }
     }
 }
