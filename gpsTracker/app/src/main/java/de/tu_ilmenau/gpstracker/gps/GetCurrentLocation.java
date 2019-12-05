@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -20,6 +21,8 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -34,10 +37,10 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.android.material.textfield.TextInputEditText;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 
 import de.tu_ilmenau.gpstracker.R;
 import de.tu_ilmenau.gpstracker.dbModel.ClientDeviceMessage;
@@ -51,24 +54,28 @@ public class GetCurrentLocation extends Activity implements OnClickListener {
 
     private Button btnGetLocation = null;
     private EditText editLocation = null;
+    private EditText ipAddress = null;
     private ProgressBar pb = null;
-    private String deviceId = Settings.Secure.getString(getApplicationContext()
-                    .getContentResolver(), Settings.Secure.ANDROID_ID);
+    private String deviceId;
     private MqttClientWrapper clientWrapper;
     private static final String TAG = "Debug";
     private Boolean flag = false;
+    private boolean enableMqtt = false;
+    private String ipAdd;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-
+        deviceId = Settings.Secure.getString(getApplicationContext()
+                .getContentResolver(), Settings.Secure.ANDROID_ID);
 
         //if you want to lock screen for always Portrait mode
         setRequestedOrientation(ActivityInfo
                 .SCREEN_ORIENTATION_PORTRAIT);
 
         pb = (ProgressBar) findViewById(R.id.progressBar1);
+        ipAddress = (EditText) findViewById(R.id.editIpAddress);
         pb.setVisibility(View.INVISIBLE);
 
         editLocation = (EditText) findViewById(R.id.editTextLocation);
@@ -78,19 +85,56 @@ public class GetCurrentLocation extends Activity implements OnClickListener {
 
         locationMangaer = (LocationManager)
                 getSystemService(Context.LOCATION_SERVICE);
-        clientWrapper = new MqttClientWrapper(getApplicationContext());
-        clientWrapper.connect();
-
+        enableMqtt();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+    public void enableMqtt() {
+        ipAdd = ipAddress.getText().toString();
+//        if (ipAdd != null && ipAdd.length() > 0) {
+            clientWrapper = new MqttClientWrapper(getApplicationContext(), ipAdd);
+            enableMqtt = true;
+//        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     @Override
     public void onClick(View v) {
         flag = displayGpsStatus();
         if (flag) {
-
+//            if (ipAdd == null || !ipAdd.equals(ipAddress.getText().toString())) {
+//                enableMqtt = false;
+//            }
+            if (!enableMqtt) {
+                enableMqtt();
+            }
             Log.v(TAG, "onClick");
-
+            @SuppressLint("MissingPermission")
+            Location loc = locationMangaer.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            try {
+                WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                @SuppressLint("MissingPermission") WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+                GregorianCalendar cal = new GregorianCalendar();
+                Date date = new Date();
+                cal.setTime(date);
+                ClientDeviceMessage.Block payload = new ClientDeviceMessage.Block();
+                payload.setBssid(wifiInfo.getBSSID());
+                payload.setSsid(wifiInfo.getSSID());
+                ClientDeviceMessage.Block.Signal signal = new ClientDeviceMessage.Block.Signal();
+                signal.setRssi(wifiInfo.getRssi());
+                payload.setSignal(signal);
+                payload.setInfoType("test");
+                ClientDeviceMessage message = new ClientDeviceMessage.Builder().latitude(loc.getLatitude())
+                        .longitude(loc.getLongitude()).messageType(ClientDeviceMessage.MessageType.raw)
+                        .time(DatatypeFactory.newInstance().newXMLGregorianCalendar(cal))
+                        .device(new Device.Builder().deviceType(Device.DeviceType.handy).id(deviceId).build())
+                        .payload(payload)
+                        .build();
+                clientWrapper.publish(message);
+            } catch (DatatypeConfigurationException e) {
+                e.printStackTrace();
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
             editLocation.setText("Please!! move your device to" +
                     " see the changes in coordinates." + "\nWait..");
 
@@ -109,7 +153,7 @@ public class GetCurrentLocation extends Activity implements OnClickListener {
                 return;
             }
             locationMangaer.requestLocationUpdates(LocationManager
-                    .GPS_PROVIDER, 5000, 10, locationListener);
+                    .GPS_PROVIDER, 5000, 0.5f, locationListener);
 
         } else {
             alertbox("Gps Status!!", "Your GPS is: OFF");
@@ -164,34 +208,33 @@ public class GetCurrentLocation extends Activity implements OnClickListener {
     private class MyLocationListener implements LocationListener {
         @Override
         public void onLocationChanged(Location loc) {
-
             editLocation.setText("");
             pb.setVisibility(View.INVISIBLE);
-            Toast.makeText(getBaseContext(),"Location changed : Lat: " +
-                            loc.getLatitude()+ " Lng: " + loc.getLongitude(),
+            Toast.makeText(getBaseContext(), "Location changed : Lat: " +
+                            loc.getLatitude() + " Lng: " + loc.getLongitude(),
                     Toast.LENGTH_SHORT).show();
-            String longitude = "Longitude: " +loc.getLongitude();
+            String longitude = "Longitude: " + loc.getLongitude();
             Log.v(TAG, longitude);
-            String latitude = "Latitude: " +loc.getLatitude();
+            String latitude = "Latitude: " + loc.getLatitude();
             Log.v(TAG, latitude);
 
             /*----------to get City-Name from coordinates ------------- */
-            String cityName=null;
+            String cityName = null;
             Geocoder gcd = new Geocoder(getBaseContext(),
                     Locale.getDefault());
-            List<Address>  addresses;
+            List<Address> addresses;
             try {
                 addresses = gcd.getFromLocation(loc.getLatitude(), loc
                         .getLongitude(), 1);
                 if (addresses.size() > 0)
                     System.out.println(addresses.get(0).getLocality());
-                cityName=addresses.get(0).getLocality();
+                cityName = addresses.get(0).getLocality();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            String s = longitude+"\n"+latitude +
-                    "\n\nMy Currrent City is: "+cityName;
+            String s = longitude + "\n" + latitude +
+                    "\n\nMy Currrent City is: " + cityName;
             GregorianCalendar cal = new GregorianCalendar();
             Date date = new Date();
             cal.setTime(date);

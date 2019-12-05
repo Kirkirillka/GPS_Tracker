@@ -9,15 +9,30 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Get Current Location and City Name"
-        android:layout_weight="0.20"
+        android:layout_weight="0.1"
         android:gravity="center"
         android:textSize="20sp" />
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.33"
+        android:layout_weight="0.15"
         android:id="@+id/editTextLocation"
         android:editable="false">
+        <requestFocus></requestFocus>
+    </EditText>
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Enter mqtt ip address:"
+        android:layout_weight="0.1"
+        android:gravity="center"
+        android:textSize="20sp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.1"
+        android:id="@+id/editIpAddress"
+        android:editable="true">
         <requestFocus></requestFocus>
     </EditText>
     <LinearLayout

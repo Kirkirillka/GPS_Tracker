@@ -15,11 +15,9 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.io.UnsupportedEncodingException;
 
-import android.provider.Settings.Secure;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 
 import de.tu_ilmenau.gpstracker.dbModel.ClientDeviceMessage;
 
@@ -28,7 +26,7 @@ public class MqttClientWrapper {
     private MqttAndroidClient client;
     Context context;
 
-    final String serverIp = "tcp://";//TODO add ip address and port
+    final String serverIp = "10.48.226.193";//TODO add ip address and port
     final String port = "1883";
     final String protocol = "tcp";
 
@@ -39,10 +37,10 @@ public class MqttClientWrapper {
     final String password = "password";
 
 
-    public MqttClientWrapper(Context context) {
+    public MqttClientWrapper(Context context, String serverIp) {
         this.context = context;
         String clientId = MqttClient.generateClientId();
-        String serverUri = String.format("%s://%s:%s", protocol, serverIp, port);
+        String serverUri = String.format("%s://%s:%s", protocol, this.serverIp, port);
         client = new MqttAndroidClient(context, serverUri, clientId);
         connect();
     }
@@ -61,7 +59,7 @@ public class MqttClientWrapper {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     // We are connected
-                    Log.d("file", "onSuccess");
+                    Log.d("file", "onSuccess" + asyncActionToken);
                     //publish(client,"payloadd");
                     subscribe(client, subscriptionTopic);
                     client.setCallback(new MqttCallback() {
@@ -107,6 +105,7 @@ public class MqttClientWrapper {
             encodedPayload = payload.getBytes("UTF-8");
             MqttMessage message = new MqttMessage(encodedPayload);
             client.publish(subscriptionTopic, message);
+            Log.d("file:  ", payload);
         } catch (UnsupportedEncodingException | MqttException e) {
             e.printStackTrace();
         }
