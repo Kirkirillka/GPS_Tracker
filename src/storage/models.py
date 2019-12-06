@@ -362,7 +362,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
                                         {"$project": {
                                             "_id": 0,
                                             "device.id": "$_id",
-                                            "data": { "$slice" : ["$data", limit_to]},
+                                            "data": 1
                                         }},
                                         {"$sort": {"device.id": 1, "device.data.time": -1}},
                                         ])
