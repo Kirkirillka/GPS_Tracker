@@ -24,6 +24,16 @@ services:
     depends_on:
       - mqtt_broker
 
+  analyzer:
+    build:
+      context: src
+      target: final-stage
+    volumes:
+      - ./src:/app
+    command: ["python","runners/analyzer_runner.py"]
+    depends_on:
+      - mongodb
+
   databroker:
     build:
       context: src
