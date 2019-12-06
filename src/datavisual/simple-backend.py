@@ -67,9 +67,7 @@ def aggregation_by_device_id():
         HTTP Endpoint to access the records aggregated per <device.id>
     """
 
-    limit = request.args.get("limit",default=10,type=int)
-
-    data = app.storage.get_aggr_per_client(limit_to=limit)
+    data = app.storage.get_aggr_per_client()
 
     return jsonify(data)
 
@@ -77,8 +75,15 @@ def aggregation_by_device_id():
 @app.route("/estimations/all", methods=["GET"])
 def all_estimations():
 
-    raise NotImplementedError
+    """
+        HTTP Endpoint to access the estimation made by analyzers
+    """
 
+    data = app.storage.get_raw_estimations()
+    sanitized_records = sanitize_json(data)
+
+
+    return jsonify(sanitized_records)
 
 @app.route("/estimations/last", methods=["GET"])
 def last_estimations():
