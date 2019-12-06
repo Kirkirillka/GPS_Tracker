@@ -323,7 +323,25 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         return self.save(record, collection_name)
 
-    def get_aggr_per_client(self, limit_to: int = -1) -> List[Dict]:
+    def get_raw_estimations(self) -> List[Dict]:
+
+        """
+            Return all computed estimations
+        :return: estimations as they are stored in the DB.
+        """
+
+        # Use custom name to fetch estimation
+        collection_name = 'estimations'
+
+        # Get collection to read from
+        collection = self._db_conn[collection_name]
+
+        # Convert from cursor iterator to list
+        records = collection.aggregate([{"$sort": {"time": -1}}])
+
+        return list(records)
+
+    def get_aggr_per_client(self) -> List[Dict]:
 
         """
             Returns records aggregated per a client.

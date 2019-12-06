@@ -4,7 +4,7 @@ from unittest import TestCase
 from unittest import TestCase
 
 from storage.models import MongoDBStorageAdapter
-from utils.generators import RawPayloadGenerator
+from utils.generators import RawPayloadGenerator, RealisticClientPayloadGenerator
 
 
 class TestMongoDBStorageAdapter(TestCase):
@@ -82,3 +82,25 @@ class TestMongoDBStorageAdapter(TestCase):
         deleted_id = self.adapter.delete(message)
 
         self.assertEqual(added_id, deleted_id)
+
+    def test_get_client_aggr(self):
+
+        # Test on the empty data
+        rows = self.adapter.get_aggr_per_client()
+
+        self.assertTrue(isinstance(rows,list))
+        self.assertTrue(len(rows) == 0)
+
+        # Test with test data
+        # Prepare message
+        message = RealisticClientPayloadGenerator().get()
+        # Save the message to delete it at the end of the tests
+        self.generated_messages.append(message)
+        # Save message
+        res = self.adapter.save(message)
+
+        rows = self.adapter.get_aggr_per_client()
+
+        self.assertTrue(isinstance(rows,list))
+        self.assertTrue(len(rows) != 0)
+        self.assertTrue(len(rows) == 1)
