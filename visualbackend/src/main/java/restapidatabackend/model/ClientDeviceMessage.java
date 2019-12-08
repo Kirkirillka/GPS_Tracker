@@ -1,4 +1,4 @@
-package edu.ilmenau.group.study.restapidatabackend.model;
+package restapidatabackend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

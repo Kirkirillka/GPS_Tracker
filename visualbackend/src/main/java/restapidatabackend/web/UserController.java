@@ -1,4 +1,4 @@
-package edu.ilmenau.group.study.restapidatabackend.web;
+package restapidatabackend.web;
 
 import edu.ilmenau.group.study.restapidatabackend.model.ClientDeviceMessage;
 import edu.ilmenau.group.study.restapidatabackend.service.ClientDeviceService;

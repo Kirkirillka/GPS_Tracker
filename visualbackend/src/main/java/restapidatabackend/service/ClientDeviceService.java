@@ -1,4 +1,4 @@
-package edu.ilmenau.group.study.restapidatabackend.service;
+package restapidatabackend.service;
 
 import edu.ilmenau.group.study.restapidatabackend.model.ClientDeviceMessage;
 import org.springframework.beans.factory.annotation.Autowired;

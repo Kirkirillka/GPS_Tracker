@@ -1,4 +1,4 @@
-package edu.ilmenau.group.study.restapidatabackend;
+package restapidatabackend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
