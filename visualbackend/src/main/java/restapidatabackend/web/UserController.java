@@ -1,7 +1,8 @@
 package restapidatabackend.web;
 
-import edu.ilmenau.group.study.restapidatabackend.model.ClientDeviceMessage;
-import edu.ilmenau.group.study.restapidatabackend.service.ClientDeviceService;
+import de.tuIlmenau.gpsTracker.dbModel.ClientDeviceMessage;
+import de.tuIlmenau.gpsTracker.dbModel.Coordinate;
+import restapidatabackend.service.ClientDeviceService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class UserController {
@@ -47,7 +50,7 @@ public class UserController {
         ClientDeviceMessage message = clientDeviceService.findLast();
         if (message == null) {
             logger.error("No message found");
-            return new ResponseEntity<>(new ClientDeviceMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ClientDeviceMessage.Builder().build(), HttpStatus.NOT_FOUND);
         }
 
         logger.info("Returned last message");
@@ -65,7 +68,7 @@ public class UserController {
         ClientDeviceMessage message = clientDeviceService.findById(clientId);
         if (message == null) {
             logger.error("No message found for specified client");
-            return new ResponseEntity<>(new ClientDeviceMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new ClientDeviceMessage.Builder().build(), HttpStatus.NOT_FOUND);
         }
 
         logger.info("Returned message by client device id");
@@ -87,5 +90,38 @@ public class UserController {
 
         logger.info("Returned all client IDs");
         return new ResponseEntity<>(list, HttpStatus.FOUND);
+    }
+
+    /**
+     * Get all coordinates
+     * @return ResponseEntity<Map<String, List<Coordinate>>>
+     */
+    @GetMapping("/messages/all/coords")
+    public ResponseEntity<Map<String, List<Coordinate>>> getLastCoords() {
+        Map<String, List<Coordinate>> list = clientDeviceService.findLastCoords();
+        if (list == null) {
+            logger.error("No coordinates found");
+            return new ResponseEntity<>(new HashMap<>(), HttpStatus.NOT_FOUND);
+        }
+
+        logger.info("Returned all coordinates");
+        return new ResponseEntity<>(list, HttpStatus.FOUND);
+    }
+
+    /**
+     * Get all coordinates for client
+     * @param clientId - client device id
+     * @return List<Coordinate>
+     */
+    @GetMapping("/clients/{id}/coords")
+    public ResponseEntity<List<Coordinate>> getLastCoordsByClientId(@PathVariable(value = "id") String clientId) {
+        List<Coordinate> coords = clientDeviceService.findLastCoordsByClientId(clientId);
+        if (coords == null) {
+            logger.error("No coordinates found for client " + clientId);
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+        }
+
+        logger.info("Returned all coordinates for client " + clientId);
+        return new ResponseEntity<>(coords, HttpStatus.FOUND);
     }
 }
