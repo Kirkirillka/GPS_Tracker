@@ -1,26 +1,17 @@
-package de.tuIlmenau.gpsTracker.dbModel;
-
+package restapidatabackend.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.util.List;
 
 
-public class ClientDeviceMessage extends Coordinate {
+public class ClientDeviceMessage {
 
-    @JsonProperty(ClientDeviceMessageFields.TIME)
+    @JsonProperty("time")
     private XMLGregorianCalendar time;
 
-    private ClientDeviceMessage(Builder builder) {
-        setLongitude(builder.longitude);
-        setLatitude(builder.latitude);
-        setTime(builder.time);
-        setMessageType(builder.messageType);
-        setDevice(builder.device);
-        setPayload(builder.payload);
-    }
-
-    public enum MessageType {
+    protected enum MessageType {
         raw,
         wifi
     }
@@ -31,8 +22,46 @@ public class ClientDeviceMessage extends Coordinate {
     @JsonProperty("device")
     private Device device;
 
+
+    public static class Device {
+
+        @JsonProperty("id")
+        private String id;
+
+        private enum DeviceType {
+            handy,
+            UAV
+        }
+
+        @JsonProperty("device_type")
+        private DeviceType deviceType;
+
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public DeviceType getDeviceType() {
+            return deviceType;
+        }
+
+        public void setDeviceType(DeviceType deviceType) {
+            this.deviceType = deviceType;
+        }
+    }
+
+    @JsonProperty("longitude")
+    private double longitude;
+
+    @JsonProperty("latitude")
+    private double latitude;
+
     @JsonProperty("payload")
-    private Block payload;
+    private List<Block> payload;
 
 
     public static class Block {
@@ -122,57 +151,27 @@ public class ClientDeviceMessage extends Coordinate {
         this.device = device;
     }
 
-    public Block getPayload() {
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public List<Block> getPayload() {
         return payload;
     }
 
-    public void setPayload(Block payload) {
+    public void setPayload(List<Block> payload) {
         this.payload = payload;
-    }
-
-    public static final class Builder {
-        private double longitude;
-        private double latitude;
-        private XMLGregorianCalendar time;
-        private MessageType messageType;
-        private Device device;
-        private Block payload;
-
-        public Builder() {
-        }
-
-        public Builder longitude(double val) {
-            longitude = val;
-            return this;
-        }
-
-        public Builder latitude(double val) {
-            latitude = val;
-            return this;
-        }
-
-        public Builder time(XMLGregorianCalendar val) {
-            time = val;
-            return this;
-        }
-
-        public Builder messageType(MessageType val) {
-            messageType = val;
-            return this;
-        }
-
-        public Builder device(Device val) {
-            device = val;
-            return this;
-        }
-
-        public Builder payload(Block val) {
-            payload = val;
-            return this;
-        }
-
-        public ClientDeviceMessage build() {
-            return new ClientDeviceMessage(this);
-        }
     }
 }
