@@ -18,8 +18,8 @@
       },
       "required": ["id","device_type"]
     },
-    "longitude": {"type": "string"},
-    "latitude": {"type": "string"},
+    "longitude": {"type": "number"},
+    "latitude": {"type": "number"},
     "payload": {"type": "object"}
   },
   "required": ["time", "device", "longitude", "latitude","payload","message_type"]

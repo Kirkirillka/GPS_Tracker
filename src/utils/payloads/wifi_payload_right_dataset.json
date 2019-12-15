@@ -1,13 +1,13 @@
 [
   {
     "time": "2019-10-29T19:00:07.525122",
-    "message_type": "qd qd",
+    "message_type": "wifi",
     "device": {
       "id": "0c7f856e-d084-4633-8a08-990447db67b6",
       "device_type": "handy"
     },
-    "longitude": "213.4213",
-    "latitude": "213.4232",
+    "longitude": 13.4213,
+    "latitude": 13.4232,
     "payload": [
       {
         "info_type": "wifi",

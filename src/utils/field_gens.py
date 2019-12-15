@@ -68,7 +68,7 @@ def longitude_gen():
     offset = random.gauss(1, 2)
     radians = random.randint(0, 360) * math.pi / 180
 
-    return str(base_longitude + offset * math.cos(radians))
+    return base_longitude + offset * math.cos(radians)
 
 
 def latitude_gen():
@@ -77,7 +77,7 @@ def latitude_gen():
     offset = random.gauss(1, 2)
     radians = random.randint(0, 360) * math.pi / 180
 
-    return str(base_latitude + offset * math.sin(radians))
+    return base_latitude + offset * math.sin(radians)
 
 
 #

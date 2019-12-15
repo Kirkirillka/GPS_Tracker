@@ -168,8 +168,8 @@ class RealisticClientPayloadGenerator(WIFIPayloadGenerator):
         dump_wifi_payload = super(RealisticClientPayloadGenerator, self).get()
 
         dump_wifi_payload["device"]["id"] = self.uuid
-        dump_wifi_payload['longitude'] = str(longitude)
-        dump_wifi_payload['latitude'] = str(latitude)
+        dump_wifi_payload['longitude'] = float(longitude)
+        dump_wifi_payload['latitude'] = float(latitude)
         dump_wifi_payload["payload"]["ssid"] = self.ssid
         dump_wifi_payload["payload"]["signal"]["rssi"] = signal_quality
 

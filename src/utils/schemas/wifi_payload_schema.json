@@ -32,10 +32,10 @@
       ]
     },
     "longitude": {
-      "type": "string"
+      "type": "number"
     },
     "latitude": {
-      "type": "string"
+      "type": "number"
     },
     "payload": {
       "type": "object",
