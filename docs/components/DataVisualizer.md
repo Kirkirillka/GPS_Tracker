@@ -7,6 +7,7 @@
     - D3
     - ApexCharts
 - Prometheus/Grafana stack
+- Offline Jupyter Notebook
 
 ## Description
 

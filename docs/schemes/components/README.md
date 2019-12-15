@@ -1,3 +1,5 @@
 # Component Diagram
 
-![Component UML Diagram](Component%20Diagram.png)
+## Overview of the components
+
+![Overview](ComponentDiagram-Overview.png)
