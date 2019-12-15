@@ -9,7 +9,7 @@ logging.config.dictConfig(read_logging_config())
 logger = logging.getLogger(__name__)
 
 
-DELAY = 1
+DELAY = 0.7
 MAX_MESSAGE_NUMBER = 100000
 
 if __name__ == '__main__':

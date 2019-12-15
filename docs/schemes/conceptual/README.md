@@ -1,5 +1,6 @@
 # Conceptual Diagram
 
-This diagram shows in general how the system works
+## Main concept
 
+This diagram shows how the system works in general.
 ![Conceptual Diagram](ConceptualDiagram.png)
