@@ -32,15 +32,13 @@
       ]
     },
     "longitude": {
-      "type": "string"
+      "type": "number"
     },
     "latitude": {
-      "type": "string"
+      "type": "number"
     },
     "payload": {
-      "type": "object",
-      "properties": {
-        "$schema": "http://json-schema.org/schema#",
+
         "type": "object",
         "properties": {
           "ssid": {
@@ -53,8 +51,8 @@
             "type": "object",
             "properties": {
               "rssi": {
-                "type": "integer",
-                "minimum": -100,
+                "type": "number",
+                "minimum": -130,
                 "maximum": -20
               }
             },
@@ -69,7 +67,7 @@
           "signal"
         ]
       }
-    }
+
   },
   "required": [
     "time",

@@ -22,7 +22,7 @@ def time_gen():
     :return:
     """
 
-    return str(datetime.datetime.now().isoformat())
+    return datetime.datetime.now().isoformat()
 
 
 def raw_payload_message_gen():

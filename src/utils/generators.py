@@ -160,16 +160,16 @@ class RealisticClientPayloadGenerator(WIFIPayloadGenerator):
         _x = np.random.choice(self._x_plane)
         _y = np.random.choice(self._y_plane)
 
-        latitude = _x + float(self.base_latitude)
-        longitude = _y + float(self.base_longitude)
+        latitude = float(_x + float(self.base_latitude))
+        longitude = float(_y + float(self.base_longitude))
 
         signal_quality = self._get_signal(_x, _y)
 
         dump_wifi_payload = super(RealisticClientPayloadGenerator, self).get()
 
         dump_wifi_payload["device"]["id"] = self.uuid
-        dump_wifi_payload['longitude'] = str(longitude)
-        dump_wifi_payload['latitude'] = str(latitude)
+        dump_wifi_payload['longitude'] = longitude
+        dump_wifi_payload['latitude'] = latitude
         dump_wifi_payload["payload"]["ssid"] = self.ssid
         dump_wifi_payload["payload"]["signal"]["rssi"] = signal_quality
 

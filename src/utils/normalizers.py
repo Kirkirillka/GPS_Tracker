@@ -2,6 +2,8 @@
 import json
 from typing import Tuple, Any
 
+import dateutil.parser
+
 # Project modules
 from config.utils import get_project_config
 from utils.validators import VALIDATOR_MAPPING, VALIDATOR_MESSAGE_TYPES
@@ -105,7 +107,16 @@ class DefaultNormalizer:
         validator = _validator_class()
         _is_valid = validator.validate(casted_dict)
 
-        if _is_valid:
-            return casted_dict
-        else:
+        if not _is_valid:
             return None
+        else:
+
+            # Cast time field
+            casted_dict['time'] = dateutil.parser.parse(casted_dict['time'])
+
+            # Cast longitude and latitude
+            casted_dict['latitude'] = float(casted_dict['latitude'])
+            casted_dict['longitude'] = float(casted_dict['longitude'])
+
+        return casted_dict
+
