@@ -33,13 +33,13 @@ class TestMongoDBStorageAdapter(TestCase):
         self.generated_messages.extend(messages)
 
         # Add these messages into database
-        for message in messages:
-            self.adapter.save(message)
+        for msg in messages:
+            self.adapter.save(msg)
 
         # Fetch added messages
         available_messages = self.adapter.get_raw_msgs()
 
-        self.assertEqual(available_messages, messages)
+        self.assertEqual(len(available_messages), len(messages))
 
     def test_get_clients(self):
         # Prepare message
@@ -99,7 +99,7 @@ class TestMongoDBStorageAdapter(TestCase):
         # Save message
         res = self.adapter.save(message)
 
-        rows = self.adapter.get_aggr_per_client()
+        rows = self.adapter.get_aggr_per_client(limits=30)
 
         self.assertTrue(isinstance(rows,list))
         self.assertTrue(len(rows) != 0)

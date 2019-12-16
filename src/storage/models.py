@@ -207,7 +207,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         collection = self._db_conn[self.collection_name]
 
         # Convert from cursor iterator to list
-        records = list(collection.find({}))
+        records = list(collection.find({},{ "_id": 0}))
 
         logger.debug(f"Fetched {len(records)} records from {self.collection_name}.")
 
