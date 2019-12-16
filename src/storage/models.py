@@ -1,4 +1,5 @@
 # Python library import
+import os
 from abc import ABC, abstractmethod
 from typing import List, Dict, Tuple, Any
 import dateutil.parser
@@ -91,14 +92,14 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         # Use connection parameters from default configuration
 
-        self.host = CONFIG['storage']['host']
-        self.port = int(CONFIG['storage']['port'])
+        self.host = os.environ.get('MONGODB_HOST') or CONFIG['mongodb']['host']
+        self.port = int( os.environ.get('MONGODB_PORT') or CONFIG['mongodb']['port'])
 
-        self._username = CONFIG['storage']['db_user']
-        self._password = CONFIG['storage']['db_password']
+        self._username = os.environ.get('MONGODB_DB_USER') or CONFIG['mongodb']['db_user']
+        self._password = os.environ.get('MONGODB_DB_USERPASS') or CONFIG['mongodb']['db_password']
 
-        self.db_name = CONFIG['storage']['db_name']
-        self.collection_name = CONFIG['storage']['collection_name']
+        self.db_name = os.environ.get('MONGODB_DB_NAME') or CONFIG['mongodb']['db_name']
+        self.collection_name = os.environ.get('MONGODB_DEFAULT_COLLECTION') or CONFIG['mongodb']['collection_name']
 
         # Setup connection to DB
         self._connect()

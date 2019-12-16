@@ -1,4 +1,5 @@
 # Python library import
+import os
 from socket import error as SocketError
 from typing import List, Callable, Any
 
@@ -16,7 +17,7 @@ logging.config.dictConfig(read_logging_config())
 logger = logging.getLogger(__name__)
 
 # Project configuration
-CONFIG = get_project_config()
+DEFAULT_CONFIG = get_project_config()
 
 
 class MQTTBrokerAdapter:
@@ -55,10 +56,10 @@ class MQTTBrokerAdapter:
         self._topics: dict = {}
 
         # Connection parameters to MQTT Message Broker
-        self._host: str = CONFIG["mqtt"]["host"]
-        self._port: int = int(CONFIG["mqtt"]["port"])
-        self._user: str = CONFIG["mqtt"]["user"]
-        self._password: str = CONFIG["mqtt"]["password"]
+        self._host: str = os.environ.get('MQTT_HOST') or DEFAULT_CONFIG["mqtt"]["host"]
+        self._port: int = int(os.environ.get('MQTT_PORT') or DEFAULT_CONFIG["mqtt"]["port"])
+        self._user: str = os.environ.get('MQTT_USER') or DEFAULT_CONFIG["mqtt"]["user"]
+        self._password: str = os.environ.get('MQTT_USERPASS') or DEFAULT_CONFIG["mqtt"]["password"]
 
         # Setup the connection
         self._connect()
