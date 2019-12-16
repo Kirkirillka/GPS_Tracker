@@ -20,6 +20,9 @@ services:
       target: final-stage
     volumes:
       - ./src:/app
+    environment:
+      - MQTT_HOST=185.104.106.47
+      - MQTT_POR=1883
     command: ["python","runners/wifi_payload_client_runner.py"]
     depends_on:
       - mqtt_broker
@@ -40,6 +43,9 @@ services:
       target: final-stage
     volumes:
       - ./src:/app
+    environment:
+      - MQTT_HOST=185.104.106.47
+      - MQTT_POR=1883
     command: ["python","runners/databroker_runner.py"]
     depends_on:
       - mqtt_broker
