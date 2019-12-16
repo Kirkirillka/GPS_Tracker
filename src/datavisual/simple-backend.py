@@ -60,26 +60,42 @@ def all_clients():
     return jsonify(clients)
 
 
-@app.route("/aggr/by_device_id", methods=['GET'])
+@app.route("/aggr/by_device_id", methods=["POST"])
 def aggregation_by_device_id():
 
     """
         HTTP Endpoint to access the records aggregated per <device.id>
     """
+    json_data = request.json
 
-    data = app.storage.get_aggr_per_client()
+    if json_data:
+
+        data = app.storage.get_aggr_per_client(**json_data)
+    else:
+        data = app.storage.get_aggr_per_client()
+
+
 
     return jsonify(data)
 
 
-@app.route("/estimations/all", methods=["GET"])
+
+@app.route("/estimations/all", methods=["POST"])
 def all_estimations():
 
     """
         HTTP Endpoint to access the estimation made by analyzers
     """
 
-    data = app.storage.get_raw_estimations()
+    json_data = request.json
+
+    if json_data:
+
+        data = app.storage.get_raw_estimations(**json_data)
+    else:
+        data = app.storage.get_raw_estimations()
+
+
     sanitized_records = sanitize_json(data)
 
 
