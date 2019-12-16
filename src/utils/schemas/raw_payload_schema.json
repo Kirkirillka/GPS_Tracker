@@ -2,12 +2,25 @@
   "$schema": "http://json-schema.org/schema#",
   "type": "object",
   "properties": {
-    "time": {"type": "string", "format": "date-time"},
-    "message_type": {"type": "string", "enum": ["raw"]},
+    "time": {
+      "type": [
+        "string",
+        "integer"
+      ],
+      "format": "date-time"
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "raw"
+      ]
+    },
     "device": {
       "type": "object",
       "properties": {
-        "id": {"type": "string"},
+        "id": {
+          "type": "string"
+        },
         "device_type": {
           "type": "string",
           "enum": [
@@ -16,11 +29,27 @@
           ]
         }
       },
-      "required": ["id","device_type"]
+      "required": [
+        "id",
+        "device_type"
+      ]
     },
-    "longitude": {"type": "string"},
-    "latitude": {"type": "string"},
-    "payload": {"type": "object"}
+    "longitude": {
+      "type": "string"
+    },
+    "latitude": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "object"
+    }
   },
-  "required": ["time", "device", "longitude", "latitude","payload","message_type"]
+  "required": [
+    "time",
+    "device",
+    "longitude",
+    "latitude",
+    "payload",
+    "message_type"
+  ]
 }

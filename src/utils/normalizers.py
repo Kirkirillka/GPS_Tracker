@@ -3,6 +3,7 @@ import json
 from typing import Tuple, Any
 
 import dateutil.parser
+import datetime
 
 # Project modules
 from config.utils import get_project_config
@@ -112,7 +113,7 @@ class DefaultNormalizer:
         else:
 
             # Cast time field
-            casted_dict['time'] = dateutil.parser.parse(casted_dict['time'])
+            casted_dict['time'] = datetime.datetime.fromtimestamp(casted_dict['time'] / 1e3)
 
             # Cast longitude and latitude
             casted_dict['latitude'] = float(casted_dict['latitude'])
