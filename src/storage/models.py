@@ -1,7 +1,8 @@
 # Python library import
 from abc import ABC, abstractmethod
 from typing import List, Dict, Tuple, Any
-from bson.son import SON
+import dateutil.parser
+import datetime
 
 # 3-td party libraries
 import pymongo
@@ -323,12 +324,20 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         return self.save(record, collection_name)
 
-    def get_raw_estimations(self) -> List[Dict]:
+    def get_raw_estimations(self, start_date=None, end_date=None, *args, **kwargs) -> List[Dict]:
 
         """
             Return all computed estimations
         :return: estimations as they are stored in the DB.
         """
+
+        # Parse time boundaries if possible
+        try:
+            start_date = dateutil.parser.parse(start_date)
+            end_date = dateutil.parser.parse(end_date)
+        except:
+            start_date = datetime.datetime.now() - datetime.timedelta(days=1)
+            end_date = datetime.datetime.now()
 
         # Use custom name to fetch estimation
         collection_name = 'estimations'
@@ -337,11 +346,17 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         collection = self._db_conn[collection_name]
 
         # Convert from cursor iterator to list
-        records = collection.aggregate([{"$sort": {"time": -1}}])
+        records = collection.find({
+            "time": {
+                "$lt": end_date,
+                "$gte": start_date
+
+            }
+        }).sort('time', -1)
 
         return list(records)
 
-    def get_aggr_per_client(self) -> List[Dict]:
+    def get_aggr_per_client(self, limits=20, start_date=None, end_date=None, *args, **kwargs) -> List[Dict]:
 
         """
             Returns records aggregated per a client.
@@ -354,16 +369,30 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
             - longitude
             - latitude
 
-        :param limit_to: set the maximum number of records for a client is returned. If -1, then all records will be returned.
+        :param limits: set the maximum number of records for a client is returned. If -1, then all records will be returned.
         :return:
         """
+
+        # Parse time boundaries if possible
+        try:
+            start_date = dateutil.parser.parse(start_date)
+            end_date = dateutil.parser.parse(end_date)
+        except:
+            start_date = datetime.datetime.now() - datetime.timedelta(days=1)
+            end_date = datetime.datetime.now()
 
         # Get collection to read from
         collection = self._db_conn[self.collection_name]
 
         # Convert from cursor iterator to list
+
         records = collection.aggregate([{"$sort": {"time": -1}},
-                                        {"$match": {"message_type": "wifi"}},
+                                        {"$match": {"message_type": "wifi",
+                                                    "time": {
+                                                        "$gte": start_date,
+                                                        "$lt": end_date
+                                                    }
+                                                    }},
                                         {"$group": {"_id": "$device.id",
                                                     "data":
                                                         {"$push": {"time": "$time",
@@ -380,9 +409,9 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
                                         {"$project": {
                                             "_id": 0,
                                             "device.id": "$_id",
-                                            "data": 1
+                                            "data": {"$slice": ["$data", limits]}
                                         }},
-                                        {"$sort": {"device.id": 1, "device.data.time": -1}},
+                                        {"$sort": {"device.id": 1, "device.data.time": 1}},
                                         ])
 
         return list(records)
