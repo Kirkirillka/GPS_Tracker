@@ -1,4 +1,5 @@
 # Python library import
+import os
 from typing import Callable
 
 # 3-td party libraries
@@ -17,7 +18,7 @@ logging.config.dictConfig(read_logging_config())
 logger = logging.getLogger(__name__)
 
 # Project configuration
-CONFIG = get_project_config()
+DEFAULT_CONFIG = get_project_config()
 
 # Default topics to subscribe
 TOPICS = [
