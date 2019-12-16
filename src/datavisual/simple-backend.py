@@ -3,7 +3,6 @@ from flask import request
 
 from flask_cors import CORS
 
-
 from storage import MongoDBStorageAdapter
 
 app = Flask(__name__)
@@ -11,7 +10,7 @@ CORS(app)
 app.storage = MongoDBStorageAdapter()
 
 
-def sanitize_json(json_data : dict) -> dict:
+def sanitize_json(json_data: dict) -> dict:
     """
         Allow to parse unknown objects from MongoDB, which the default JSON parser cannot
         understand
@@ -24,7 +23,6 @@ def sanitize_json(json_data : dict) -> dict:
 
 @app.route("/messages/all", methods=["GET"])
 def all_messages() -> dict:
-
     """
         HTTP Endpoint to access all received messages from clients
     """
@@ -37,7 +35,6 @@ def all_messages() -> dict:
 
 @app.route("/messages/last", methods=["GET"])
 def last_messages() -> dict:
-
     """
         HTTP Endpoint to access the most recent messages from clients
     """
@@ -50,7 +47,6 @@ def last_messages() -> dict:
 
 @app.route("/clients/all", methods=['GET'])
 def all_clients():
-
     """
         HTTP Endpoint to access the ID of registered clients
     """
@@ -62,7 +58,6 @@ def all_clients():
 
 @app.route("/aggr/by_device_id", methods=["POST"])
 def aggregation_by_device_id():
-
     """
         HTTP Endpoint to access the records aggregated per <device.id>
     """
@@ -74,15 +69,11 @@ def aggregation_by_device_id():
     else:
         data = app.storage.get_aggr_per_client()
 
-
-
     return jsonify(data)
-
 
 
 @app.route("/estimations/all", methods=["POST"])
 def all_estimations():
-
     """
         HTTP Endpoint to access the estimation made by analyzers
     """
@@ -95,17 +86,22 @@ def all_estimations():
     else:
         data = app.storage.get_raw_estimations()
 
-
     sanitized_records = sanitize_json(data)
-
 
     return jsonify(sanitized_records)
 
+
 @app.route("/estimations/last", methods=["GET"])
 def last_estimations():
-
     raise NotImplementedError
 
 
+@app.route("/stat/", methods=["GET"])
+def get_statistics():
+    stat = app.storage.get_stat()
+
+    return jsonify(stat)
+
+
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",port=5000,debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

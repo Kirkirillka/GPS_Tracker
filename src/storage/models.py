@@ -417,7 +417,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         return list(records)
 
-    def get_stat(self):
+    def get_stat(self) -> Dict[str, int]:
 
         """
         Returns information about the number of received messages for each collection, specified in 'collections'.
