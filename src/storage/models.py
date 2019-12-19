@@ -435,13 +435,15 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         # collection to calculate statistics for
         collections = [self.collection_name, 'estimations']
 
-        msg_counts = {}
+        msg_counts = []
 
         for col_name in collections:
             collection = self._db_conn[col_name]
 
             count = collection.find({}).count()
 
-            msg_counts[col_name] = count
+            new_record = {"name": col_name, 'count': count}
+
+            msg_counts.append(new_record)
 
         return msg_counts
