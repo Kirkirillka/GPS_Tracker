@@ -1,64 +1,19 @@
-from abc import ABC, abstractmethod
-from typing import Any
-
 import datetime, time
 
-from analyzer.placement.solvers.utils import OptimizationScenario
 from analyzer.placement.solvers.models import UAVPositionSolver
-
 from storage.models import MongoDBStorageAdapter
 
 # Logging section
 import logging.config
 from utils.logs.tools import read_logging_config
+
 logging.config.dictConfig(read_logging_config())
 logger = logging.getLogger(__name__)
 
 
-class AbstractAnalyzer(ABC):
+class UAVSolverRunner:
     """
-    Class **AbstractAnalyzer** defines main methods and attributes that will have every Analyzer.
-
-    Every *Analyzer* is a object that gets information from Storage via StorageAdapter, process the data somehow, and saves
-    the result into Storage back.
-
-
-
-    Methods
-    ----------
-
-    - analyze (data: OptimizationScenario): Perform one analysis step.
-
-    """
-
-    @abstractmethod
-    def analyze(self, data: Any):
-        raise NotImplementedError
-
-
-class UAVLocationAnalyzer(AbstractAnalyzer):
-    """
-    Performs analysis on the best placement for UAVs.
-    As optimization technique, use the power of UAVPositionSolver's optimization interface.
-    """
-
-    # For what kind of objects analysis is made
-    TARGET = "uav"
-
-    # What the Analyzer tries to do
-    MESSAGE_TYPE = "estimation"
-
-    def analyze(self, scenario: OptimizationScenario):
-        # ask solver to estimate the optimum position for UAVs
-        solver = UAVPositionSolver(scenario)
-        optimized_uavs_pos = solver.solve()
-
-        return optimized_uavs_pos
-
-
-class AnalyzerRunner:
-    """
-        Class AnalyzerRunner is responsible for running Analyzers in production.
+        Class UAVSolverRunner is responsible for running Analyzers in production.
 
         Having an Analyzer instance, AnalyzeRunner supply all necessary params for .analyze
         method, save the result in the DB.
@@ -70,21 +25,24 @@ class AnalyzerRunner:
 
     """
 
+    # For what kind of objects analysis is made
+    TARGET = "uav"
 
+    # What the Analyzer tries to do
+    MESSAGE_TYPE = "estimation"
 
-    @property
-    def wait_time(self):
-        # Analyze each 1 second
-        return self.base_wait_time
-
-    def __init__(self, analyzer: UAVLocationAnalyzer):
+    def __init__(self, method_name='clustering', n_clusters = 2):
 
         # How long to wait between each analysis steps
         self.base_wait_time = 10
 
         # Init connection to a DB
         self.store = MongoDBStorageAdapter()
-        self.analyzer = analyzer
+        self.solver = UAVPositionSolver(method_name)
+
+        # Default params
+        self.__methods = method_name
+        self.__n_clusters = n_clusters
 
     def loop(self):
 
@@ -103,28 +61,19 @@ class AnalyzerRunner:
                 data_rows = []
 
                 for record in records:
-
                     last_record = record['data'].pop()
 
                     only_last_position = (last_record['latitude'], last_record['longitude'])
 
                     data_rows.append(only_last_position)
 
-                # Phase 3. Prepare OptimizationScenario
-                logging.info("Starting preparing an optimization scenario")
-                scenario = OptimizationScenario()
-                scenario.random_init(
-                    num_nodes=len(data_rows),
-                    num_uavs=min(len(data_rows),2),
-                    base_num=1)
-
-                scenario.nodes_locations = data_rows
-                logging.debug("The optimization scenario is:")
-                logging.debug(scenario)
-
                 # Phase 2. Ask solver to optimize
-                logging.info("Start analysis of the formed scenario.")
-                optimized_results = self.analyzer.analyze(scenario)
+                logging.info("Start optimization ")
+                optimized_results = self.solver.solve(
+                    nodes_locations=data_rows,
+                    # May be the case that you have n_clusters more than available data
+                    n_clusters = min(len(data_rows),self.__n_clusters)
+                )
 
                 # Phase 3. Save bulk into Storage
                 logging.info("Analysis is done. Now preparing the result to be stored in the Storage.")
@@ -135,10 +84,10 @@ class AnalyzerRunner:
                 # Enrich data with clients (device) ID and time for estimation
                 estimation = {
                     "time": estimation_time,
-                    "message_type": self.analyzer.MESSAGE_TYPE,
+                    "message_type": self.MESSAGE_TYPE,
                     "payload": {
-                        "method": scenario.method,
-                        "target": self.analyzer.TARGET,
+                        "method": self.solver.optimization_method,
+                        "target": self.TARGET,
                         "suggested": [{
                             "latitude": x[0],
                             "longitude": x[1],
@@ -152,5 +101,5 @@ class AnalyzerRunner:
                 self.store.add_estimation(estimation)
 
             # Phase 4. Sleep
-            logging.info(f"The cycle is ended. Sleep for {self.wait_time} seconds.")
-            time.sleep(self.wait_time)
+            logging.info(f"The cycle is ended. Sleep for {self.base_wait_time} seconds.")
+            time.sleep(self.base_wait_time)

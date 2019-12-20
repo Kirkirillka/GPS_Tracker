@@ -1,13 +1,12 @@
 import sys
 
-from analyzer.models import AnalyzerRunner, UAVLocationAnalyzer
+from analyzer.models import UAVSolverRunner
 
 if __name__ == '__main__':
 
     try:
-        analyzer = UAVLocationAnalyzer()
 
-        runner: AnalyzerRunner = AnalyzerRunner(analyzer)
+        runner: UAVSolverRunner = UAVSolverRunner()
 
         runner.loop()
     except KeyboardInterrupt:
