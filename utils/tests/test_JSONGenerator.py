@@ -94,15 +94,12 @@ class TestJSONValidator(TestCase):
 
 class TestJSONGenerator(TestCase):
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        cls.ITERATION_LENGTH = 30
-
     def setUp(self) -> None:
 
         self.json_schema = read_schema_from_file("dump_payload_schema.json")
         self.validator = JSONValidator(self.json_schema)
         self.generator = JSONGenerator(DUMP_PAYLOAD_FIELDS_TEMPLATE)
+        self.ITERATION_LENGTH = 30
 
     def test_generate(self):
 
