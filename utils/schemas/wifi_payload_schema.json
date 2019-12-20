@@ -3,7 +3,6 @@
   "type": "object",
   "properties": {
     "time": {
-      "type": ["string","integer"],
       "format": "date-time"
     },
     "message_type": {

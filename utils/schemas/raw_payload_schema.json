@@ -3,10 +3,6 @@
   "type": "object",
   "properties": {
     "time": {
-      "type": [
-        "string",
-        "integer"
-      ],
       "format": "date-time"
     },
     "message_type": {
@@ -35,10 +31,10 @@
       ]
     },
     "longitude": {
-      "type": "string"
+      "type": "number"
     },
     "latitude": {
-      "type": "string"
+      "type": "number"
     },
     "payload": {
       "type": "object"
