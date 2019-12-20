@@ -1,9 +1,11 @@
 # Python library import
 import os
 from abc import ABC, abstractmethod
-from typing import List, Dict, Tuple, Any
+from typing import List, Dict, Any
 import dateutil.parser
 import datetime
+
+from datetime import datetime as DateTimeClass
 
 # 3-td party libraries
 import pymongo
@@ -32,7 +34,8 @@ class AbstractStorageAdapter(ABC):
         Members
         ======
             * save - take and store a message in DB.
-            * delete - take an item by a Record Identification (may be different, either built-in, like _id, or manually added.
+            * delete - take an item by a Record Identification (may be different, either built-in, like _id, or manually
+            added.
 
     """
 
@@ -213,66 +216,11 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         return records
 
-    def get_last_raw_msgs(self) -> dict:
+    def get_last_raw_msgs(self) -> List[Dict]:
 
         """
-            Return the last saved message (with the newest date) for each of clients.
-            Records are returned as they stored in the DB, e.g. in 'raw' format.
-
-            Example
-            ======
-
-            There are three clients with "device.id" = [1,2,3]. There are three records for each of clients in the
-            time points:
-
-            - 2019-11-12T15:30:09.510003
-            - 2019-11-12T15:30:10.2341
-            - 2019-11-12T15:30:10.344
-
-            The returned value must be something like:
-
-            [
-                {
-                ...
-                date: "2019-11-12T15:30:10.344",
-                    "device": {
-                        "id" = 1
-                        ...
-                    }
-                    ...
-                },
-                {
-                ...
-                date: "2019-11-12T15:30:10.344",
-                    "device": {
-                        "id" = 2
-                        ...
-                    }
-                    ...
-                },
-                {
-                ...
-                date: "2019-11-12T15:30:10.344",
-                    "device": {
-                        "id" = 3
-                        ...
-                    }
-                    ...
-                }
-            ]
-
-        Where "..." means there are other fields contained in the scheme.
-
-        >>> db.data
-        >>> .aggregate([
-        >>>     {"$sort": {"time": -1}},
-        >>>     {
-        >>> $group: {
-        >>>     _id: "$device.id",
-        >>>     device: { $first: "$$ROOT"}
-        >>>
-        >>> }
-        >>> }])
+        Return the last saved message (with the newest date) for each of clients.
+        Records are returned as they stored in the DB, e.g. in 'raw' format.
 
         :return: A saved JSON Python dictionary
         """
@@ -329,14 +277,23 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         """
             Return all computed estimations
+        :param start_date: the leftmost boundary for fetching data from DB. if not specified, the current datetime - 1
+        day is used.
+        :param end_date: the rightmost boundary for fetching data from DB. if not specified, the current datetime.
+        :type args: object
+
+        :raises:
+            :raise ValueError: the provided start_date or end_date couldn't be parsed.
+
         :return: estimations as they are stored in the DB.
         """
 
-        # Parse time boundaries if possible
-        try:
+        # Convert the datetime boundaries
+        if start_date is not None and end_date is not None:
             start_date = dateutil.parser.parse(start_date)
             end_date = dateutil.parser.parse(end_date)
-        except:
+        else:
+            logger.error("The start and end dates are not specified. Use the default parameters.")
             start_date = datetime.datetime.now() - datetime.timedelta(days=1)
             end_date = datetime.datetime.now()
 
@@ -357,28 +314,39 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         return list(records)
 
-    def get_aggr_per_client(self, limits=20, start_date=None, end_date=None, *args, **kwargs) -> List[Dict]:
+    def get_aggr_per_client(self, start_date: DateTimeClass = None, end_date: DateTimeClass = None, limits=20,
+                            *args, **kwargs) -> List[Dict]:
 
         """
-            Returns records aggregated per a client.
-            Records are filtered to be "wifi" message_type.
+        Returns records aggregated per a client.
 
-            For each of clients there is information
+        Records are filtered to be "wifi" message_type. For each of clients there is the information contains:
 
-            - time of record
-            - received RSSI signal
-            - longitude
-            - latitude
+        - time of record
+        - received RSSI signal
+        - longitude
+        - latitude
 
-        :param limits: set the maximum number of records for a client is returned. If -1, then all records will be returned.
-        :return:
+
+        :param start_date: the leftmost boundary for fetching data from DB. if not specified, the current datetime - 1
+        day is used.
+        :param end_date: the rightmost boundary for fetching data from DB. if not specified, the current datetime.
+        :param limits: set the maximum number of records for a client is returned. If -1, then all records will
+            be returned.
+
+        :raises:
+            :raise ValueError: the provided start_date or end_date couldn't be parsed.
+
+        :return: a list of coordinates, united in dictionaries => List[Dict]
+
         """
 
         # Parse time boundaries if possible
-        try:
+        if start_date is not None and end_date is not None:
             start_date = dateutil.parser.parse(start_date)
             end_date = dateutil.parser.parse(end_date)
-        except:
+        else:
+            logger.error("The start and end dates are not specified. Use the default parameters.")
             start_date = datetime.datetime.now() - datetime.timedelta(days=1)
             end_date = datetime.datetime.now()
 
@@ -417,7 +385,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         return list(records)
 
-    def get_stat(self) -> Dict[str, int]:
+    def get_stats(self) -> List[Dict[str, int]]:
 
         """
         Returns information about the number of received messages for each collection, specified in 'collections'.
@@ -425,7 +393,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         Example
         =======
 
-        A command **adapter.get_stat()** may return:
+        A command **adapter.get_stats()** may return:
         
         - {'messages' : 23, 'estimations': 4}
 
@@ -440,7 +408,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         for col_name in collections:
             collection = self._db_conn[col_name]
 
-            count = collection.find({}).count()
+            count = collection.count_documents({})
 
             new_record = {"name": col_name, 'count': count}
 

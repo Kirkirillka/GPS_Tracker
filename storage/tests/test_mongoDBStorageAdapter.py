@@ -105,7 +105,7 @@ class TestMongoDBStorageAdapter(TestCase):
         self.assertTrue(len(rows) != 0)
         self.assertTrue(len(rows) == 1)
 
-    def test_get_stat(self):
+    def test_get_stats(self):
 
         # Prepare message
         messages = [RawPayloadGenerator().get() for _ in range(30)]
@@ -118,6 +118,8 @@ class TestMongoDBStorageAdapter(TestCase):
             self.adapter.save(msg)
 
         # Statistics
-        stat = self.adapter.get_stat()
+        stats = self.adapter.get_stats()
 
-        self.assertEqual(stat['test'],30)
+        counts_for_test = list(filter(lambda x: x['name']=='test', stats)).pop()['count']
+
+        self.assertEqual(counts_for_test,30)
