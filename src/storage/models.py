@@ -93,7 +93,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         # Use connection parameters from default configuration
 
         self.host = os.environ.get('MONGODB_HOST') or CONFIG['mongodb']['host']
-        self.port = int( os.environ.get('MONGODB_PORT') or CONFIG['mongodb']['port'])
+        self.port = int(os.environ.get('MONGODB_PORT') or CONFIG['mongodb']['port'])
 
         self._username = os.environ.get('MONGODB_DB_USER') or CONFIG['mongodb']['db_user']
         self._password = os.environ.get('MONGODB_DB_USERPASS') or CONFIG['mongodb']['db_password']
@@ -207,7 +207,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         collection = self._db_conn[self.collection_name]
 
         # Convert from cursor iterator to list
-        records = list(collection.find({}))
+        records = list(collection.find({}, {"_id": 0}))
 
         logger.debug(f"Fetched {len(records)} records from {self.collection_name}.")
 
@@ -416,3 +416,34 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
                                         ])
 
         return list(records)
+
+    def get_stat(self) -> Dict[str, int]:
+
+        """
+        Returns information about the number of received messages for each collection, specified in 'collections'.
+
+        Example
+        =======
+
+        A command **adapter.get_stat()** may return:
+        
+        - {'messages' : 23, 'estimations': 4}
+
+        :return: dict
+        """
+
+        # collection to calculate statistics for
+        collections = [self.collection_name, 'estimations']
+
+        msg_counts = []
+
+        for col_name in collections:
+            collection = self._db_conn[col_name]
+
+            count = collection.find({}).count()
+
+            new_record = {"name": col_name, 'count': count}
+
+            msg_counts.append(new_record)
+
+        return msg_counts
