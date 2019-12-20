@@ -6,6 +6,7 @@ from typing import Mapping
 # 3-td party libraries
 from deepdiff import DeepDiff
 from jsonschema import Draft7Validator
+import jsonschema
 
 # Project modules
 from utils.tools import read_schema_from_file
@@ -58,11 +59,10 @@ class JSONValidator(AbstractValidator):
         """
 
         if isinstance(schema, dict):
-            _schema = schema
+            self._schema = schema
         else:
             raise TypeError("A provided schema is not a dict object!")
         # Use already existing JSON validator
-        self.internal_validator = Draft7Validator(_schema)
 
     def get_schema(self):
 
@@ -72,7 +72,7 @@ class JSONValidator(AbstractValidator):
         """
 
         # Simple pass through to internal validator
-        return self.internal_validator.schema
+        return self._schema
 
     def compare_schema(self, schema: dict):
 
@@ -84,7 +84,7 @@ class JSONValidator(AbstractValidator):
             True if the schema is identical, False otherwise
         """
 
-        internal_schema = self.internal_validator.schema
+        internal_schema = self._schema
         decision = True if not DeepDiff(internal_schema, schema) else False
 
         return decision
@@ -106,9 +106,12 @@ class JSONValidator(AbstractValidator):
             raise ValueError(f"A supplied object type '{type(sample)}' cannot be converted into JSON")
 
         # Ask a JSON Schema checker implementation to check if it is valid
-        decision = self.internal_validator.is_valid(sample)
-
-        return decision
+        try:
+            jsonschema.validate(sample, self._schema, format_checker=jsonschema.FormatChecker())
+        except jsonschema.exceptions.ValidationError:
+            return False
+        else:
+            return True
 
 
 class RawPayloadValidator(JSONValidator):
