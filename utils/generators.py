@@ -154,7 +154,7 @@ class RealisticClientPayloadGenerator(WIFIPayloadGenerator):
         self._radius = 20
 
     def _get_signal(self, x, y):
-        return - (y ** 2 + x ** 2 + self._radius)
+        return max([- (y ** 2 + x ** 2 + self._radius), -120])
 
     def get(self):
         _x = np.random.choice(self._x_plane)
