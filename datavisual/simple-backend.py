@@ -98,9 +98,9 @@ def last_estimations():
 
 @app.route("/stat", methods=["GET"])
 def get_statistics():
-    stat = app.storage.get_stat()
+    stats = app.storage.get_stats()
 
-    return jsonify(stat)
+    return jsonify(stats)
 
 
 if __name__ == '__main__':
