@@ -96,7 +96,7 @@ def last_estimations():
     raise NotImplementedError
 
 
-@app.route("/stat", methods=["GET"])
+@app.route("/stats", methods=["GET"])
 def get_statistics():
     stats = app.storage.get_stats()
 
