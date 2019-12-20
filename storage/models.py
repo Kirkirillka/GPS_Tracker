@@ -2,10 +2,10 @@
 import os
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any
-import dateutil.parser
-import datetime
 
+import datetime
 from datetime import datetime as DateTimeClass
+from utils.tools import datetime_parse
 
 # 3-td party libraries
 import pymongo
@@ -290,8 +290,8 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         # Convert the datetime boundaries
         if start_date is not None and end_date is not None:
-            start_date = dateutil.parser.parse(start_date)
-            end_date = dateutil.parser.parse(end_date)
+            start_date = datetime_parse(start_date)
+            end_date = datetime_parse(end_date)
         else:
             logger.error("The start and end dates are not specified. Use the default parameters.")
             start_date = datetime.datetime.now() - datetime.timedelta(days=1)
@@ -343,8 +343,8 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         # Parse time boundaries if possible
         if start_date is not None and end_date is not None:
-            start_date = dateutil.parser.parse(start_date)
-            end_date = dateutil.parser.parse(end_date)
+            start_date = datetime_parse(start_date)
+            end_date = datetime_parse(end_date)
         else:
             logger.error("The start and end dates are not specified. Use the default parameters.")
             start_date = datetime.datetime.now() - datetime.timedelta(days=1)
