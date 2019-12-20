@@ -2,6 +2,7 @@ import json
 from unittest import TestCase
 
 from utils.generators import WIFIPayloadGenerator, RawPayloadGenerator
+from utils.tools import DateTimeEncoder, DateTimeDecoder
 
 from utils.normalizers import DefaultNormalizer
 from databroker.tests.test_utils import get_correct_data_with_correct_scheme, get_correct_data_with_wrong_scheme
@@ -46,8 +47,8 @@ class TestDefaultNormalizer(TestCase):
             # Transform JSON-valid dictionary into different castable objects
             testing_dataset = (
                 sample,  # dict itself
-                json.dumps(sample),  # str
-                json.dumps(sample).encode()  # bytes
+                json.dumps(sample, cls=DateTimeEncoder),  # str
+                json.dumps(sample, cls=DateTimeEncoder).encode()  # bytes
             )
 
             # For each test sample

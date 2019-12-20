@@ -1,6 +1,7 @@
 import json
 
 from utils.generators import RawPayloadGenerator, WIFIPayloadGenerator
+from utils.tools import DateTimeEncoder
 
 
 def get_correct_data_with_wrong_scheme() -> str:
@@ -21,5 +22,5 @@ def get_correct_data_with_correct_scheme() -> str:
 
     for _obj in obj_list:
 
-        yield json.dumps(_obj)
+        yield json.dumps(_obj, cls=DateTimeEncoder)
 

@@ -1,11 +1,11 @@
 # Python library import
 import json
-import datetime
 from abc import ABC, abstractmethod
 
 # Project modules
 from adapters import MQTTBrokerAdapter
 from utils.generators import RealisticClientPayloadGenerator
+from utils.tools import DateTimeEncoder
 
 # Logging section
 import logging.config
@@ -14,12 +14,7 @@ logging.config.dictConfig(read_logging_config())
 logger = logging.getLogger(__name__)
 
 
-class DateTimeEncoder(json.JSONEncoder):
-    def default(self, o):
-        if isinstance(o, datetime.datetime):
-            return o.isoformat()
 
-        return json.JSONEncoder.default(self, o)
 
 class AbstractClientApp(ABC):
 
@@ -48,7 +43,7 @@ class WIFIClientAppMock(AbstractClientApp):
 
         serialized_msg = json.dumps(msg, cls=DateTimeEncoder)
 
-        logger.debug("Sending the message to MQTT Broker: ", serialized_msg)
+        logger.debug("Sending the message to MQTT Broker: " + str(serialized_msg))
         res = self._mqtt_adapter.publish(topic_name, serialized_msg)
 
         return res

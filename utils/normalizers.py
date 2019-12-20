@@ -8,6 +8,7 @@ import datetime
 # Project modules
 from config.utils import get_project_config
 from utils.validators import VALIDATOR_MAPPING, VALIDATOR_MESSAGE_TYPES
+from utils.tools import DateTimeDecoder
 
 # Logging section
 import logging.config
@@ -72,7 +73,7 @@ class DefaultNormalizer:
 
         # Try to deserialize JSON string into dict
         try:
-            _casted_obj = json.loads(cast_object)
+            _casted_obj = json.loads(cast_object, cls=DateTimeDecoder)
         except json.JSONDecodeError:
             return {}, False
         else:
@@ -111,21 +112,5 @@ class DefaultNormalizer:
         if not _is_valid:
             return None
         else:
-
-            # Cast time field
-            time = casted_dict['time']
-
-            if isinstance(time,int):
-                casted_time  = datetime.datetime.fromtimestamp(casted_dict['time'] / 1e3)
-            elif isinstance(time,str):
-                casted_time = dateutil.parser.parse(time)
-
-            casted_dict['time'] = casted_time
-
-
-            # Cast longitude and latitude
-            casted_dict['latitude'] = float(casted_dict['latitude'])
-            casted_dict['longitude'] = float(casted_dict['longitude'])
-
-        return casted_dict
+            return casted_dict
 
