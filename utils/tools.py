@@ -35,6 +35,17 @@ class DateTimeDecoder(json.JSONDecoder):
             return parser.parse(obj['value'])
         return obj
 
+
+def datetime_parse(date):
+
+    if isinstance(date, str):
+        return parser.parse(date)
+    if isinstance(date, datetime.datetime):
+        return date
+
+    raise ValueError(f"Cannot parse the object {date}")
+
+
 def read_payload_from_file(payload_filename):
 
     try:
