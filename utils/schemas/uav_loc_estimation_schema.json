@@ -1,9 +1,8 @@
 {
-  "$schema": "http://json-schema.org/schema#",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
     "time": {
-      "type": ["string","integer"],
       "format": "date-time"
     },
     "message_type": {
@@ -23,10 +22,10 @@
           "type": "string"
         },
         "longitude": {
-          "type": "string"
+          "type": "number"
         },
         "latitude": {
-          "type": "string"
+          "type": "number"
         }
       },
       "required": [
