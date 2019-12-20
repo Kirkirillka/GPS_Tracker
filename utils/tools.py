@@ -1,6 +1,39 @@
 import os
 import json
 
+import datetime
+from dateutil import parser
+
+
+class DateTimeEncoder(json.JSONEncoder):
+    DATE_FORMAT = "%Y-%m-%d"
+    TIME_FORMAT = "%H:%M:%S"
+
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return {
+                "_type": "datetime",
+                "value": obj.strftime("%s %s" % (
+                    self.DATE_FORMAT, self.TIME_FORMAT
+                ))
+            }
+        return super(DateTimeEncoder, self).default(obj)
+
+
+class DateTimeDecoder(json.JSONDecoder):
+    # https://gist.github.com/simonw/7000493
+
+    def __init__(self, *args, **kwargs):
+        super(DateTimeDecoder, self).__init__(object_hook=self.object_hook, *args, **kwargs)
+
+
+    def object_hook(self, obj):
+        if '_type' not in obj:
+            return obj
+        type = obj['_type']
+        if type == 'datetime':
+            return parser.parse(obj['value'])
+        return obj
 
 def read_payload_from_file(payload_filename):
 
