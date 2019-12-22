@@ -62,3 +62,8 @@ services:
     command: ["python","datavisual/simple-backend.py"]
     depends_on:
       - mongodb
+
+  rabbitmq:
+    image: rabbitmq:3.8
+    ports:
+      - 5462:5462
