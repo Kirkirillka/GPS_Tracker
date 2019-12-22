@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "time": {
+      "format": "date-time"
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "raw"
+      ]
+    },
+    "device": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "device_type": {
+          "type": "string",
+          "enum": [
+            "handy",
+            "UAV"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "device_type"
+      ]
+    },
+    "longitude": {
+      "type": "number"
+    },
+    "latitude": {
+      "type": "number"
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "time",
+    "device",
+    "longitude",
+    "latitude",
+    "payload",
+    "message_type"
+  ]
+}

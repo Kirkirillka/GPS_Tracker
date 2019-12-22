@@ -4,11 +4,11 @@
 
 Now it is possible to run a Proof-of-Concept of the system. The PoC is taking into considering:
 
-- Visualization is done by offline Jupyter Python Notebook ([here](/src/datavisual/gps_visualize.ipynb))
+- Visualization is done by offline Jupyter Python Notebook ([here](/datavisual/gps_visualize.ipynb))
 - Instead of a real ClientApp, there is a mock client class - RealisticWIFIPayloadGenerator, which is running as a part
 of PoC.
 - Data producing by RealisticWIFIPayloadGenerator is not truly realisitic, especially in GPS location, but produced RSSI
-is taken by a formula visualized [here](/src/datavisual/try_to_find_handy_func.ipynb).
+is taken by a formula visualized [here](/datavisual/try_to_find_handy_func.ipynb).
 
 To start up the PoC, you should check if you have Docker and docker-compose installed:
 
@@ -38,7 +38,7 @@ Docker will run:
 - RealisticWIFIPayloadGenerator - to generate testing data.
 - DataVisual - a simple HTTP API backend, if you need integration.
 
-After docker is done, you can havigate to the [notebook](src/datavisual/gps_visualize.ipynb) and run the cells.
+After docker is done, you can havigate to the [notebook](datavisual/gps_visualize.ipynb) and run the cells.
 
 ## Available pages
 

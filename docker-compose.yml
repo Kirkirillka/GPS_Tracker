@@ -16,12 +16,12 @@ services:
 
   wifi-client-mock:
     build:
-      context: src
+      context: .
       target: final-stage
     volumes:
-      - ./src:/app
+      - ./.:/app
     environment:
-      - MQTT_HOST=185.104.106.47
+      - MQTT_HOST=mqtt_broker
       - MQTT_POR=1883
     command: ["python","runners/wifi_payload_client_runner.py"]
     depends_on:
@@ -29,22 +29,22 @@ services:
 
   analyzer:
     build:
-      context: src
+      context: .
       target: final-stage
     volumes:
-      - ./src:/app
+      - ./.:/app
     command: ["python","runners/analyzer_runner.py"]
     depends_on:
       - mongodb
 
   databroker:
     build:
-      context: src
+      context: .
       target: final-stage
     volumes:
-      - ./src:/app
+      - ./.:/app
     environment:
-      - MQTT_HOST=185.104.106.47
+      - MQTT_HOST=mqtt_broker
       - MQTT_POR=1883
     command: ["python","runners/databroker_runner.py"]
     depends_on:
@@ -53,10 +53,10 @@ services:
 
   visual-backend:
     build:
-      context: src
+      context: .
       target: final-stage
     volumes:
-      - ./src:/app
+      - ./.:/app
     ports:
       - 5000:5000
     command: ["python","datavisual/simple-backend.py"]
