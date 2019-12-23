@@ -401,7 +401,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         """
 
         # collection to calculate statistics for
-        collections = self._db_conn.collection_names()
+        collections = self._db_conn.list_collection_names({})
 
         msg_counts = []
 
