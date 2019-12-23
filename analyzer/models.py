@@ -1,6 +1,6 @@
 import datetime
 
-from solvers.models import UAVPositionSolver
+from placement.solvers.models import UAVPositionSolver
 from storage.models import MongoDBStorageAdapter
 
 # Logging section
