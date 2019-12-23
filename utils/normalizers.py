@@ -13,6 +13,7 @@ from utils.tools import DateTimeDecoder
 # Logging section
 import logging.config
 from utils.logs.tools import read_logging_config
+
 logging.config.dictConfig(read_logging_config())
 logger = logging.getLogger(__name__)
 
@@ -105,6 +106,16 @@ class DefaultNormalizer:
         else:
             _validator_class = VALIDATOR_MAPPING[message_type]
 
+        # Cast time field
+        time = casted_dict['time']
+
+        if isinstance(time, int):
+            casted_time = datetime.datetime.fromtimestamp(casted_dict['time'] / 1e3)
+        elif isinstance(time, str):
+            casted_time = dateutil.parser.parse(time)
+
+        casted_dict['time'] = casted_time
+
         # Validate the object
         validator = _validator_class()
         _is_valid = validator.validate(casted_dict)
@@ -113,4 +124,3 @@ class DefaultNormalizer:
             return None
         else:
             return casted_dict
-
