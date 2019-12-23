@@ -273,29 +273,16 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         return self.save(record, collection_name)
 
-    def get_raw_estimations(self, start_date=None, end_date=None, *args, **kwargs) -> List[Dict]:
+    def get_all_estimations(self, *args, **kwargs) -> List[Dict]:
 
         """
             Return all computed estimations
-        :param start_date: the leftmost boundary for fetching data from DB. if not specified, the current datetime - 1
-        day is used.
-        :param end_date: the rightmost boundary for fetching data from DB. if not specified, the current datetime.
-        :type args: object
 
         :raises:
             :raise ValueError: the provided start_date or end_date couldn't be parsed.
 
         :return: estimations as they are stored in the DB.
         """
-
-        # Convert the datetime boundaries
-        if start_date is not None and end_date is not None:
-            start_date = datetime_parse(start_date)
-            end_date = datetime_parse(end_date)
-        else:
-            logger.error("The start and end dates are not specified. Use the default parameters.")
-            start_date = datetime.datetime.now() - datetime.timedelta(days=1)
-            end_date = datetime.datetime.now()
 
         # Use custom name to fetch estimation
         collection_name = 'estimations'
@@ -304,15 +291,31 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         collection = self._db_conn[collection_name]
 
         # Convert from cursor iterator to list
-        records = collection.find({
-            "time": {
-                "$lt": end_date,
-                "$gte": start_date
-
-            }
-        }).sort('time', -1)
+        records = collection.find({}).sort('time', -1)
 
         return list(records)
+
+    def get_recent_estimation(self, *args, **kwargs):
+
+        """
+            Return the most recent estimation
+        :param args:
+        :param kwargs:
+        :return:
+        """
+
+        # Fetch all estimations
+        all_estimation = self.get_all_estimations(*args,**kwargs)
+
+        # Check if we have any estimations
+        if len(all_estimation)>0:
+            # Then return only the first one
+            recent_estimation = all_estimation.pop(0)
+        else:
+            recent_estimation = {}
+
+        return recent_estimation
+
 
     def get_aggr_per_client(self, start_date: DateTimeClass = None, end_date: DateTimeClass = None, limits=20,
                             *args, **kwargs) -> List[Dict]:
@@ -385,7 +388,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         return list(records)
 
-    def get_stats(self) -> List[Dict[str, int]]:
+    def get_db_stats(self) -> List[Dict[str, int]]:
 
         """
         Returns information about the number of received messages for each collection, specified in 'collections'.
@@ -393,7 +396,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         Example
         =======
 
-        A command **adapter.get_stats()** may return:
+        A command **adapter.get_db_stats()** may return:
         
         - {'messages' : 23, 'estimations': 4}
 
@@ -401,7 +404,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         """
 
         # collection to calculate statistics for
-        collections = self._db_conn.collection_names()
+        collections = self._db_conn.list_collection_names({})
 
         msg_counts = []
 

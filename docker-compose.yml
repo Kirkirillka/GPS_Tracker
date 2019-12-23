@@ -27,16 +27,6 @@ services:
     depends_on:
       - mqtt_broker
 
-  analyzer:
-    build:
-      context: .
-      target: final-stage
-    volumes:
-      - ./.:/app
-    command: ["python","runners/analyzer_runner.py"]
-    depends_on:
-      - mongodb
-
   databroker:
     build:
       context: .
@@ -55,10 +45,28 @@ services:
     build:
       context: .
       target: final-stage
+    environment:
+      - RABBITMQ_HOST=rabbitmq
     volumes:
       - ./.:/app
     ports:
       - 5000:5000
     command: ["python","datavisual/simple-backend.py"]
     depends_on:
+      - mongodb
+
+  rabbitmq:
+    image: rabbitmq:3.8
+    ports:
+      - 5672:5672
+
+  celery-worker:
+    build: .
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    volumes:
+      - ./.:/app
+    command: celery -A workers worker -l info
+    depends_on:
+      - rabbitmq
       - mongodb

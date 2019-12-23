@@ -3,3 +3,4 @@ venv
 application.log
 *.iml
 */target/
+dist

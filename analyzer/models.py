@@ -1,6 +1,6 @@
 import datetime
 
-from solvers.models import UAVPositionSolver
+from placement.solvers.models import UAVPositionSolver
 from storage.models import MongoDBStorageAdapter
 
 # Logging section
@@ -66,10 +66,20 @@ class UAVEstimator:
 
             # Ask solver to estimate the location for UAVs
             logger.info("Start the estimation process for UAVs' locations.")
+
+            ues_num = len(data_rows)
+
+            logger.info(f"Available number of UEs' records: '{ues_num}'")
+            logger.info(f"Expected number of UAVs: '{expected_uavs_number}'")
+
+            # Check if required num_clusters in higher than possible UEs clients
+            if expected_uavs_number > ues_num :
+                logger.info(f"The provided number of expected UAVs '{expected_uavs_number}' is higher than available "
+                            f"UEs' records - '{ues_num}'! Use the minimal possible value. ")
             optimized_results = self.solver.solve(
                 nodes_locations=data_rows,
                 # May be the case that you have n_clusters more than available data
-                n_clusters=min(len(data_rows), expected_uavs_number)
+                n_clusters=min(ues_num, expected_uavs_number)
             )
 
             # Save bulk into the storage
@@ -98,4 +108,6 @@ class UAVEstimator:
 
             self.store.add_estimation(estimation)
 
-        pass
+            return True
+
+        return False
