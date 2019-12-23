@@ -118,7 +118,7 @@ class TestMongoDBStorageAdapter(TestCase):
             self.adapter.save(msg)
 
         # Statistics
-        stats = self.adapter.get_stats()
+        stats = self.adapter.get_db_stats()
 
         counts_for_test = list(filter(lambda x: x['name']=='test', stats)).pop()['count']
 
