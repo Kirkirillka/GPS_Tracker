@@ -98,4 +98,4 @@ class UAVEstimator:
 
             self.store.add_estimation(estimation)
 
-        pass
+        return
