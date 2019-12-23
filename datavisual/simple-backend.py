@@ -72,23 +72,6 @@ def aggregation_by_device_id():
     return jsonify(data)
 
 
-@app.route("/estimations/all", methods=["POST"])
-def all_estimations():
-    """
-        HTTP Endpoint to access the estimation made by analyzers
-    """
-
-    json_data = request.json
-
-    if json_data:
-
-        data = app.storage.get_raw_estimations(**json_data)
-    else:
-        data = app.storage.get_raw_estimations()
-
-    return jsonify(data)
-
-
 @app.route("/estimations/new", methods=["POST"])
 def run_new_estimation():
     """
@@ -114,9 +97,32 @@ def run_new_estimation():
     return jsonify(str(job_id))
 
 
-@app.route("/estimations/last", methods=["GET"])
-def last_estimations():
-    raise NotImplementedError
+@app.route("/estimations/all", methods=["POST"])
+def get_all_estimations():
+    """
+        HTTP Endpoint to access the estimation made by analyzers
+    """
+
+    json_data = request.json
+
+    if json_data:
+
+        data = app.storage.get_all_estimations(**json_data)
+    else:
+        data = app.storage.get_all_estimations()
+
+    return jsonify(data)
+
+
+@app.route("/estimations/recent", methods=["GET"])
+def get_recent_estimation():
+
+    """
+        HTTP Endpoint to access only the most recent done estimation
+    :return:
+    """
+
+    return jsonify(app.storage.get_recent_estimation())
 
 
 @app.route("/db/stats", methods=["GET"])
