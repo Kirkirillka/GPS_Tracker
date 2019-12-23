@@ -8,11 +8,12 @@ from utils.tools import BSONClassEncoder
 
 from workers.tools.integrations import make_celery
 from workers.tasks import dispatch_estimation, add
+from workers.celery import connection_string
 
 app = Flask(__name__)
 app.config.update(
-    CELERY_BROKER_URL='pyamqp://localhost//',
-    CELERY_RESULT_BACKEND='pyamqp://localhost//'
+    CELERY_BROKER_URL=connection_string,
+    CELERY_RESULT_BACKEND=connection_string
 )
 CORS(app)
 app.storage = MongoDBStorageAdapter()
