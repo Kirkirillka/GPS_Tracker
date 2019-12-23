@@ -66,4 +66,4 @@ services:
   rabbitmq:
     image: rabbitmq:3.8
     ports:
-      - 5462:5462
+      - 5672:5672
