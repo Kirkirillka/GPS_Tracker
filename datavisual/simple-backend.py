@@ -4,7 +4,7 @@ from flask import request
 from flask_cors import CORS
 
 from storage import MongoDBStorageAdapter
-from utils.tools import DateTimeEncoder
+from utils.tools import BSONClassEncoder
 
 from workers.tools.integrations import make_celery
 from workers.tasks import dispatch_estimation, add
@@ -19,7 +19,7 @@ app.storage = MongoDBStorageAdapter()
 celery = make_celery(app)
 
 # Make it possible to parse datetime
-app.json_encoder = DateTimeEncoder
+app.json_encoder = BSONClassEncoder
 
 
 @app.route("/messages/all", methods=["GET"])
