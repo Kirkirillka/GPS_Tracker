@@ -67,3 +67,11 @@ services:
     image: rabbitmq:3.8
     ports:
       - 5672:5672
+
+  celery-worker:
+    build: .
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    volumes:
+      - ./.:/app
+    command: celery -A workers worker -l info

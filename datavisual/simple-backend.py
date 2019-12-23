@@ -1,24 +1,25 @@
-from flask import Flask, jsonify, json
+from flask import Flask, jsonify
 from flask import request
 
 from flask_cors import CORS
 
 from storage import MongoDBStorageAdapter
+from utils.tools import DateTimeEncoder
+
+from workers.tools.integrations import make_celery
+from workers.tasks import dispatch_estimation, add
 
 app = Flask(__name__)
+app.config.update(
+    CELERY_BROKER_URL='pyamqp://localhost//',
+    CELERY_RESULT_BACKEND='pyamqp://localhost//'
+)
 CORS(app)
 app.storage = MongoDBStorageAdapter()
+celery = make_celery(app)
 
-
-def sanitize_json(json_data: dict) -> dict:
-    """
-        Allow to parse unknown objects from MongoDB, which the default JSON parser cannot
-        understand
-    :param json_data: python dict
-    :return: dict
-    """
-    _san_json = json.dumps(json_data, default=str)
-    return json.loads(_san_json)
+# Make it possible to parse datetime
+app.json_encoder = DateTimeEncoder
 
 
 @app.route("/messages/all", methods=["GET"])
@@ -28,9 +29,8 @@ def all_messages() -> dict:
     """
 
     records = app.storage.get_raw_msgs()
-    sanitized_records = sanitize_json(records)
 
-    return jsonify(sanitized_records)
+    return jsonify(records)
 
 
 @app.route("/messages/last", methods=["GET"])
@@ -40,9 +40,8 @@ def last_messages() -> dict:
     """
 
     records = app.storage.get_last_raw_msgs()
-    sanitized_records = sanitize_json(records)
 
-    return jsonify(sanitized_records)
+    return jsonify(records)
 
 
 @app.route("/clients/all", methods=['GET'])
@@ -86,9 +85,32 @@ def all_estimations():
     else:
         data = app.storage.get_raw_estimations()
 
-    sanitized_records = sanitize_json(data)
+    return jsonify(data)
 
-    return jsonify(sanitized_records)
+
+@app.route("/estimations/new", methods=["POST"])
+def run_new_estimation():
+    """
+        Dispatch a new work for Celery.
+
+        JSON must contains:
+
+        - Start date of data to filterer
+        - End data of data to filter
+        - A number of clusters
+
+    :return: job id
+    """
+    json_data = request.json
+
+    start_date = json_data["start_date"]
+    end_date = json_data["end_date"]
+    num_clusters = json_data['num_clusters']
+    method = json_data["method"]
+
+    job_id = dispatch_estimation.delay(start_date, end_date, num_clusters, method)
+
+    return jsonify(str(job_id))
 
 
 @app.route("/estimations/last", methods=["GET"])
@@ -96,11 +118,30 @@ def last_estimations():
     raise NotImplementedError
 
 
-@app.route("/stats", methods=["GET"])
-def get_statistics():
-    stats = app.storage.get_stats()
+@app.route("/db/stats", methods=["GET"])
+def get_db_stats():
+    stats = app.storage.get_db_stats()
 
     return jsonify(stats)
+
+
+@app.route("/tasks/stats/<type>", methods=["GET"])
+def get_tasks_stats(type: str):
+    from workers.tools.stats import get_active_tasks_list, get_registered_tasks_list, get_scheduled_tasks_list
+
+    task_type_mapping = {
+        "active": get_active_tasks_list,
+        "registered": get_registered_tasks_list,
+        "scheduled": get_scheduled_tasks_list
+    }
+
+    def default_func(): return {}
+
+    stat_func = task_type_mapping.get(type, default_func)
+
+    task_list = stat_func()
+
+    return jsonify(task_list)
 
 
 if __name__ == '__main__':

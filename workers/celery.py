@@ -12,14 +12,14 @@ PASSWORD = os.environ.get("RABBITMQ_USERPASS") or DEFAULT_CONFIG['queue']['passw
 
 connection_string = f'pyamqp://{USER}:{PASSWORD}@{HOST}:{PORT}//'
 
-app = Celery(QUEUE_NAME, broker=connection_string,
-             backend='rpc://',
-             include=['workers.tasks'])
+celery_app = Celery(QUEUE_NAME, broker=connection_string,
+                    backend='rpc://',
+                    include=['workers.tasks'])
 
 # Optional configuration, see the application user guide.
-app.conf.update(
+celery_app.conf.update(
     result_expires=3600,
 )
 
 if __name__ == '__main__':
-    app.start()
+    celery_app.start()
