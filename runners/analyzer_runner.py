@@ -20,6 +20,10 @@ if __name__ == '__main__':
         while True:
 
             runner.run_estimation(start_date,end_date,UAVS_NUM)
+            # Shift the right boundary for end_date
+            end_date = datetime.datetime.now()
+
+            # Wait for next iteration
             time.sleep(SLEEP_TIME)
 
     except KeyboardInterrupt:
