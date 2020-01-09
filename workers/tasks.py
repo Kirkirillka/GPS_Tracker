@@ -13,12 +13,12 @@ def add(x,y):
 
 
 @celery_app.task
-def dispatch_estimation(start_time, end_time, n_clusters, method):
+def dispatch_estimation(start_time, end_time, n_clusters, method, **kwargs):
 
     logger.debug("Preparing UAVEstimator...")
     estimator = UAVEstimator(method)
 
     logger.info("Starting estimation process...")
-    estimator.run_estimation(start_time, end_time, n_clusters)
+    estimator.run_estimation(start_time, end_time, n_clusters, **kwargs)
 
     logger.info("Estimation is done!")

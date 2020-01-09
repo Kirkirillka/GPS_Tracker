@@ -33,7 +33,7 @@ class UAVEstimator:
         # We expect to receive only one position for each UE
         self.window_size = 1
 
-    def run_estimation(self, start_time: datetime, end_time: datetime, expected_uavs_number = 2, ):
+    def run_estimation(self, start_time: datetime, end_time: datetime, expected_uavs_number = 2, **kwargs):
 
         """
         Executes one optimization step and save the result in the DB.
@@ -44,15 +44,17 @@ class UAVEstimator:
         :param end_time: The right bound datetime for initial data fetching
         :param expected_uavs_number: The number of UAVs' optimized locations to create. Implicitly means to *n_clusters*.
 
+        :keyword explicit_ues_locations: a list of predefined locations for UES in format [(x,y),(x,y)...]
+
         :return: None
         """
 
-        # Fetch and prepare only the last positions in the specified time range
-        records = self.store.get_aggr_per_client(start_time, end_time)
-        logging.info(f"Received info for {len(records)} UEs ")
-
-        # Check if we have data to process
-        if records and len(records)>0:
+        # Check if ues last position are defined explicitly
+        records = kwargs.get("explicit_ues_locations", None )
+        # If not, then use last known position from the database for the specified date range
+        if records is None:
+            # Fetch and prepare only the last positions in the specified time range
+            records = self.store.get_aggr_per_client(start_time, end_time)
 
             # Prepare data in format [(x1,y1)]
             data_rows = []
@@ -64,10 +66,18 @@ class UAVEstimator:
 
                 data_rows.append(only_last_position)
 
-            # Ask solver to estimate the location for UAVs
+            records = data_rows
+
+
+
+        # Check if we have data to process
+        if isinstance(records, list) and len(records)>0:
+
+            logging.info(f"Received info for {len(records)} UEs ")
             logger.info("Start the estimation process for UAVs' locations.")
 
-            ues_num = len(data_rows)
+            # Ask solver to estimate the location for UAVs
+            ues_num = len(records)
 
             logger.info(f"Available number of UEs' records: '{ues_num}'")
             logger.info(f"Expected number of UAVs: '{expected_uavs_number}'")
@@ -77,7 +87,7 @@ class UAVEstimator:
                 logger.info(f"The provided number of expected UAVs '{expected_uavs_number}' is higher than available "
                             f"UEs' records - '{ues_num}'! Use the minimal possible value. ")
             optimized_results = self.solver.solve(
-                nodes_locations=data_rows,
+                nodes_locations=records,
                 # May be the case that you have n_clusters more than available data
                 n_clusters=min(ues_num, expected_uavs_number)
             )
@@ -99,7 +109,8 @@ class UAVEstimator:
                     "suggested": [{
                         "latitude": x[0],
                         "longitude": x[1],
-                    } for x in optimized_results]
+                    } for x in optimized_results],
+                    "ues_location": records
                 }
             }
 
@@ -110,4 +121,6 @@ class UAVEstimator:
 
             return True
 
-        return False
+        else:
+            logger.error("Problems with input location data  for UEs for estimation!")
+            return False
