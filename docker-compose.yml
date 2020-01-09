@@ -66,6 +66,8 @@ services:
       - RABBITMQ_HOST=rabbitmq
     volumes:
       - ./.:/app
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     command: celery -A workers worker -l info
     depends_on:
       - rabbitmq
