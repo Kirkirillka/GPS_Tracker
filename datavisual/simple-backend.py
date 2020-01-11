@@ -93,7 +93,7 @@ def run_new_estimation():
     method = json_data["method"]
     explicit_ues_locations = json_data["explicit_ues_locations"]
 
-    job_id = dispatch_estimation(start_date, end_date, num_clusters, method,
+    job_id = dispatch_estimation.delay(start_date, end_date, num_clusters, method,
                                        explicit_ues_locations = explicit_ues_locations)
 
     return jsonify(str(job_id))
