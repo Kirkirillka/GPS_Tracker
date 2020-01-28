@@ -1,0 +1,6 @@
+allow-hotplug {{WLAN_INTERFACE}}
+auto {{WLAN_INTERFACE}}
+iface {{WLAN_INTERFACE}} inet static
+    address 192.168.10.1
+    netmask 255.255.255.0
+    dns-nameservers 192.168.10.1

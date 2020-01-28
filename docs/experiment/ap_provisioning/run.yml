@@ -1,0 +1,15 @@
+- hosts: all
+  become: yes
+  vars:
+    DHCP_RANGE: 192.168.10.50,192.168.10.150
+    WLAN_INTERFACE: wlan0
+    WIFI_SSID: test
+    WIFI_PASSPHASE: 12345678
+    WIFI_CHANNEL: 6
+    GATEWAY_INTERFACE: eth0
+  tasks:
+    - name: Add all tasks
+      include_tasks: ansible/tasks.yml
+
+  handlers:
+    - import_tasks: ansible/handlers.yml

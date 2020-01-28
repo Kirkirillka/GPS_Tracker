@@ -1,0 +1,62 @@
+- name: Add repository for non-free packages
+  apt_repository:
+    repo: deb http://http.us.debian.org/debian stable main contrib non-free
+    state: present
+    filename: non-free
+- name: Install packages via apt
+  apt:
+    name:
+      - hostapd
+      - dhcpd
+      - firmware-realtek
+      - tcpdump
+      - dnsmasq
+    state: present
+    update_cache: yes
+- name: Enable IP forwarding
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    sysctl_set: yes
+- name: Add additional DNS servers
+  lineinfile:
+    dest: /etc/resolv.conf
+    line: "nameserver {{item}}"
+    state: present
+  with_items:
+    - 8.8.8.8
+    - 8.8.8.4
+- name: Configure hostapd
+  template:
+    src: hostapd.conf
+    dest: /etc/hostapd/hostapd.conf
+- name: Configure dnsmasq
+  template:
+    src: dnsmasq.conf
+    dest: /etc/dnsmasq.conf
+- name: Configure interface
+  template:
+    src: "{{WLAN_INTERFACE}}"
+    dest: "/etc/network/interfaces.d/{{WLAN_INTERFACE}}"
+  notify: restart systemd-networkd
+- name: Restart and enable dnsmasq
+  service:
+    name: dnsmasq
+    state: restarted
+    enabled: yes
+  notify: restart systemd-networkd
+- name: Unmask hostapd
+  command: systemctl unmask hostapd
+- name: Restart and enable hostapd
+  service:
+    name: hostapd
+    state: restarted
+    enabled: yes
+  notify: restart systemd-networkd
+- name: Add NAT rules
+  iptables:
+    chain: POSTROUTING
+    table: nat
+    out_interface: "{{GATEWAY_INTERFACE}}"
+    jump: MASQUERADE
+  notify: restart systemd-networkd
