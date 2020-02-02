@@ -1,14 +1,7 @@
-- name: Add repository for non-free packages
-  apt_repository:
-    repo: deb http://http.us.debian.org/debian stable main contrib non-free
-    state: present
-    filename: non-free
 - name: Install packages via apt
   apt:
     name:
       - hostapd
-      - dhcpd
-      - firmware-realtek
       - tcpdump
       - dnsmasq
     state: present
@@ -37,7 +30,7 @@
 - name: Configure interface
   template:
     src: "{{WLAN_INTERFACE}}"
-    dest: "/etc/network/interfaces.d/{{WLAN_INTERFACE}}"
+    dest: "/etc/network/{{WLAN_INTERFACE}}"
   notify: restart systemd-networkd
 - name: Restart and enable dnsmasq
   service:
