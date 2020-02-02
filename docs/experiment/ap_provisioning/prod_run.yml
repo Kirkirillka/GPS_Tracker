@@ -1,0 +1,32 @@
+- hosts: ap
+  become: yes
+  vars:
+    DHCP_RANGE: 192.168.10.50,192.168.10.150
+    WLAN_INTERFACE: wlan3
+    WLAN_ADDR: 192.168.10.1
+    WIFI_SSID: ap
+    WIFI_PASSPHASE: 12345678
+    WIFI_CHANNEL: 6
+    GATEWAY_INTERFACE: wlan_conf.j2
+  tasks:
+    - name: Add all tasks
+      include_tasks: ansible/tasks.yml
+
+  handlers:
+    - import_tasks: ansible/handlers.yml
+
+- hosts: cnc
+  become: yes
+  vars:
+    DHCP_RANGE: 192.168.20.50,192.168.10.150
+    WLAN_INTERFACE: wlan_conf.j2
+    WIFI_SSID: cnc
+    WIFI_PASSPHASE: 12345678
+    WIFI_CHANNEL: 1
+    GATEWAY_INTERFACE: eth0
+  tasks:
+    - name: Add all tasks
+      include_tasks: ansible/tasks.yml
+
+  handlers:
+    - import_tasks: ansible/handlers.yml
