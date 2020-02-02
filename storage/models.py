@@ -305,17 +305,16 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         """
 
         # Fetch all estimations
-        all_estimation = self.get_all_estimations(*args,**kwargs)
+        all_estimation = self.get_all_estimations(*args, **kwargs)
 
         # Check if we have any estimations
-        if len(all_estimation)>0:
+        if len(all_estimation) > 0:
             # Then return only the first one
             recent_estimation = all_estimation.pop(0)
         else:
             recent_estimation = {}
 
         return recent_estimation
-
 
     def get_aggr_per_client(self, start_date: DateTimeClass = None, end_date: DateTimeClass = None, limits=20,
                             *args, **kwargs) -> List[Dict]:
@@ -329,6 +328,8 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         - received RSSI signal
         - longitude
         - latitude
+        - downlink speed estimation
+        - uplink speed estimation
 
 
         :param start_date: the leftmost boundary for fetching data from DB. if not specified, the current datetime - 1
@@ -372,7 +373,8 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
                                                                    "longitude": "$longitude",
                                                                    "signal": "$payload.signal.rssi",
                                                                    "ap": "$payload.bssi",
-
+                                                                   "downlink": "$payload.downSpeed",
+                                                                   "uplink": "$payload.upSpeed"
                                                                    },
                                                          },
 
