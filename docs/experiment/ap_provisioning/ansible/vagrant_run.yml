@@ -1,9 +1,13 @@
 - hosts: all
   become: yes
   vars:
-    DHCP_RANGE: 192.168.10.50,192.168.10.150
+    DHCP_RANGE: 192.168.20.50,192.168.20.150
+    DNS_SERVERS:
+      - 192.168.20.1
+      - 8.8.8.8
+    WLAN_ADDR: 192.168.20.1
     WLAN_INTERFACE: wlan0
-    WIFI_SSID: mynet
+    WIFI_SSID: cnc
     WIFI_PASSPHASE: 12345678
     WIFI_CHANNEL: 6
     GATEWAY_INTERFACE: eth0

@@ -17,8 +17,7 @@
     line: "nameserver {{item}}"
     state: present
   with_items:
-    - 8.8.8.8
-    - 8.8.8.4
+    - "{{DNS_SERVERS}}"
 - name: Configure hostapd
   template:
     src: hostapd.conf
@@ -29,7 +28,7 @@
     dest: /etc/dnsmasq.conf
 - name: Configure interface
   template:
-    src: "{{WLAN_INTERFACE}}"
+    src: "wlan_conf.j2"
     dest: "/etc/network/{{WLAN_INTERFACE}}"
   notify: restart systemd-networkd
 - name: Restart and enable dnsmasq
