@@ -1,0 +1,89 @@
+version: "3.4"
+services:
+  mqtt_broker:
+    image: eclipse-mosquitto:1.6.7
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    ports:
+      - 1883:1883
+      - 9001:9001
+
+  mongodb:
+    image: mongo:4
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - 27017:27017
+
+  wifi-client-mock:
+    build:
+      context: .
+      target: final-stage
+    volumes:
+      - ./.:/app
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    environment:
+      - MQTT_HOST=mqtt_broker
+      - MQTT_POR=1883
+    command: ["python","runners/wifi_payload_client_runner.py"]
+    depends_on:
+      - mqtt_broker
+
+  databroker:
+    build:
+      context: .
+      target: final-stage
+    volumes:
+      - ./.:/app
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    environment:
+      - MQTT_HOST=185.104.106.47
+      - MQTT_POR=1883
+    command: ["python","runners/databroker_runner.py"]
+    depends_on:
+      - mqtt_broker
+      - mongodb
+
+  visual-backend:
+    build:
+      context: .
+      target: final-stage
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    volumes:
+      - ./.:/app
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    ports:
+      - 5000:5000
+    command: ["python","datavisual/simple-backend.py"]
+    depends_on:
+      - mongodb
+
+  rabbitmq:
+    image: rabbitmq:3.8
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    ports:
+      - 5672:5672
+
+  celery-worker:
+    build: .
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    volumes:
+      - ./.:/app
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    command: celery -A workers worker -l info
+    depends_on:
+      - rabbitmq
+      - mongodb

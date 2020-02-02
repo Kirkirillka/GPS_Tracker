@@ -1,0 +1,16 @@
+pytest
+configparser
+deepdiff
+jsonschema
+pyyaml
+paho-mqtt
+pymongo
+flask
+flask_cors
+pandas
+matplotlib
+scipy
+sklearn
+numpy
+python-dateutil
+celery

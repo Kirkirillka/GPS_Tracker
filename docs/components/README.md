@@ -8,12 +8,13 @@ In this section, we describe our components of the system, their functionality, 
 
 ## Current components
 
-- Client Application
-- Client connections broker
-- Data Broker
-- Storage
-- Visual Backend
-- Visual Frontend 
+- Client Telemetry Data Sender -  [ClientApp](ClientApp.md)
+- Client Message Broker -  [MessageBroker](MessageBroker.md) 
+- Medium Data Broker - [DataBroker](DataBroker.md) 
+- Storage Component - [Storage](Storage.md)
+- Telemetry Data Analyzer - [Analyzer](Analyzer.md)
+- Integration Backend Component for Data Access - [DataBackend](DataBackend.md)
+- Visualization Component - [DataVisualizer](DataVisualizer.md)
 
 
 
