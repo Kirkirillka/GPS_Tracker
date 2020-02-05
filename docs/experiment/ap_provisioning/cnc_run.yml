@@ -2,9 +2,9 @@
   become: yes
   vars:
     DHCP_RANGE: 192.168.10.50,192.168.10.150
-    WLAN_INTERFACE: wlan_conf.j2
+    WLAN_INTERFACE: wlan0
     WLAN_ADDR: 192.168.10.1
-    WIFI_SSID: test
+    WIFI_SSID: cnc
     WIFI_PASSPHASE: 12345678
     WIFI_CHANNEL: 6
     GATEWAY_INTERFACE: eth0
