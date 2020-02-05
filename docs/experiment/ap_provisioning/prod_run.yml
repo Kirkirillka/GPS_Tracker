@@ -19,7 +19,7 @@
   become: yes
   vars:
     DHCP_RANGE: 192.168.20.50,192.168.10.150
-    WLAN_INTERFACE: wlan_conf.j2
+    WLAN_INTERFACE: wlan0
     WIFI_SSID: cnc
     WIFI_PASSPHASE: 12345678
     WIFI_CHANNEL: 1
