@@ -25,25 +25,22 @@
   template:
     src: dnsmasq.conf
     dest: /etc/dnsmasq.conf
+- name: Start dnsmasq
+  service:
+    name: dnsmasq
+    state: started
+- name: Unmask hostapd
+  command: systemctl unmask hostapd
+  ignore_errors: yes
+- name: Start hostapd
+  service:
+    name: hostapd
+    state: started
 - name: Configure interface
   command: "{{item}}"
   with_items:
     - "ip addr flush dev {{WLAN_INTERFACE}}"
-    - "ip link set up dev {{WLAN_INTERFACE}}"
     - "ip addr add {{WLAN_ADDR}} dev {{WLAN_INTERFACE}}"
-- name: Restart and enable dnsmasq
-  service:
-    name: dnsmasq
-    state: restarted
-    enabled: yes
-- name: Unmask hostapd
-  command: systemctl unmask hostapd
-  ignore_errors: yes
-- name: Restart and enable hostapd
-  service:
-    name: hostapd
-    state: restarted
-    enabled: yes
 - name: Add NAT rules
   iptables:
     chain: POSTROUTING
