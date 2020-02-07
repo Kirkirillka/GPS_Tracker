@@ -1,7 +1,7 @@
 localhost ansible_port=2222
 
 [ap]
-localhost
+192.168.56.111 ansible_user=user
 
 [cnc]
 192.168.20.1
