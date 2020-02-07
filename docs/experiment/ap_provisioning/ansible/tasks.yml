@@ -1,12 +1,12 @@
-- name: Add repository for non-free packages
-  apt_repository:
-    repo: "deb http://http.us.debian.org/debian stable main contrib non-free"
-    state: present
-    filename: non-free
+- name: Add tasks for Debian distributions
+  import_tasks: debian_tasks.yml
+  when: ansible_distribution == 'Debian'
+- name: Add tasks for Ubuntu distributions
+  import_tasks: ubuntu_tasks.yml
+  when: ansible_distribution == 'Ubuntu'  
 - name: Install packages via apt
   apt:
-    name:
-      - firmware-misc-nonfree
+    name: 
       - hostapd
       - tcpdump
       - dnsmasq
