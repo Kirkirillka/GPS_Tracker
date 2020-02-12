@@ -57,8 +57,11 @@ The `inventory.yml` file contains:
 127.0.0.1 ansible_port=2222
 ```
 
-Then executing the command will run Ansible playbook on the machine:
+> Warning!
+> Currently uses Debian 11 Testing, there is no Vagrant VM for that purpose, so make sure your install the image by yourself!
+
+Check which IP addresses the virtual machine uses. Then perform AP provisioning:
 
 ```bash
-ansible-playbook -i inventory.yml -u root run.yml
+ansible-playbook ap_run.yml  -i inventory.yml --ask-become-pass
 ```
