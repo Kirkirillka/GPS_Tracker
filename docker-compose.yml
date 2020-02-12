@@ -94,7 +94,7 @@ services:
     environment:
       - FTP_USER=speedtest
       - FTP_PASS=speedtest
-      - PASV_ADDRESS=192.168.50.4
+      - PASV_ADDRESS=192.168.10.1
       - PASV_MIN_PORT=21100
       - PASV_MAX_PORT=21110
     volumes:
