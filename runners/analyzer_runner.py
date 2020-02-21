@@ -1,3 +1,7 @@
+"""
+A script to run :py:class:`UAVEstimator` standalone.
+"""
+
 import sys
 
 import time

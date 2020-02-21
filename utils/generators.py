@@ -136,6 +136,11 @@ class WIFIPayloadGenerator(AbstractGenerator):
 
 class RealisticClientPayloadGenerator(WIFIPayloadGenerator):
 
+    """
+    Class :py:class:`RealisticClientPayloadGenerator` tries to generate a JSON messages which seems to be generated
+    by a real Android phone.
+    """
+
     def __init__(self):
         super(RealisticClientPayloadGenerator, self).__init__()
 

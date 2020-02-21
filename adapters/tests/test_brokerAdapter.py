@@ -39,6 +39,10 @@ class TestBrokerAdapter(TestCase):
 
     def test_del_topic(self):
 
+        """
+            Test if the deletion of MQTT topic is successful.
+        """
+
         mqtt_broker = MQTTBrokerAdapter()
 
         for topic,callback in self.TOPICS.items():
@@ -49,6 +53,11 @@ class TestBrokerAdapter(TestCase):
             self.assertTrue(res_del)
 
     def test_publish(self):
+
+        """
+            Test if publishing to a concrete topic is successful.
+        :return:
+        """
 
         mqtt_broker = MQTTBrokerAdapter()
 

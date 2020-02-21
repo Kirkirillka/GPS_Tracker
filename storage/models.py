@@ -22,7 +22,7 @@ logging.config.dictConfig(read_logging_config())
 logger = logging.getLogger(__name__)
 
 # Project configuration
-CONFIG = get_project_config()
+DEFAULT_CONFIG = get_project_config()
 
 
 class AbstractStorageAdapter(ABC):
@@ -54,40 +54,48 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         This class to contain convenient interface to access MongoDB Database.
 
-        To connect to MongoDB instance, **StorageAdapter** uses configuration parameters under *[storage]* section in
-        default *config.ini*
+        To connect to MongoDB instance, :py:class:`StorageAdapter` uses configuration parameters
+        provided by :py:attr:`DEFAULT_CONFIG` or by OS environment.
 
-        Examples
-        =======
+        The class takes parameters from the config provided by **DEFAULT_CONFIG**. Other way is to define OS environment
+        variables to adjust the behaviour.
 
-        Perform connection to DB:
+        :param string MONGODB_HOST: An address of MongoDB instance. Can use FQDN or IP-address.
+        :param int MONGODB_PORT: A port of MongoDB instance.
+        :param string MONGODB_DB_USER:  An username to connect.
+        :param string MONGODB_DB_USERPASS: A password to authenticate the user.
+        :param string MONGODB_DB_NAME: A default name of Database collection.
+        :param string MONGODB_DEFAULT_COLLECTION: Default collection name to store data from sensors.
 
-        >>> adapter = MongoDBStorageAdapter()
+        Examples:
 
-        Add a record:
+            Perform connection to DB:
 
-        >>> record_to_save  = {"username":"Max"}
-        >>> saved_id = adapter.save({"username":"Max"})
+                >>> adapter = MongoDBStorageAdapter()
 
-        Delete the added record:
+            Add a record:
 
-        >>> record_to_delete = {"username":"Max"}
-        >>> record_by_id = {"_id": saved_id}
+                >>> record_to_save  = {"username":"Max"}
+                >>> saved_id = adapter.save({"username":"Max"})
 
-        >>> del_id = adapter.delete(record_to_delete)
-        >>> del2_id = adapter.delete(record_by_id)
+            Delete the added record:
 
-        >>> assert del_id == del2_id
+                >>> record_to_delete = {"username":"Max"}
+                >>> record_by_id = {"_id": saved_id}
 
-        Configuration Parameters
-        ======
+                >>> del_id = adapter.delete(record_to_delete)
+                >>> del2_id = adapter.delete(record_by_id)
 
-        - **host** - An address of MongoDB instance. Can use FQDN or IP-address.
-        - **port** - A port of MongoDB instance.
-        - **db_user** - An username to connect.
-        - **db_password** - A password to authenticate the user.
-        - **db_name** - A default name of Database collection
-        - **collection_name** - Default collection name to store data from sensors
+                >>> assert del_id == del2_id
+
+        Attributes:
+
+        :param host: An address of MongoDB instance. Can use FQDN or IP-address.
+        :param port: port A port of MongoDB instance.
+        :param db_user: An username to connect.
+        :param db_password: A password to authenticate the user.
+        :param db_name: A default name of Database collection.
+        :param collection_name: Default collection name to store data from sensors.
 
     """
 
@@ -95,14 +103,14 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         # Use connection parameters from default configuration
 
-        self.host = os.environ.get('MONGODB_HOST') or CONFIG['mongodb']['host']
-        self.port = int(os.environ.get('MONGODB_PORT') or CONFIG['mongodb']['port'])
+        self.host = os.environ.get('MONGODB_HOST') or DEFAULT_CONFIG['mongodb']['host']
+        self.port = int(os.environ.get('MONGODB_PORT') or DEFAULT_CONFIG['mongodb']['port'])
 
-        self._username = os.environ.get('MONGODB_DB_USER') or CONFIG['mongodb']['db_user']
-        self._password = os.environ.get('MONGODB_DB_USERPASS') or CONFIG['mongodb']['db_password']
+        self._username = os.environ.get('MONGODB_DB_USER') or DEFAULT_CONFIG['mongodb']['db_user']
+        self._password = os.environ.get('MONGODB_DB_USERPASS') or DEFAULT_CONFIG['mongodb']['db_password']
 
-        self.db_name = os.environ.get('MONGODB_DB_NAME') or CONFIG['mongodb']['db_name']
-        self.collection_name = os.environ.get('MONGODB_DEFAULT_COLLECTION') or CONFIG['mongodb']['collection_name']
+        self.db_name = os.environ.get('MONGODB_DB_NAME') or DEFAULT_CONFIG['mongodb']['db_name']
+        self.collection_name = os.environ.get('MONGODB_DEFAULT_COLLECTION') or DEFAULT_CONFIG['mongodb']['collection_name']
 
         # Setup connection to DB
         self._connect()
@@ -264,7 +272,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
             .add_estimation implicitly uses .save() method with different collection_name.
 
-        :param record:
+        :param record: a dict structure which must fit a JSON Schema for that type of message.
         :return:
         """
 
@@ -299,9 +307,9 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
 
         """
             Return the most recent estimation
-        :param args:
-        :param kwargs:
-        :return:
+        :param args: list of arguments
+        :param kwargs: dict of arguments
+        :return: a Python dictionary
         """
 
         # Fetch all estimations
@@ -402,7 +410,7 @@ class MongoDBStorageAdapter(AbstractStorageAdapter):
         
         - {'messages' : 23, 'estimations': 4}
 
-        :return: dict
+        :return: a Python dictionary
         """
 
         # collection to calculate statistics for
