@@ -6,7 +6,7 @@
     WLAN_ADDR: 192.168.10.1/24
     WIFI_SSID: ap
     WIFI_PASSPHASE: 12345678
-    WIFI_CHANNEL: 6
+    WIFI_CHANNEL: 2
     GATEWAY_INTERFACE: enp0s3
   tasks:
     - name: Add all tasks
