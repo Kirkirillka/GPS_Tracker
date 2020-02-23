@@ -11,10 +11,7 @@ from utils.validators import VALIDATOR_MAPPING, VALIDATOR_MESSAGE_TYPES
 from utils.tools import DateTimeDecoder
 
 # Logging section
-import logging.config
-from utils.logs.tools import read_logging_config
-
-logging.config.dictConfig(read_logging_config())
+import logging
 logger = logging.getLogger(__name__)
 
 # Project configuration
