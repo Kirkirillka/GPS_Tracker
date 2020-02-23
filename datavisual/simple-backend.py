@@ -5,10 +5,15 @@ from flask_cors import CORS
 
 from storage import MongoDBStorageAdapter
 from utils.tools import BSONClassEncoder
+from utils.normalizers import DefaultNormalizer
 
 from workers.tools.integrations import make_celery
 from workers.tasks import dispatch_estimation, add
 from workers.celery import connection_string
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config.update(
@@ -151,6 +156,25 @@ def get_tasks_stats(type: str):
     task_list = stat_func()
 
     return jsonify(task_list)
+
+
+@app.route("/messages/new", methods=["POST"])
+def handle_new_message_directly():
+
+    logger.debug("New message is received.")
+    json_data = request.json
+
+    _normalizer = DefaultNormalizer()
+    normalized_messages = _normalizer.normalize(json_data)
+
+    if normalized_messages:
+        logger.debug("Message is normalized, save in DB.")
+        app.storage.save(normalized_messages)
+        return jsonify(success=True)
+    else:
+        logger.error("Cannot normalize the message! Drop it.")
+        logger.debug("Dropped message is {}".format(json_data))
+        return jsonify(success=False)
 
 
 if __name__ == '__main__':
