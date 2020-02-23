@@ -12,8 +12,6 @@ from utils.tools import convert_to_str
 
 # Logging section
 import logging.config
-from utils.logs.tools import read_logging_config
-logging.config.dictConfig(read_logging_config())
 logger = logging.getLogger(__name__)
 
 # Project configuration
