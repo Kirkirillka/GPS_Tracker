@@ -158,8 +158,13 @@ def get_tasks_stats(type: str):
     return jsonify(task_list)
 
 
-@app.route("/messages/new", methods=["POST"])
+@app.route("/message/new", methods=["POST"])
 def handle_new_message_directly():
+
+    """
+    API Entry point for directly send messages from GPS_Android to the database.
+    :return: 200 if the message is normalized and saved successfully, 400 if the format is invalid.
+    """
 
     logger.debug("New message is received.")
     json_data = request.json
@@ -170,11 +175,11 @@ def handle_new_message_directly():
     if normalized_messages:
         logger.debug("Message is normalized, save in DB.")
         app.storage.save(normalized_messages)
-        return jsonify(success=True)
+        return jsonify(success=True, code=200)
     else:
         logger.error("Cannot normalize the message! Drop it.")
         logger.debug("Dropped message is {}".format(json_data))
-        return jsonify(success=False)
+        res = jsonify(success=False, code=400)
 
 
 if __name__ == '__main__':
