@@ -3,8 +3,9 @@ from utils.clients.models import WIFIClientAppMock
 from time import sleep
 
 # Logging section
-import logging
-logger = logging.getLogger(__name__)
+from utils.logs.tools import get_child_logger_by_name
+logger = get_child_logger_by_name(__name__)
+
 
 
 DELAY = 0.7

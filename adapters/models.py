@@ -11,8 +11,8 @@ from config.utils import get_project_config
 from utils.tools import convert_to_str
 
 # Logging section
-import logging.config
-logger = logging.getLogger(__name__)
+from utils.logs.tools import get_child_logger_by_name
+logger = get_child_logger_by_name(__name__)
 
 # Project configuration
 DEFAULT_CONFIG = get_project_config()

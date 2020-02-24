@@ -12,8 +12,9 @@ from utils.normalizers import DefaultNormalizer
 from config.utils import get_project_config
 
 # Logging section
-import logging
-logger = logging.getLogger(__name__)
+from utils.logs.tools import get_child_logger_by_name
+logger = get_child_logger_by_name(__name__)
+
 
 # Project configuration
 DEFAULT_CONFIG = get_project_config()
@@ -98,10 +99,11 @@ class DataBroker:
 
         def _store_in_db(client: Client, userdata: None, message: MQTTMessage) -> None:
 
-            logger.debug(f"Received a message on the topic {message}.")
+            logger.debug(f"Received a message on the topic: '{message.topic}'")
             normalized_message = self._normalizer.normalize(message.payload)
             if normalized_message:
-                logger.debug("Message is normalized, save in DB.")
+                logger.info(f'A new message received, normalized. Client ID is {normalized_message["device"]["id"]}.'
+                            f' Ready to save it. ')
                 self._store_adapter.save(normalized_message)
             else:
                 logger.error("Cannot normalize the message!")
