@@ -1,5 +1,13 @@
 # Configure AP on Linux using HostAPd and dnsmasq
 
+## Quick Introduction
+
+```bash
+ansible-playbook  -i inventory.yml cnc_run.yml  --ask-become-pass
+ansible-playbook  -i inventory.yml ap_run.yml  --ask-become-pass
+
+```
+
 ## Prerequisites
 
 - ansible
@@ -12,7 +20,7 @@ There is ansible playbook which set up AP on your Linux router.
 
 Tested on:
 
-- Debian 10 (Vagrant)
+ - Debian 11 (Testing)
 
 Steps:
 

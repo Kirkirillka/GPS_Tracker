@@ -15,11 +15,9 @@ from pymongo.errors import ConnectionFailure
 from config.utils import get_project_config
 
 # Logging section
-import logging.config
-from utils.logs.tools import read_logging_config
+from utils.logs.tools import get_child_logger_by_name
+logger = get_child_logger_by_name(__name__)
 
-logging.config.dictConfig(read_logging_config())
-logger = logging.getLogger(__name__)
 
 # Project configuration
 DEFAULT_CONFIG = get_project_config()

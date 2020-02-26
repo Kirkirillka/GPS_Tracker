@@ -11,53 +11,43 @@ from config.utils import get_project_config
 from utils.tools import convert_to_str
 
 # Logging section
-import logging
-
-logger = logging.getLogger(__name__)
+from utils.logs.tools import get_child_logger_by_name
+logger = get_child_logger_by_name(__name__)
 
 # Project configuration
 DEFAULT_CONFIG = get_project_config()
 
 
 class MQTTBrokerAdapter:
-    """ Description:
-
+    """
         **MQTTBrokerAdapter** is responsible for providing an interface to MQTT Message Broker.
 
         It allows to specify get_topics to subscribe, set callbacks to be executed on a new message arrived
         on the get_topics. After all subscriptions are specified, BrokerAdapter.serve() can be executed to pool messages
         from MQTT Message Broker.
 
-        The class takes parameters from the config provided by **DEFAULT_CONFIG**. Other way is to define OS environment
-        variables to adjust the behaviour.
+        General usage flow
+        ======
 
-        :param string MQTT_HOST: MQTT server address
-        :param int MQTT_PORT: MQTT server port
-        :param string MQTT_USER: (not implemented)
-        :param string MQTT_PASSWORD: (not implemented)
+        First, instantiate **BrokerAdapter**
+        After an instance of **BrokerAdapter** is created, you should specify get_topics to subscribe and callbacks to be
+        executed.
+        Then execute .setup() function - that performs all subscription to MQTT MessageBroker.
+        Start message polling via .serve() function. This operation is blocking, so it will release after .stop()
+        will be triggered. .setup() will be executed before .serve(), if it's not done earlier
 
-
-        General usage flow:
-
-            1. First, instantiate **BrokerAdapter**. After an instance of **BrokerAdapter** is created, you should
-               specify :py:meth:`.get_topics` to subscribe and callbacks to be executed.
-            2. Then execute :py:meth:`.setup` function - that performs all subscription to MQTT MessageBroker.
-            3. Start message polling via :py:meth:`.serve` function. This operation is blocking, so it will release
-               after :py:meth:`.stop` will be triggered. :py:meth:`.setup` will be executed before :py:meth:`.serve`,
-               if it's not done earlier
-
-        Example:
+        Example
+        ======
 
             >>> adapter = MQTTBrokerAdapter()
             >>> adapter.add_topic("any/topic/#",print)
+
             >>> adapter.serve()
-
-
     """
 
     def __init__(self):
 
-        # MQTT connection
+        # MQTT client
         self._conn = mqtt.Client()
 
         # Storage for topic <-> callback mapping
@@ -75,23 +65,33 @@ class MQTTBrokerAdapter:
     def _connect(self) -> bool:
 
         """
-        Establish connection to MQTT MessageBroker.
-        Internally, executes :py:meth:`mqtt.connect` function with the provided parameters.
+            Establish connection to MQTT MessageBroker.
 
-        :return: If connection established, then returns True, if there is timeout, then returns False.
+            Internally, executes mqtt.connect() function with configured parameters.
+            If connection established, then returns True, if there is timeout, then returns False.
 
-        :raise SocketError: if the trying to connect to MQTT is timed out.
+        :param host: argument to specify to which MQTT address to connect.
+
+        :param port: MQTT Message Broker port to connect. Default is 1883.
+
+        :param user: *Not implemented yet*.A user to be identified. If not specified, no authentication is used.
+
+        :param password: *Not implemented yet*. A user's password to authenticate.
+
+        :return: True if successful, False otherwise.
 
         """
 
         try:
             # Connect to MQTT Message Broker
-            self._conn.connect(host=self._host, port=self._port, )
+            self._conn.connect(host=self._host, port=self._port,)
             # Enable action logging
             self._conn.enable_logger(logger)
+
         except SocketError as e:
             # If connection is timed out
             logger.error(f"Connection to {self._host} is timed out. {e}")
+            return False
         else:
             # Notify that connection is successful
             return True
@@ -100,7 +100,9 @@ class MQTTBrokerAdapter:
 
         """
             Returns a list of registered get_topics to subscribe.
-            Internally, the list of :py:meth:`get_topics` is presented by :py:attr:`_topics` variable.
+
+            Internally, the list of get_topics is presented by *_topics* variable.
+
             This function should take care of the right formatting and checking.
 
         :return: A list of get_topics which to subscribe on.
@@ -146,6 +148,7 @@ class MQTTBrokerAdapter:
 
             # Check if it's forced to rewrite the topic <-> callback mapping.
             if forced:
+
                 logger.info(f"Rewrite callback for topic '{topic}' to callable '{callback}'")
 
                 # Add topic into internal list
@@ -170,10 +173,12 @@ class MQTTBrokerAdapter:
             self._topics.setdefault(topic, callback)
 
             # Perform subscription
+
             self._conn.subscribe(topic)
             self._conn.message_callback_add(topic, callback)
 
             logger.debug(f"Subscription on topic '{topic}' with function '{callback}' is done.")
+
 
             return True
 
@@ -181,11 +186,13 @@ class MQTTBrokerAdapter:
         """
             Cancel registration on the *topic*.
 
+            **Actions**:
+
             * Unsubscribe on the topic from MQTT Message broker.
             * Delete the topic from *_topics*/
 
         :param topic: a string specifies a topic (format : "/my/format/for/any/*")
-        :return: True if unsubscription is successful, False otherwise
+        :return: True if unsubscribed, False otherwise
 
         """
 
@@ -207,9 +214,9 @@ class MQTTBrokerAdapter:
     def serve(self) -> int:
 
         """
-            Start pooling :py:attr:`get_topics` from MQTT Message Broker.
+            Start pooling get_topics from MQTT Message Broker.
 
-            Run internal :py:meth:`_conn.run_forever` function in :py:attr:`_conn`.
+            Run internal *loop_forever* function in *_conn*.
 
             This function is blocking, so function won't return
             until disconnect is executed on MQTT connection object.
@@ -227,9 +234,9 @@ class MQTTBrokerAdapter:
 
     def stop(self) -> int:
         """
-            Stop MQTT message pooling.
+            Stop pooling.
 
-            Execute internal :py:meth:`_conn.disconnect` function in :py:attr:`_conn`.
+            Execute internal *disconnect* function in *_conn*.
 
         :return: True if MQTTBrokerAdapter stopped.
         """

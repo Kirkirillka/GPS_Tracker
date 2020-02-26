@@ -5,6 +5,7 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /etc/timezone:/etc/timezone:ro
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
     ports:
       - 1883:1883
       - 9001:9001
@@ -94,11 +95,11 @@ services:
     environment:
       - FTP_USER=speedtest
       - FTP_PASS=speedtest
-      - PASV_ADDRESS=192.168.10.1
+      - PASV_ADDRESS=192.168.50.1
       - PASV_MIN_PORT=21100
       - PASV_MAX_PORT=21110
     volumes:
-    - ./ftp:/home/vsftpd
+    - ./ftp/:/home/vsftpd
     ports:
       - 20:20
       - 21:21

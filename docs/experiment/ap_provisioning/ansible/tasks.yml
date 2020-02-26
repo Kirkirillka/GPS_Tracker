@@ -12,6 +12,7 @@
       - dnsmasq
     state: present
     update_cache: yes
+  ignore_errors: yes
 - name: Enable IP forwarding
   sysctl:
     name: net.ipv4.ip_forward
@@ -28,18 +29,17 @@
 - name: Start dnsmasq
   service:
     name: dnsmasq
-    state: started
+    state: restarted
 - name: Unmask hostapd
   command: systemctl unmask hostapd
   ignore_errors: yes
 - name: Start hostapd
   service:
     name: hostapd
-    state: started
+    state: restarted
 - name: Configure interface
   command: "{{item}}"
   with_items:
-    - "ip link set dev {{WLAN_INTERFACE}} down"
     - "ip addr flush dev {{WLAN_INTERFACE}}"
     - "ip addr add {{WLAN_ADDR}} dev {{WLAN_INTERFACE}}"
   ignore_errors: yes
@@ -49,3 +49,7 @@
     table: nat
     out_interface: "{{GATEWAY_INTERFACE}}"
     jump: MASQUERADE
+- name: Copy a script to configure the AP from the inside the machine
+  template:
+    src: scripts/ap_configure.sh
+    dest: ap_configure.sh

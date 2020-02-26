@@ -2,23 +2,24 @@ from .celery import celery_app
 
 from analyzer.models import UAVEstimator
 
-import logging
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+# Logging section
+from utils.logs.tools import get_child_logger_by_name
+logger = get_child_logger_by_name(__name__)
 
 
 @celery_app.task
-def add(x,y):
-    return x + y
+def dispatch_estimation(*args,**kwargs):
 
+    logger.debug("Received the new estimation tasks. Parameters are:")
+    logger.debug("Args: " + ",".join(args))
+    logger.debug("Kwargs: " + str(kwargs))
 
-@celery_app.task
-def dispatch_estimation(start_time, end_time, n_clusters, method, **kwargs):
+    start_date = kwargs.get("start_date")
+    end_date = kwargs.get("end_date")
+    num_clusters = kwargs.get('num_clusters')
+    method = kwargs.get("method")
 
-    logger.debug("Preparing UAVEstimator...")
     estimator = UAVEstimator(method)
 
-    logger.info("Starting estimation process...")
-    estimator.run_estimation(start_time, end_time, n_clusters, **kwargs)
-
-    logger.info("Estimation is done!")
+    logger.info("Scheduling a new estimation task...")
+    estimator.run_estimation(start_date, end_date, num_clusters, **kwargs)
