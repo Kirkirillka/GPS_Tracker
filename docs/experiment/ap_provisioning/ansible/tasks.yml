@@ -12,6 +12,7 @@
       - dnsmasq
     state: present
     update_cache: yes
+  ignore_errors: yes
 - name: Enable IP forwarding
   sysctl:
     name: net.ipv4.ip_forward
