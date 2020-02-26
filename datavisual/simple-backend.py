@@ -7,15 +7,18 @@ from storage import MongoDBStorageAdapter
 from utils.tools import BSONClassEncoder
 
 from workers.tools.integrations import make_celery
-from workers.tasks import dispatch_estimation, add
+from workers.tasks import dispatch_estimation
 from workers.celery import connection_string
 
 app = Flask(__name__)
 app.config.update(
     CELERY_BROKER_URL=connection_string,
-    CELERY_RESULT_BACKEND=connection_string
+    CELERY_RESULT_BACKEND=connection_string,
+    DEBUG=True
 )
+# Use to bypass CORS in the cases where the backend is outside of the current domain
 CORS(app)
+# Add storage to the app
 app.storage = MongoDBStorageAdapter()
 celery = make_celery(app)
 
@@ -154,4 +157,4 @@ def get_tasks_stats(type: str):
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=app.config.get("DEBUG",False))

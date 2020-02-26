@@ -1,3 +1,7 @@
+"""
+A script to run :py:class:`WIFIClientAppMock` standalone
+"""
+
 import sys
 from utils.clients.models import WIFIClientAppMock
 from time import sleep

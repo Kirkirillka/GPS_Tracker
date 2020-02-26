@@ -1,0 +1,12 @@
+- name: Add repository for non-free packages
+  apt_repository:
+    repo: "deb http://deb.debian.org/debian testing main contrib non-free"
+    state: present
+    filename: non-free
+- name: Install packages via apt
+  apt:
+    name:
+      - firmware-misc-nonfree
+      - firmware-ralink   
+    state: present
+    update_cache: yes

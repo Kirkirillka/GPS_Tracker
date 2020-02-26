@@ -109,11 +109,13 @@ class DefaultNormalizer:
         # Cast time field
         time = casted_dict['time']
 
+        # There is a trick with date casting. The Android may send date in int format, but the timezone will be lost.
         if isinstance(time, int):
             time = datetime.datetime.fromtimestamp(casted_dict['time'] / 1e3)
         elif isinstance(time, str):
             time = dateutil.parser.parse(time)
 
+        # Update the time in the right format
         casted_dict['time'] = time
 
         # Validate the object

@@ -13,6 +13,14 @@ class UAVEstimator:
         Class UAVEstimator is responsible to provide an API to run and save the result of optimization of
         *UAVPositionSolver*. Strictly dependent on concrete *MongoDBStorageAdapter* logic.
 
+        Attributes:
+
+            TARGET: the name of current estimator aim used for generation the estimation result message.
+            MESSAGE_TYPE: the name used for *target* in the payload field in MQTT messages.
+
+        :param method_name: an optimization method used to run an estimater. Default is `clustering`. The methods
+            must be registered in the module properly.
+
     """
 
     # For what kind of objects analysis is made
@@ -67,8 +75,6 @@ class UAVEstimator:
                 data_rows.append(only_last_position)
 
             records = data_rows
-
-
 
         # Check if we have data to process
         if isinstance(records, list) and len(records)>0:

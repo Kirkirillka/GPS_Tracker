@@ -1,3 +1,7 @@
+"""
+Setting up celery workers for Flask backend.
+"""
+
 import os
 from celery import Celery
 from config.utils import get_project_config

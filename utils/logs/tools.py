@@ -5,7 +5,8 @@ from yaml import safe_load
 def read_logging_config():
     """
         Read logging configuration from YAML
-    :return:
+    :return: a dict with configuration parameters
+    :rtype: dict
     """
 
     location = os.path.join(os.path.dirname(__file__), "config.yml")
