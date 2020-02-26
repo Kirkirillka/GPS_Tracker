@@ -1,10 +1,10 @@
-# General Use-Case description
+# Context and Scope
 
 The GPS_Tracker set of projects are intended to be used for the optimization of mobile users' signals. The aim of optimization is to find the best positions for the base stations represented by the UAVs.
 
-![General System usage representation](schemes/use-case/Main-Usage-Use-Case.png)
+## Business context
 
-## Main Use-Case description
+![Business context representation](schemes/use-case/Main-Usage-Use-Case.png)
 
 There are three types of actors:
 
@@ -27,3 +27,9 @@ Also there are the others activities included in or to extend these three use-ca
 |Testing Placement Algorithms| There is a simple and extensible approach how to add additional optimization algorithms to test. There is unified interface to access telemetry data.|
 |Running Optimization Tasks| GPS_Tracker can run several optimization in parallel. The researches can compare the results of different algorithms.|
 |Persistent storage| The telemetry from the users as well as optimization task result are saved in a persistent way in well-known JSON format. Further, the data can be imported in other analytic tools.|
+
+## Technical context
+
+The following diagrams shows the input/output interfaces for the main components.
+
+![Abstract Architecture representation](schemes/architecture/ArchitectureDiagram.png)
