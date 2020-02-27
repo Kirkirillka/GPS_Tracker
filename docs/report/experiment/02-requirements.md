@@ -29,7 +29,7 @@
   - `openssh-server` installed.
   - `docker` and `docker-compose` installed.
     - MongoDB container.
-    - Redis container.
+    - RabbitMQ container.
     - Mosquitto MQTT broker container.
     - Python3 container.
     - nginx container.
