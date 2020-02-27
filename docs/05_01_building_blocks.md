@@ -2,7 +2,7 @@
 
 ## Level 1. Main Scope and Context
 
-The following diagram represent the main component in the framework divided by four subsystems:
+The following diagram represents the main component in the framework divided by four subsystems:
 
 - Client Subsystem
 - Processing Subsystem
@@ -13,7 +13,7 @@ The following diagram represent the main component in the framework divided by f
 
 ### Motivation
 
-Main motivation of this structure is the flexibility gaining by dividing the responsibility of implementation. Since the project is not so difficult, it involves a lot of different technologies and participants.
+The main motivation of this structure is the flexibility gaining by dividing the responsibility of implementation. Since the project is not so difficult, it involves a lot of different technologies and participants.
 
 ### Component consideration
 
@@ -22,7 +22,7 @@ The framework highly utilize already completed components and protocols. The mos
 1. Interfaces
     - **AbstractStorageAdapter** - specify methods of accessing the data in a strict format.
     - **AbstractValidator** - defines methods to check if a message has a valid telemetry data format.
-    - **HTTP REST API** - defines methods how to access the stored data through HTTP requests. 
+    - **HTTP REST API** - defines methods on how to access the stored data through HTTP requests. 
 2. Protocols  
     - **FTP** - used to measure uplink/downlink throughput.
     - **MQTT** - used to communicate the telemetry messages to the MQTT Broker.
@@ -50,11 +50,11 @@ These components are currently implemented in Python. Some code regarding placem
 
 #### Open Issues
 
-##### MQTT Broker don't hold message for the future 
+##### MQTT Broker doesn't hold message for the future 
 
 Since we use quite simple MQTT protocol, the used implementation of MQTT Eclipso Mosquitto doesn't hold messages if there no subscribers for that message's topic. It requires at least one subscriber or set up properly QoS to guarantee that the message will be delivered and consumed properly.
 
-One of the possibilities is to use more advanced publisher/subscriber system such as Apache Kafka, but that has its drawbacks.
+One of the possibilities is to use more advanced publisher/subscriber systems such as Apache Kafka, but that has its drawbacks.
 
 ### Storage Subsystem
 
@@ -62,7 +62,7 @@ One of the possibilities is to use more advanced publisher/subscriber system suc
 
 ### Description
 
-**Storage Subsystem** implements the function to access the stored data. It hides all complexity and preparation phases to get the information in required form. This is the **Storage** component from conceptual design phase.
+**Storage Subsystem** implements the function to access the stored data. It hides all complexity and preparation phases to get the information in the required form. This is the **Storage** component from the conceptual design phase.
 
 Currently, only MongoDB is supported as final storage.
 
@@ -74,11 +74,11 @@ The MongoDB adapter is available only in Python currently.
 
 ### Description
 
-The DataBackend is written in Python. It has an access to the Celery Worker infrastructure that requires Redis NoSQL DB to work. This is needed to proper register the task by the user, so it quite tangled.
+The DataBackend is written in Python. It has access to the Celery Worker infrastructure that requires Redis NoSQL DB to work. This is needed to properly register the task by the user, so it quite tangled.
 
-The tasks are performed in background so feedback of web backend server is quite fast. The users can check the task status through REST API (not implemented, //TODO). 
+The tasks are performed in the background so feedback of the web backend server is quite fast. The users can check the task status through REST API (not implemented, //TODO). 
 
-This subsystem includes the components from conceptual design phase:
+This subsystem includes the components from the conceptual design phase:
 
 - DataBackend
 - DataVisualizer
