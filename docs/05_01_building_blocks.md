@@ -22,7 +22,7 @@ The framework highly utilize already completed components and protocols. The mos
 1. Interfaces
     - **AbstractStorageAdapter** - specify methods of accessing the data in a strict format.
     - **AbstractValidator** - defines methods to check if a message has a valid telemetry data format.
-    - **HTTP REST API** - defines methods on how to access the stored data through HTTP requests. 
+    - **HTTP REST API** - defines methods on how to access the stored data through HTTP requests.
 2. Protocols  
     - **FTP** - used to measure uplink/downlink throughput.
     - **MQTT** - used to communicate the telemetry messages to the MQTT Broker.
@@ -30,8 +30,8 @@ The framework highly utilize already completed components and protocols. The mos
     - FTP-server - vsftpd - implementation of FTP server.
     - MQTT Broker - Eclipse Mosquitto - implementation of MQTT Protocol Broker.
     - NoSQL Database - MongoDB - a NoSQL database to store messages in BSON format.
-    - Queue Broker = RabbitMQ - a message queue used to register the users scheduled tasks. 
-    
+    - Queue Broker - RabbitMQ - a message queue used to register the users scheduled tasks.
+
 ## Level 2. Subsystems
 
 ### Processing Subsystem
@@ -50,7 +50,7 @@ These components are currently implemented in Python. Some code regarding placem
 
 #### Open Issues
 
-##### MQTT Broker doesn't hold message for the future 
+##### MQTT Broker doesn't hold message for the future
 
 Since we use quite simple MQTT protocol, the used implementation of MQTT Eclipso Mosquitto doesn't hold messages if there no subscribers for that message's topic. It requires at least one subscriber or set up properly QoS to guarantee that the message will be delivered and consumed properly.
 
@@ -58,9 +58,9 @@ One of the possibilities is to use more advanced publisher/subscriber systems su
 
 ### Storage Subsystem
 
-![Storage Subsystem](schemes/classes/ClassDiagram-storage_subsystem.png)
+![Storage Subsystem](schemes/classes/ClassDiagram-storage_subsystem.png){width=50%}
 
-### Description
+#### Description
 
 **Storage Subsystem** implements the function to access the stored data. It hides all complexity and preparation phases to get the information in the required form. This is the **Storage** component from the conceptual design phase.
 
@@ -72,15 +72,15 @@ The MongoDB adapter is available only in Python currently.
 
 ![UI Subsystem](schemes/classes/ClassDiagram-ui_subsystem.png)
 
-### Description
+#### Description
 
 The DataBackend is written in Python. It has access to the Celery Worker infrastructure that requires RabbitMQ. This is needed to properly register the task by the user, so it quite tangled.
 
-The tasks are performed in the background so feedback of the web backend server is quite fast. The users can check the task status through REST API (not implemented, //TODO). 
+The tasks are performed in the background so feedback of the web backend server is quite fast. The users can check the task status through REST API (not implemented, //TODO).
 
 This subsystem includes the components from the conceptual design phase:
 
 - DataBackend
 - DataVisualizer
 
-The DataVisualizer is implemented as a web Single Page Application written with web technologies. 
+The DataVisualizer is implemented as a web Single Page Application written with web technologies.

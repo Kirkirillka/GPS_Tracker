@@ -4,7 +4,7 @@
 
 ### Operation System
 
-#### GPS_Tracker
+#### GPS_Tracker OS
 
 The framework is intended to run on Linux-based machines.
 
@@ -26,13 +26,13 @@ The user should use one of the modern version of web-browser HTML5-compatible:
 - Opera
 - Apple Safari
 
-The browser should allow running JavaScript files. 
+The browser should allow running JavaScript files.
 
 ### Hardware
 
 There are no special hardware requirements.
 
-#### GPS_Android
+#### GPS_Android Hardware
 
 The Android phone must have WiFi and GPS adapters.
 
@@ -41,6 +41,7 @@ The Android phone must have WiFi and GPS adapters.
 GPS_Tracker and GPS_Frontend can be configurated via a configuration file provided in the projects or via the OS environment variables.
 
 For the exact configuration instructions please check each of the detailed project configuration sections.  
+
 ## Deployment Cases
 
 Both GPS_Tracker and GPS_Frontend are designed to be easily deployed. There are possible two cases:

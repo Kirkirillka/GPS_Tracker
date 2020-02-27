@@ -13,8 +13,9 @@ Conceptually, the GPS_Tracker framework consists of several abstract components
 |DataBackend|A component that provides data access methods for the end clients. |
 |DataVisualizer| An entity the user interacts with.|
 |Storage|A program that stores sensor data reliably and has a well-defined access interface.|
+Table: Conceptual Design components
 
-![Conceptual Design Diagram](schemes/conceptual/ConceptualDiagram.png) 
+![Conceptual Design Diagram](schemes/conceptual/ConceptualDiagram.png)
 
 ## Solution Approaches
 
@@ -22,15 +23,15 @@ Conceptually, the GPS_Tracker framework consists of several abstract components
 
 #### Goal
 
-The messages receiving an operation performing must be accomplished as fast as possible. 
- 
+The messages receiving an operation performing must be accomplished as fast as possible.
+
 #### Solution
 
 To accomplish that, a protocol with very low latency but still reliable must be used. That must be a TCP/IP-based application protocol. There are two possible choices:
- 
+
 - TCP-based protocols for a reliable connection, but may have higher latency.
 - UDP-based protocols for fast transmission without built-in reliable quality, but still has some of acknowledging mechanisms on the application level.  
- 
+
 Moreover, all components must be aware of to be written with efficient programming techniques and components. 
 
 ### Reliability
@@ -38,17 +39,19 @@ Moreover, all components must be aware of to be written with efficient programmi
 #### Goal
 
 The communication sides must have a way to check if the message was received and interpreted correctly.
- 
+
 #### Solution 
 
 For that, there must be checks in the end-to-end protocol, as well as checks in the backend that received information stored.
 
 ### Scalability
 
-#### Goal 
+#### Goal
+
 There must be an opportunity to easily increase the performance of the framework if required.
 
 #### Solution
+
 Publish/subscriber architecture pattern suits well the scalability requirement. Each component can be changed separately by different component regarding the proper interface implementation is done.
 
 ### Usability

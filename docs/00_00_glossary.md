@@ -1,7 +1,7 @@
 # Glossary
 
-|Item| Description|
-|---|---|
+|Item|Description|
+|---|---------|
 |GPS_Frontend|A web-based application to provide a user a convenient user interface.|
 |GPS_Tracker|A name of the framework and as well a name for the backend software running for processing and storing telemetry data|
 |GPS_Android|An Android application to send the telemetry information about the current mobile network from the users' phones to GPS_Tracker.|
@@ -16,4 +16,5 @@
 |GPS| Global Positioning System.|
 |UE(s)| User Equipment.|
 |UAV(s)|Unmanned Aerial Vehicle.|
-|AP|Access Point.|
+|AP|Access Point|
+Table:Glossary List
