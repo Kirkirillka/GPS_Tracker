@@ -2,5 +2,5 @@
 
 ## Overview of the system
 
-![Overview](ClassDiagram-Overview.png)
+![Overview](ClassDiagram-overview.png)
 
