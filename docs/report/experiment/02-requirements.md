@@ -3,7 +3,7 @@
 ## Hardware Equipment
 
 - 6 cellphones with Android OS (version 5.0 and above).
-  - Dedicated GPS and WiFi modules.
+- Dedicated GPS and WiFi modules.
 - 3 external WiFi Adapters with AP mode capable.
 - 3 Laptops.
 - One ruler.
@@ -14,7 +14,7 @@
 ### For UEs
 
 - Android enabled smartphone (version 5.0 and above).
-- `Magic Perf` installed.
+    - `Magic Perf` installed.
 - `GPS_Android` installed.
 
 ### For Command Center (CnC)
@@ -43,4 +43,4 @@
   - `iperf3` installed.
   - `openssh-server` installed.
   - `docker` and `docker-compose` installed.
-    - VSFTPD container.
+   VSFTPD container.
