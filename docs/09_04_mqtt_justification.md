@@ -1,12 +1,12 @@
-### Consideration on the protocol used to send data from GPS_Android
+## Consideration on the protocol used to send data from GPS_Android
 
 ### Description
 
 During the group study solution design it became clear that
-our system needs **a mediator** which can 
-control incoming messages. In particular:
+our system needs **a mediator** which can control incoming messages. In particular:
+
 - avoid loss of messages
-- provide the availability to many devices at once 
+- provide the availability to many devices at once
 - provide smooth transmission to the processing subsystem
 
 ![mqtt-justification](mqtt-justification.png){ width=50% }
@@ -14,6 +14,7 @@ control incoming messages. In particular:
 ### Decision
 
 As a result, MQTT was selected for the reasons:
+
 - fitting to criterion above
 - reliability
 - lightweight
@@ -21,7 +22,6 @@ As a result, MQTT was selected for the reasons:
 ### Status
 
 Accepted
-
 
 ### Consequences
 
