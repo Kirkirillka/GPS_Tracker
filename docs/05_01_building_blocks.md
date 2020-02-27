@@ -30,7 +30,7 @@ The framework highly utilize already completed components and protocols. The mos
     - FTP-server - vsftpd - implementation of FTP server.
     - MQTT Broker - Eclipse Mosquitto - implementation of MQTT Protocol Broker.
     - NoSQL Database - MongoDB - a NoSQL database to store messages in BSON format.
-    - NoSQL Database = Redis - a NoSQL database to cache the scheduled task list for Celery workers. 
+    - Queue Broker = RabbitMQ - a message queue used to register the users scheduled tasks. 
     
 ## Level 2. Subsystems
 
@@ -74,7 +74,7 @@ The MongoDB adapter is available only in Python currently.
 
 ### Description
 
-The DataBackend is written in Python. It has access to the Celery Worker infrastructure that requires Redis NoSQL DB to work. This is needed to properly register the task by the user, so it quite tangled.
+The DataBackend is written in Python. It has access to the Celery Worker infrastructure that requires RabbitMQ. This is needed to properly register the task by the user, so it quite tangled.
 
 The tasks are performed in the background so feedback of the web backend server is quite fast. The users can check the task status through REST API (not implemented, //TODO). 
 

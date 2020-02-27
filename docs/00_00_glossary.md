@@ -11,7 +11,7 @@
 |JSON|JavaScript Object Notation, a lightweight data-interchange format.|
 |MongoDB| A NoSQL database storing data in BSON (Binary JSON) format.|
 |Celery|A framework to implement program using "Worker" architecture design.|
-|Redis|An in-memory queuing subsystem.|
+|RabbitMQ|An in-memory queuing message broker.|
 |RSS| Received Signal Strength.|
 |GPS| Global Positioning System.|
 |UE(s)| User Equipment.|
