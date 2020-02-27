@@ -15,7 +15,7 @@ Conceptually, the GPS_Tracker framework consists of several abstract components
 |Storage|A program that stores sensor data reliably and has a well-defined access interface.|
 Table: Conceptual Design components
 
-![Conceptual Design Diagram](schemes/conceptual/ConceptualDiagram.png)
+![Conceptual Design Diagram](schemes/conceptual/ConceptualDiagram.png){width=70%}
 
 ## Solution Approaches
 

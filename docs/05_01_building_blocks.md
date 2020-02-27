@@ -58,7 +58,7 @@ One of the possibilities is to use more advanced publisher/subscriber systems su
 
 ### Storage Subsystem
 
-![Storage Subsystem](schemes/classes/ClassDiagram-storage_subsystem.png){width=50%}
+![Storage Subsystem](schemes/classes/ClassDiagram-storage_subsystem.png){width=30%}
 
 #### Description
 
