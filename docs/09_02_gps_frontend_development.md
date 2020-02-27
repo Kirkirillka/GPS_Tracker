@@ -1,6 +1,6 @@
 ## Decision on GPS_Tracker techniques development
 
-## Description
+### Description
 
 The GPS_Tracker is a UI to access the functions of other components of the framework. Thus, it would have complicated behavior. The best-suited architecture for that kind of task is Single Page Application (SPA). 
 
@@ -10,7 +10,7 @@ There are many possible web frameworks exist that may help to build SPA applicat
 - React
 - Vue.js
 
-## Decision
+### Decision
 
 Only one person in the team had experience developing a web application with the Vue.js framework.
 
@@ -46,11 +46,11 @@ Also there is a set of dependencies specified:
 - "vue-router": "^3.1.3" - An router extension to Vue.js. 
 - "vuex": "^3.1.2" - A storage library extension to Vue.js.
 
-## Status
+### Status
 
 Accepted
 
-## Consequences
+### Consequences
 
 Advantages:
 
