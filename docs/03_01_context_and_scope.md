@@ -33,4 +33,4 @@ Table: Main use-cases description
 
 The following diagrams show the input/output interfaces for the main components.
 
-![Abstract Architecture representation](schemes/architecture/ArchitectureDiagram.png)
+![Abstract Architecture representation](schemes/architecture/ArchitectureDiagram.png){width=50%}

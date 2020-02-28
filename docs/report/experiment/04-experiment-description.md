@@ -36,7 +36,7 @@ From the deployment view, we are using a complicated combination of software and
 
 We prefer to run the AP and the designed software separately in a virtual machine. That helps to automate development, testing, and maintenance routines.
 
-![Deployment Diagram](<images/Deployment Diagram-Deployment_Diagram.png>){width=75%}
+![Deployment Diagram](images/Deployment%20Diagram-Deployment_Diagram.png){width=75%}
 
 ### Command center deployment (CnC)
 
@@ -63,7 +63,7 @@ In `WiFi CnC Network` installed another DHCP server. It used to reply to connect
 
 Finally, the UEs can access the static CnC address `192.168.20.1` as well as its local AP's gateway address `192.168.10.1`.
 
-![Network Diagram](<images/Deployment Diagram-Network_Diagram.png>){width=75%}
+![Network Diagram](images/Deployment%20Diagram-Network_Diagram.png){width=75%}
 
 ## Experiment Steps
 
@@ -75,7 +75,7 @@ The following steps will be executed for each described experimental case:
 | 2   | Run the software for the experiment                                      | Startup GPS_Tracker, GPS_Frontend                                                                                 |
 | 3   | Place the APs and UEs according to an experiment case                    | There are specific predefined positions for each element on the experiment area.                                  |
 | 4   | Measure RSS, Link quality for the initial layout                         | Measurements are done via GPS_Android that sends the result to GPS_Tracker                                        |
-| 5   | Run the APs location optimization for each algorithm in GPS_Tracker      | Each optimization algorithm can prodice different probable positions for the same UEs positions and measurements. |
+| 5   | Run the APs location optimization for each algorithm in GPS_Tracker      | Each optimization algorithm can produce different probable positions for the same UEs positions and measurements. |
 | 6   | Move the APs to the optimized positions                                  | It is expected that new positions for APs would increase our network efficiency.                                  |
-| 7   | Repeat RSS and Link quality measurements for the optimized APs positions | 1-3 iteractions for optimization per each case.                                                                   |  |
+| 7   | Repeat RSS and Link quality measurements for the optimized APs positions | 1-3 interactions for optimization per each case.                                                                   |  |
 Table: Steps of the experimental case.

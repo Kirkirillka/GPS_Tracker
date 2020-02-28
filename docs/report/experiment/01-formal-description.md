@@ -45,7 +45,7 @@ For each test case, we expect that:
 
 ## Glossary
 
-| Termin | Description                                                                                                                               |
+| Terminology | Description                                                                                                                               |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | UE     | User Equipment - a mobile terminal which transmits data via the radio link. Each UEs runs different Android OS version (4.0+)             |
 | AP     | Access Point - a WiFi hotspot running by a laptop with wifi stick. Each laptop has a side application to support throughput measurement.  |

@@ -21,21 +21,6 @@ services:
     ports:
       - 27017:27017
 
-  wifi-client-mock:
-    build:
-      context: .
-      target: final-stage
-    volumes:
-      - ./.:/app
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-    environment:
-      - MQTT_HOST=mqtt_broker
-      - MQTT_POR=1883
-    command: ["python","runners/wifi_payload_client_runner.py"]
-    depends_on:
-      - mqtt_broker
-
   databroker:
     build:
       context: .

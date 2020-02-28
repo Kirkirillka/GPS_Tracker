@@ -22,24 +22,24 @@ The team member discussed and decided that:
 
 Finally, the team decided to use the Vue.js framework as the core for GPS_Frontend.
 
-Also there is a set of dependencies specified:
+Also, there is a set of dependencies specified:
 
 - "font-awesome" - A set of fonts.
 - "@fortawesome/fontawesome-free" -  A set of fonts.
-- "apexcharts" -  A library do draw figures using Web.
+- "apexcharts" -  A library does draw figures using Web.
 - "axios" -  A library to work with HTTP(S) requests.
-- "bootstrap" -   An open source toolkit/framework for developing with HTML, CSS, and JS.
+- "bootstrap" -   An open-source toolkit/framework for developing with HTML, CSS, and JS.
 - "bootstrap-vue" -  A wrapper to use Bootstrap components natively in Vue.js.
-- "core-js" -  An standard library to extend the number of components and operation.
+- "core-js" - A standard library to extend the number of components and operation.
 - "d3v4" - level JavaScript library for manipulating documents based on data using HTML, SVG, CSS.
 - "d3-colorbar" -  An extension to d3 library to work with colors.
 - "jquery" - rich JavaScript library.
 - "moment" -  A convenient library to work with time.
 - "pc-bootstrap4-datetimepicker" -  a DatetimePicker component compatible with Bootstrap.
-- "plotly.js-dist" -   A library do draw figures using Web.
+- "plotly.js-dist" -   A library does draw figures using Web.
 - "portal-vue" -  A Vue component to render your component's template anywhere in the DOM.
 - "underscore" - A JavaScript library that provides a whole mess of useful functional programming helpers without extending any built-in objects.
-- "vue" -  The Progressive JavaScript Framework to build web application.
+- "vue" -  The Progressive JavaScript Framework to build the web application.
 - "vue-apexcharts" -  A wrapper to use ApexChart components natively in Vue.js.
 - "vue-axios" -  A wrapper to use Axios components natively in Vue.js.
 - "vue-bootstrap-datetimepicker" - datetimepicker components natively in Vue.js.
