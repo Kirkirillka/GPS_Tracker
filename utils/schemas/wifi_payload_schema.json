@@ -51,8 +51,6 @@
             "properties": {
               "rssi": {
                 "type": "number",
-                "minimum": -130,
-                "maximum": -20
               }
             },
             "required": [
