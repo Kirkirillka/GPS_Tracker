@@ -50,7 +50,7 @@
             "type": "object",
             "properties": {
               "rssi": {
-                "type": "number",
+                "type": "number"
               }
             },
             "required": [
