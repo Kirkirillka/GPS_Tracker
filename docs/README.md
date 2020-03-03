@@ -1,5 +1,15 @@
 # Project Documentation
 
+## Usage
+
+Generate a PDF file:
+
+```bash
+pandoc *.md -H disable_float.tex -o "Performance analysis framework for base station placement using IEEE 802.11.pdf"
+```
+
+## Description 
+
 Welcome to the documentation!
 
 The documentation based on [arc42](http://arc42.org) suggested template.
