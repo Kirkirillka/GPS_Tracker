@@ -1,14 +1,5 @@
 version: "3.4"
 services:
-  mqtt_broker:
-    image: eclipse-mosquitto:1.6.7
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
-    ports:
-      - 1883:1883
-      - 9001:9001
 
   mongodb:
     image: mongo:4
@@ -21,47 +12,15 @@ services:
     ports:
       - 27017:27017
 
-  wifi-client-mock:
-    build:
-      context: .
-      target: final-stage
-    volumes:
-      - ./.:/app
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-    environment:
-      - MQTT_HOST=mqtt_broker
-      - MQTT_POR=1883
-    command: ["python","runners/wifi_payload_client_runner.py"]
-    depends_on:
-      - mqtt_broker
-
-  databroker:
-    build:
-      context: .
-      target: final-stage
-    volumes:
-      - ./.:/app
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
-    environment:
-      - MQTT_HOST=mqtt_broker
-      - MQTT_POR=1883
-    command: ["python","runners/databroker_runner.py"]
-    depends_on:
-      - mqtt_broker
-      - mongodb
-
   visual-backend:
     build:
       context: .
       target: final-stage
     environment:
+      - MONGODB_HOST=mongodb
       - RABBITMQ_HOST=rabbitmq
     volumes:
       - ./.:/app
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
     ports:
       - 5000:5000
     command: ["python","datavisual/simple-backend.py"]
@@ -70,9 +29,6 @@ services:
 
   rabbitmq:
     image: rabbitmq:3.8
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
     ports:
       - 5672:5672
 
@@ -82,8 +38,6 @@ services:
       - RABBITMQ_HOST=rabbitmq
     volumes:
       - ./.:/app
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
     command: celery -A workers worker -l info
     depends_on:
       - rabbitmq
@@ -95,13 +49,14 @@ services:
     environment:
       - FTP_USER=speedtest
       - FTP_PASS=speedtest
-      - PASV_ADDRESS=192.168.50.1
+      - PASV_ADDRESS=141.24.112.29
       - PASV_MIN_PORT=21100
       - PASV_MAX_PORT=21110
     volumes:
-    - ./ftp/:/home/vsftpd
+      - ./ftp/speedtest/1MB.zip:/home/vsftpd/speedtest/1MB.zip
+      - ./ftp/speedtest/10MB.zip:/home/vsftpd/speedtest/10MB.zip
     ports:
       - 20:20
       - 21:21
       - 21000-21010:21000-21010
-    network_mode: "host"
+    network_mode: host

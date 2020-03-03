@@ -1,5 +1,21 @@
 # RCSE WS19/20 Group Study: Performance analysis framework for base station placement using IEEE 802.11
 
+
+## Some tips
+
+### Access Points deploying
+
+1. Go to directory **docs/experiments/ap_provisioning**
+2. Change parameters, especially check if AP's stick adapter name is changed properly as it's seen in the OS
+3. Run ansible-playbook (it will asks for password to escalate privileges):
+
+```bash
+// Deploy and provision of CnC
+ansible-playbook -i inventory.yml cnc_run.yml --ask-become-pass
+// Deploy and provision of APs
+ansible-playbook -i inventory.yml ap_run.yml --ask-become-pass
+``` 
+
 ## Early access
 
 Now it is possible to run a Proof-of-Concept of the system. The PoC is taking into considering:

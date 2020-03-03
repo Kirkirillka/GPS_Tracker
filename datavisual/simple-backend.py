@@ -181,6 +181,8 @@ def handle_new_message_directly():
         logger.debug("Dropped message is {}".format(json_data))
         res = jsonify(success=False, code=400)
 
+        return res
+
 
 if __name__ == '__main__':
     logger.info("Starting GPS_Tracker datavisual backend.")
