@@ -1,6 +1,9 @@
-# Case-2. Near-optimal layout
+# Case-2. Uniform layout.
 
-In the second case, the only changed things are the position of **APs**.
-Each of them now is put in the middle of each group of 3 UEs.
+In the second case, we want to put the APs at the same distance and line from the CnC.
 
-Consequently, **RSSI** and other values are expected to be better.
+Here, both **APs** is set right on the line between the quarter of UEs and quarter where UE was alone.
+
+Signal quality and transmission rate in this configuration expected to decrease compared to the previous case.
+
+![Uniform case layout example](images/05-cases-description-Exp4-Uniform.png)

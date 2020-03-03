@@ -1,6 +1,9 @@
-# Case-3. Uniform layout
+# Case-2. Near-optimal layout.
 
-The last case to try is the compromise of the previous two cases.
-Here, both **APs** is set right on the line between the quarter of UEs and the quarter where UE was alone.
+In the third case, the only changed things are the position of **APs**.
 
-**Results** in this configuration are expected to have the average values of the previous two cases.
+Each of them now is put in the middle of each group of 3 UEs, therefore they have the same distance to centers of each cluster.
+
+Consequently, RSS and link transmission rate expected to increase
+
+![Near-optimal layout example](images/05-cases-description-Exp4-Near-Optimal.png)
