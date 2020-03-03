@@ -23,19 +23,18 @@ Only one case (near-optimal) was performed.
 
 ![The initial CnC server position](images/experiment_2_overview.jpg) 
 
-All the UEs connections were made successfully:
+All the UEs connections made successfully:
 
 - deviceId was assigned
-- UE coordinates were displayed
+- UE coordinates displayed
 
-During the first half of the experiment time, after pressing 'push once' **upload/download speeds** were estimated and displayed, 
-although the values seemed to be not realistic (300 000 kbit/s). The values were much smaller when CnC was not connected to the Internet.
+During the first half of the experiment time, after pressing 'push once' **upload/download speeds** were estimated and displayed, although the values seemed to be not realistic (300 000 kBit/s). The values were much smaller when CnC was not connected to the Internet.
 
 Later, pressing 'push once' did not cause speed re-estimation, and logs contained error messages about issues related to the MQTT.
 
 ## Outcome
 
-The second attempt was also not successful. We hadn't managed to solve the problem in telemetry data sending, although quite
+The second attempt was also not successful. We hadn't managed to solve the problem in telemetry data sending, some design proposals can be solution for the next iteration.
 
 As a result, we decided to:
 

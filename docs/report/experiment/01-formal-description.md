@@ -1,4 +1,4 @@
-# 1. Formal Description of the experiment
+# 1. Formal Description of the experiment.
 
 | Key                | Value                         |
 | ------------------ | ----------------------------- |
@@ -12,25 +12,25 @@ The aims of the experiment are:
 - Check the functional properties of the system.
 - System stability, performance and usability measurements in real case scenarios.
 
-2. Optimization algorithms evaluation for access points (base stations) layout optimization.
+2. Optimization algorithms evaluation for UAVs (having Wi-Fi AP) layout optimization.
 
 - Evaluation of correctness of provided optimized positions by the algorithms.
 - Measurement of stability, performance, and usability of the algorithms.
 
 ## Main information
 
-The main purpose of the experiment is to optimize the location of AP's such a way that throughput and RSSI of UE's connected to those AP is maximized.
+The main purpose of the experiment is to optimize the location of AP's such a way that throughput and RSS of UE's connected to those AP is maximized.
 
 For that we experiment with the following way:
 
-1. APs' are located in the space without any obstacles. They are surrounded by UEs.
+1. APs located in the space without any obstacles. They are surrounded by UEs.
 2. UEs connected to APs and evaluate RSS and throughput via specially designed software.
 3. Stored measured records by UEs are sent/copied to the central server.
 4. An operator uses the provided interface to analyze the measurements and run optimization algorithms to find out the best positions for APs.
-5. After the next optimal positions for APs are found, the APs are moved to the optimized points.
+5. After the next optimal positions for APs are found, access points moved to the optimized points.
 6. An experiment is going to step 3 and repeated until no significant improvement for APs positions will be observed.
 
-The experiment is repeated three times with different initial APs and UEs positions.
+The experiment repeated three times with different initial APs and UE positions.
 
 Test sets:
 
@@ -48,5 +48,7 @@ For each test case, we expect that:
 | Terminology | Description                                                                                                                               |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | UE     | User Equipment - a mobile terminal which transmits data via the radio link. Each UEs runs different Android OS version (4.0+)             |
-| AP     | Access Point - a WiFi hotspot running by a laptop with wifi stick. Each laptop has a side application to support throughput measurement.  |
-| RSS    | Received Signal Strength - the estimated value of signal power for the radio signal. The greater the RSSI value, the stronger the signal. |
+| AP     | Access Point - a Wi-Fi access point running by a laptop with an external Wi-Fi adapter. Each laptop has a side application to support throughput measurement.  |
+|CnC    | A central server where the system core is running. All measurements analysis and UI interactions performs here. |
+|UAV    | Unmanned Aerial Vehicle - a vehicle having AP on the board.|
+| RSS    | Received Signal Strength - the estimated value of signal power for the radio signal. The greater the RSS value, the stronger the signal. |
