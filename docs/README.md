@@ -2,7 +2,7 @@
 
 Welcome to the documentation!
 
-The documentation is based on [arc42](rc42.org) suggested template.
+The documentation based on [arc42](http://arc42.org) suggested template.
 
 The following sections are available:
 
@@ -17,11 +17,11 @@ The following sections are available:
 9. [Risk and Technical Debts](11_01_risk_and_debt.md)
 10. [Glossary](12_00_glossary.md)
 
-Also you can find out more detailed information on the sections:
+Also, you can find out more detailed information on the sections:
 
-- About System Components - [link](components/)
-- About Using Data structures - [link](data_structures/)
-- Description of Protocols and Interfaces - [link](interfaces/)
-- Diagrams and Schemes - [link](schemes/)
+- About System Components - [link](components/README.md)
+- About Using Data structures - [link](data_structures/README.md)
+- Description of Protocols and Interfaces - [link](interfaces/README.md)
+- Diagrams and Schemes - [link](schemes/README.md)
 - About System Launching - #TODO: 
-- About System Testing - [link](testing/)
+- About System Testing - [link](testing/README.md)

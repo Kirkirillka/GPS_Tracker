@@ -54,7 +54,7 @@ Accepted
 
 Advantages:
 
-- We received a well designed, good-looking  and user-friendly UI.
+- We received a well-designed, good-looking and user-friendly UI.
 - It can be easily changed and adapted to new requirements.
 - Rich set of features and further development.
 - High SPA performance.

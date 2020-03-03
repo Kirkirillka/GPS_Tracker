@@ -12,15 +12,15 @@ There are many possible web frameworks exist that may help to build SPA applicat
 
 ### Decision
 
-Only one person in the team had experience developing a web application with the Vue.js framework.
+Only one person in the team had the experience developing a web application with the Vue.js framework.
 
 The team member discussed and decided that:
 
 - Angular has reach functionality, but too complex for that task.
 - React is more flexible, but requires more time to get working in.
-- Vue.js is a simple framework with excellent documentation but has a lack of components in the default configuration. It requires additional libraries and components to design required functions.
+- Vue.js is a simple framework with an excellent documentation but has a lack of components in the default configuration. It requires additional libraries and components to design required functions.
 
-Finally, the team decided to use the Vue.js framework as the core for GPS_Frontend.
+Finally, the team decided to use the Vue.js framework as the core for **GPS_Frontend**.
 
 Also there is a set of dependencies specified:
 
@@ -43,8 +43,8 @@ Also there is a set of dependencies specified:
 - "vue-apexcharts" -  A wrapper to use ApexChart components natively in Vue.js.
 - "vue-axios" -  A wrapper to use Axios components natively in Vue.js.
 - "vue-bootstrap-datetimepicker" - datetimepicker components natively in Vue.js.
-- "vue-router" -  An router extension to Vue.js.
-- "vuex" -  A storage library extension to Vue.js.
+- "vue-router" - An router extension to Vue.js.
+- "vuex" - A storage library extension to Vue.js.
 
 ### Status
 
@@ -54,7 +54,7 @@ Accepted
 
 Advantages:
 
-- We received a well designed, good-looking  and user-friendly UI.
+- We received a well-designed, good-looking and user-friendly UI.
 - It can be easily changed and adapted to new requirements.
 - Rich set of features and further development.
 - High SPA performance.
