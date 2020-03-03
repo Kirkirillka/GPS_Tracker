@@ -44,7 +44,7 @@ The framework highly utilize already completed components and protocols. The mos
 
 - Analyzer
 - MessageBroker
-- DataBroker
+- DataBroker (deprecated, use direct pushing to DataBackend via HTTP)
 
 These components currently implemented in Python. Some code regarding placement optimization algorithms are private and provided to the production environment as installation packages of code written in Python as well.
 

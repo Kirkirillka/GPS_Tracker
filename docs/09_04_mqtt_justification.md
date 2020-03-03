@@ -10,7 +10,6 @@ During the group study solution design it became clear our system needs **a medi
 
 One of the initial requirements were to use UDP protocol.
 
-![mqtt-justification](mqtt-justification.png){ width=50% }
 
 ### Decision
 
@@ -27,6 +26,8 @@ First, we used MQTT protocol because it well-suited for IoT-based application. M
 - fitting to criterion above
 - reliability
 - lightweight
+
+![mqtt-justification](mqtt-justification.png){width=50%}
 
 However, the results in the first 3 experimental attempts have shown that MQTT is not adapted for the system. Consequently, we switched to HTTP protocol to send messages directly to backend server in GPS_Tracker.
  
