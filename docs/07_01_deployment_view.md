@@ -6,7 +6,7 @@
 
 #### GPS_Tracker OS
 
-The framework is intended to run on Linux-based machines.
+The framework intended to run on Linux-based machines.
 
 Tested OS:
 
@@ -34,24 +34,24 @@ There are no special hardware requirements.
 
 #### GPS_Android Hardware
 
-The Android phone must have WiFi and GPS adapters.
+The Android phone must have Wi-Fi and GPS adapters.
 
 ## Configuration
 
-GPS_Tracker and GPS_Frontend can be configurated via a configuration file provided in the projects or via the OS environment variables.
+GPS_Tracker and GPS_Frontend can be configured via a configuration file provided in the projects or via the OS environment variables.
 
 For the exact configuration instructions please check each of the detailed project configuration sections.  
 
 ## Deployment Cases
 
-Both GPS_Tracker and GPS_Frontend are designed to be easily deployed. There are possible two cases:
+Both GPS_Tracker and GPS_Frontend designed to be easily deployed. There are possible two cases:
 
 1. BareMetal Deployment - the administrator should be aware of manually starting the software elements, or configure the OS properly (via systemd, InitV scripts, etc.)
-2. Docker container deployment - the projects provide Dockerimage description that can be started with `docker`, and a `docker-compose.yml` file to maintain the deployment phase more properly.
+2. Docker container deployment - the projects provide Docker image description that can be started with `docker`, and a `docker-compose.yml` file to maintain the deployment phase more properly.
 
-Each running element may be started on a separated machine as long as:
+Each running element may start on a separated machine as long as:
 
-1. Proper configuration is performed
+1. A proper configuration performed
 2. A network connection is available (NAT allowed, check for the ports if opened)
 
 ### Bare-Metal Deployment

@@ -1,4 +1,4 @@
-# Case-2. Uniform layout.
+# Case-2. Uniform layout
 
 In the second case, we want to put the APs at the same distance and line from the CnC.
 

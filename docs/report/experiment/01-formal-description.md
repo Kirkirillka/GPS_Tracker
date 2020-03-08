@@ -1,4 +1,4 @@
-# 1. Formal Description of the experiment.
+# 1. Formal Description of the experiment
 
 | Key                | Value                         |
 | ------------------ | ----------------------------- |
@@ -49,6 +49,6 @@ For each test case, we expect that:
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | UE     | User Equipment - a mobile terminal which transmits data via the radio link. Each UEs runs different Android OS version (4.0+)             |
 | AP     | Access Point - a Wi-Fi access point running by a laptop with an external Wi-Fi adapter. Each laptop has a side application to support throughput measurement.  |
-|CnC    | A central server where the system core is running. All measurements analysis and UI interactions performs here. |
+|CnC    | A central server where the system core is running. All measurement analysis and UI interactions perform here. |
 |UAV    | Unmanned Aerial Vehicle - a vehicle having AP on the board.|
 | RSS    | Received Signal Strength - the estimated value of signal power for the radio signal. The greater the RSS value, the stronger the signal. |
