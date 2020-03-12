@@ -14,9 +14,9 @@ There are three types of actors:
 
 Also, that is worth describing the activities performing in the system. There are three important use-cases:
 
-1. User interaction via **GPS_Frontend** - **GPS_Frontend** is a web application that allows users to interact with the backend to fetch and observe information stored. Also, there is a purpose to filter data and run optimization tasks.
-2. Sending telemetry data via **GPS_Frontend* - each mobile connection user has GPS_Android installed on the phones. That is an important part of the software because it provides the real info on the radio network quality attributes.
-3. Operating with **GPS_Tracker** - **GPS_Tracker** is a set of the program running in the backend that performs a lot of processing operations to serve the user requests. No direct interaction from the actors required.
+1. User interaction - There is a web application that allows users to interact with the backend to fetch and observe information stored. Also, there is a purpose to filter data and run optimization tasks.
+2. Sending telemetry data from mobile phones - each mobile connection user has a special program installed on the phones. That is an important part of the software because it provides the real info on the radio network quality attributes.
+3. Data processing and runtime backend - There is a set of the program running in the backend that performs a lot of processing operations to serve the user requests. No direct interaction from the actors required.
 
 Also, there are other activities included in or to extend these three use-cases:
 
