@@ -50,9 +50,7 @@
             "type": "object",
             "properties": {
               "rssi": {
-                "type": "number",
-                "minimum": -130,
-                "maximum": -20
+                "type": "number"
               }
             },
             "required": [

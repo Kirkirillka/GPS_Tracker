@@ -11,11 +11,9 @@ from utils.validators import VALIDATOR_MAPPING, VALIDATOR_MESSAGE_TYPES
 from utils.tools import DateTimeDecoder
 
 # Logging section
-import logging.config
-from utils.logs.tools import read_logging_config
+from utils.logs.tools import get_child_logger_by_name
+logger = get_child_logger_by_name(__name__)
 
-logging.config.dictConfig(read_logging_config())
-logger = logging.getLogger(__name__)
 
 # Project configuration
 CONFIG = get_project_config()
@@ -109,11 +107,13 @@ class DefaultNormalizer:
         # Cast time field
         time = casted_dict['time']
 
+        # There is a trick with date casting. The Android may send date in int format, but the timezone will be lost.
         if isinstance(time, int):
             time = datetime.datetime.fromtimestamp(casted_dict['time'] / 1e3)
         elif isinstance(time, str):
             time = dateutil.parser.parse(time)
 
+        # Update the time in the right format
         casted_dict['time'] = time
 
         # Validate the object

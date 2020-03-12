@@ -5,12 +5,21 @@ from flask_cors import CORS
 
 from storage import MongoDBStorageAdapter
 from utils.tools import BSONClassEncoder
+from utils.normalizers import DefaultNormalizer
 
 from workers.tools.integrations import make_celery
-from workers.tasks import dispatch_estimation, add
+from workers.tasks import dispatch_estimation
 from workers.celery import connection_string
+from workers.tools.stats import get_active_tasks_list, get_registered_tasks_list, get_scheduled_tasks_list
 
-app = Flask(__name__)
+from datavisual import APP_NAME
+
+# Logging section
+from utils.logs.tools import get_child_logger_by_name
+logger = get_child_logger_by_name(APP_NAME)
+
+
+app = Flask(APP_NAME)
 app.config.update(
     CELERY_BROKER_URL=connection_string,
     CELERY_RESULT_BACKEND=connection_string
@@ -85,18 +94,15 @@ def run_new_estimation():
 
     :return: job id
     """
+
+    logger.info("Dispatch a new optimization task.")
+
     json_data = request.json
+    job_id = dispatch_estimation.delay(**json_data)
 
-    start_date = json_data["start_date"]
-    end_date = json_data["end_date"]
-    num_clusters = json_data['num_clusters']
-    method = json_data["method"]
-    explicit_ues_locations = json_data["explicit_ues_locations"]
+    logger.debug("Scheduled task ID is {}.".format(job_id))
 
-    job_id = dispatch_estimation.delay(start_date, end_date, num_clusters, method,
-                                       explicit_ues_locations = explicit_ues_locations)
-
-    return jsonify(str(job_id))
+    return jsonify(job_id=str(job_id))
 
 
 @app.route("/estimations/all", methods=["POST"])
@@ -136,7 +142,6 @@ def get_db_stats():
 
 @app.route("/tasks/stats/<type>", methods=["GET"])
 def get_tasks_stats(type: str):
-    from workers.tools.stats import get_active_tasks_list, get_registered_tasks_list, get_scheduled_tasks_list
 
     task_type_mapping = {
         "active": get_active_tasks_list,
@@ -153,5 +158,32 @@ def get_tasks_stats(type: str):
     return jsonify(task_list)
 
 
+@app.route("/message/new", methods=["POST"])
+def handle_new_message_directly():
+
+    """
+    API Entry point for directly send messages from GPS_Android to the database.
+    :return: 200 if the message is normalized and saved successfully, 400 if the format is invalid.
+    """
+
+    logger.info("A new request to directly save the message to DB.")
+    json_data = request.json
+
+    _normalizer = DefaultNormalizer()
+    normalized_messages = _normalizer.normalize(json_data)
+
+    if normalized_messages:
+        logger.debug("Message is successfully normalized")
+        app.storage.save(normalized_messages)
+        return jsonify(success=True, code=200)
+    else:
+        logger.error("Cannot normalize the message! Drop it.")
+        logger.debug("Dropped message is {}".format(json_data))
+        res = jsonify(success=False, code=400)
+
+        return res
+
+
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    logger.info("Starting GPS_Tracker datavisual backend.")
+    app.run(host="0.0.0.0", port=5000,debug=True)

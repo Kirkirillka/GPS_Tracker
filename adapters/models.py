@@ -3,6 +3,8 @@ import os
 from socket import error as SocketError
 from typing import List, Callable, Any
 
+from abc import ABC, ABCMeta
+
 # 3-td party libraries
 import paho.mqtt.client as mqtt
 
@@ -11,16 +13,19 @@ from config.utils import get_project_config
 from utils.tools import convert_to_str
 
 # Logging section
-import logging.config
-from utils.logs.tools import read_logging_config
-logging.config.dictConfig(read_logging_config())
-logger = logging.getLogger(__name__)
+from utils.logs.tools import get_child_logger_by_name
+logger = get_child_logger_by_name(__name__)
 
 # Project configuration
 DEFAULT_CONFIG = get_project_config()
 
 
-class MQTTBrokerAdapter:
+class AbstractStorageinterface(ABC):
+
+    pass
+
+
+class MQTTBrokerAdapter(AbstractStorageinterface):
     """
         **MQTTBrokerAdapter** is responsible for providing an interface to MQTT Message Broker.
 
@@ -112,7 +117,7 @@ class MQTTBrokerAdapter:
 
         return list(self._topics.keys())
 
-    def publish(self, topic: str, message: Any) -> bool:
+    def publish(self, topic: str, message: str) -> bool:
 
         """
             Publish a message on the specific topic.

@@ -4,14 +4,22 @@ from placement.solvers.models import UAVPositionSolver
 from storage.models import MongoDBStorageAdapter
 
 # Logging section
-import logging
-logger = logging.getLogger(__name__)
+from utils.logs.tools import get_child_logger_by_name
+logger = get_child_logger_by_name(__name__)
 
 
 class UAVEstimator:
     """
         Class UAVEstimator is responsible to provide an API to run and save the result of optimization of
         *UAVPositionSolver*. Strictly dependent on concrete *MongoDBStorageAdapter* logic.
+
+        Attributes:
+
+            TARGET: the name of current estimator aim used for generation the estimation result message.
+            MESSAGE_TYPE: the name used for *target* in the payload field in MQTT messages.
+
+        :param method_name: an optimization method used to run an estimater. Default is `clustering`. The methods
+            must be registered in the module properly.
 
     """
 
@@ -51,6 +59,7 @@ class UAVEstimator:
 
         # Check if ues last position are defined explicitly
         records = kwargs.get("explicit_ues_locations", None )
+        logger.info("The explicit UEs locations are not found. Try to take the most recent ones from the Storage.")
         # If not, then use last known position from the database for the specified date range
         if records is None:
             # Fetch and prepare only the last positions in the specified time range
@@ -68,19 +77,17 @@ class UAVEstimator:
 
             records = data_rows
 
-
-
         # Check if we have data to process
         if isinstance(records, list) and len(records)>0:
 
-            logging.info(f"Received info for {len(records)} UEs ")
+            logger.debug(f"Received info for {len(records)} UEs ")
             logger.info("Start the estimation process for UAVs' locations.")
 
             # Ask solver to estimate the location for UAVs
             ues_num = len(records)
 
-            logger.info(f"Available number of UEs' records: '{ues_num}'")
-            logger.info(f"Expected number of UAVs: '{expected_uavs_number}'")
+            logger.debug(f"Available number of UEs' records: '{ues_num}'")
+            logger.debug(f"Expected number of UAVs: '{expected_uavs_number}'")
 
             # Check if required num_clusters in higher than possible UEs clients
             if expected_uavs_number > ues_num :
@@ -93,7 +100,6 @@ class UAVEstimator:
             )
 
             # Save bulk into the storage
-            logger.info("Estimation is done.")
             logger.info("Preprocess the result to be stored in the storage.")
 
             # Anchor to the current time
@@ -118,6 +124,8 @@ class UAVEstimator:
             logger.debug(estimation)
 
             self.store.add_estimation(estimation)
+
+            logger.info("Estimation is done. The results are saved.")
 
             return True
 

@@ -1,3 +1,7 @@
+"""
+A script to run :py:class:`DataBroker` standalone.
+"""
+
 import sys
 
 from databroker.models import DataBroker
