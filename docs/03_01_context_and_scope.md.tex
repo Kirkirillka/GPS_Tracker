@@ -1,0 +1,125 @@
+\section{Context and Scope}\label{context-and-scope}
+
+The framework is intended for the
+optimization of mobile users' signals. Optimization aims to find the
+best positions for the base stations represented by the UAVs.
+
+\subsection{Business context}\label{business-context}
+
+\begin{figure}[H]
+\centering
+	\includegraphics[width=\linewidth]{schemes/use-case/Main-Usage-Use-Case.png}
+\caption{Business context representation}
+	\label{fig:business_context_representation}
+\end{figure}
+
+There are three types of actors:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+
+\item
+  Mobile Connection Users - the volunteers that allowed to install the
+  special software on their mobile phones. They are
+  connected to the access points provided by the network which
+  efficiency we seek to increase.
+\item
+  Operators - the owners of the mobile network who are interested in the
+  increased network throughput. They want to optimize either technical
+  characteristics of the radio technologies or optimize the layout of
+  the access points.
+\item
+  Researchers - scientists seek to test layout optimization
+  algorithms on data from mobile connection users. They
+  also can consult Operators.
+\end{enumerate}
+
+The actors involved in three main use-cases:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+
+\item
+  User interaction - There is a web application that allows users to
+  interact with the backend to fetch and observe information stored.
+  Also, there is a purpose to filter data and run optimization tasks.
+\item
+  Sending telemetry data from mobile phones - each mobile connection
+  user has a special program installed on the phones. That is an
+  important part of the software because it provides the real info on
+  the radio network quality attributes.
+\item
+  Data processing and runtime backend - There is a set of the program
+  running in the backend that performs a lot of processing operations to
+  serve the user requests. No direct interaction from the actors
+  required.
+\end{enumerate}
+
+\begin{longtable}[]{@{}ll@{}}
+	\caption{Supplemental use-cases description}\tabularnewline
+	\toprule
+	\begin{minipage}[b]{0.31\columnwidth}\raggedright
+		Use-case\strut
+	\end{minipage} & \begin{minipage}[b]{0.63\columnwidth}\raggedright
+		Description\strut
+	\end{minipage}\tabularnewline
+	\midrule
+	\endfirsthead
+	\toprule
+	\begin{minipage}[b]{0.31\columnwidth}\raggedright
+		Use-case\strut
+	\end{minipage} & \begin{minipage}[b]{0.63\columnwidth}\raggedright
+		Description\strut
+	\end{minipage}\tabularnewline
+	\midrule
+	\endhead
+	\begin{minipage}[t]{0.31\columnwidth}\raggedright
+		Signal Quality Metrics Observation\strut
+	\end{minipage} & \begin{minipage}[t]{0.63\columnwidth}\raggedright
+		Each telemetry message from the mobile connection users includes
+		information about the location and current wireless connection RSS. That
+		information is shown via different figures available in the UI.\strut
+	\end{minipage}\tabularnewline
+	\begin{minipage}[t]{0.31\columnwidth}\raggedright
+		Client Channel Throughput Analysis\strut
+	\end{minipage} & \begin{minipage}[t]{0.63\columnwidth}\raggedright
+		Each client performs uplink and downlink throughput evaluation. These
+		throughput evaluation drawn are to be observed and analyzed in
+		**GPS\_Frontend*.\strut
+	\end{minipage}\tabularnewline
+	\begin{minipage}[t]{0.31\columnwidth}\raggedright
+		Testing Placement Algorithms\strut
+	\end{minipage} & \begin{minipage}[t]{0.63\columnwidth}\raggedright
+		There is a simple and extensible approach on how to add additional
+		optimization algorithms to test. There is a unified interface to access
+		telemetry data.\strut
+	\end{minipage}\tabularnewline
+	\begin{minipage}[t]{0.31\columnwidth}\raggedright
+		Data Processing architecture\strut
+	\end{minipage} & \begin{minipage}[t]{0.63\columnwidth}\raggedright
+		Analysis of data is running in parallel, overall performance is higher. The
+		researches can compare the results of different algorithms.\strut
+	\end{minipage}\tabularnewline
+	\begin{minipage}[t]{0.31\columnwidth}\raggedright
+		Persistent storage\strut
+	\end{minipage} & \begin{minipage}[t]{0.63\columnwidth}\raggedright
+		The telemetry from the users as well as optimization task results are
+		saved persistently in well-known JSON format. Further, the data can be
+		imported in other analytic tools.\strut
+	\end{minipage}\tabularnewline
+	\bottomrule
+\end{longtable}
+
+\subsection{Technical context}\label{technical-context}
+
+\begin{figure}[H]
+	\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{schemes/architecture/ArchitectureDiagram.png}
+	\caption{Components interactions channels}
+	\label{fig:technical-context}
+
+\end{figure}
+
+Figure \ref{fig:technical-context} shows input/output interfaces for the main
+components.
+
+
