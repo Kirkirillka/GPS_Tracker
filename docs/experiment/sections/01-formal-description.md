@@ -12,7 +12,7 @@ The aims of the experiment are:
 - Check the functional properties of the system.
 - System stability, performance and usability measurements in real case scenarios.
 
-2. Optimization algorithms evaluation for access points (base stations) layout optimization.
+2. Optimization algorithms evaluation for access points (UAV-BS) layout optimization.
 
 - Evaluation of correctness of provided optimized positions by the algorithms.
 - Measurement of stability, performance, and usability of the algorithms.
