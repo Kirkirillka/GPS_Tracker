@@ -1,4 +1,4 @@
-# Case-2. Near-optimal layout.
+# Case-3. Near-optimal layout
 
 In the third case, the only changed things are the position of **APs**.
 

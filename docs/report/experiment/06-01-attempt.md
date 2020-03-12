@@ -1,4 +1,4 @@
-## Experiment-1. 12.02.2020
+# Experiment-1. 12.02.2020
 
 The first attempt took place on 12.02.2020.
 
@@ -6,7 +6,8 @@ The aim was to involve as many UEs as possible. This is partly a reason for expe
 
 Besides, the installation of apps and binding Wi-Fi to the necessary access point, a detailed **journal of the Wi-Fi** connection information enabled. This allowed monitoring RSS value on each UE.
 
-### Weather conditions:
+## Weather conditions
+
 - no precipitation
 - cloudy sky
 - a thin layer of snow on the ground
@@ -16,22 +17,22 @@ Besides, the installation of apps and binding Wi-Fi to the necessary access poin
 All items of the experiment placed on the carton boxes on the ground, so that
 they are a bit raised from the ground.
 
-![Layout of CnC server](images/experiment_1_cnc.jpg) 
+![Layout of CnC server](images/experiment_1_cnc.jpg)
 
 ### Case 1
 
 **Suboptimal scheme** was chosen to begin with: UEs' connection to one AP was made successfully.
 
 The second AP was connected to the other 3 UEs with more effort. The reason for it was in the Wi-Fi module issues of AP.
-  
+
 After some time of data collection, it was clear the second AP was not sending data to CnC at all, so we decided to locate devices according to the near-optimal scheme.
 
 ### Case 2
 
 This helped to increase the RSS level a bit from -82 and -84 to -76 and -80, data still was collected only from the first AP.
-  
+
 Besides, the graphical view in CnC showed 4 UEs close to each other (having approximately the same GPS coordinate), whereas the other 2 were detected much further.
-  
+
 Then we figured out that the second AP stopped working at some time. Restart and reconnection of UEs did not help to obtain data of that 3 UEs in CnC.
 
 ### Case 3

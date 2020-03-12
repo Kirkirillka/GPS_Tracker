@@ -20,11 +20,10 @@ ansible-playbook -i inventory.yml ap_run.yml --ask-become-pass
 
 Now it is possible to run a Proof-of-Concept of the system. The PoC is taking into considering:
 
-- Visualization is done by offline Jupyter Python Notebook ([here](/datavisual/gps_visualize.ipynb))
+- Visualization done by offline Jupyter Python Notebook ([here](/datavisual/gps_visualize.ipynb))
 - Instead of a real ClientApp, there is a mock client class - RealisticWIFIPayloadGenerator, which is running as a part
 of PoC.
-- Data producing by RealisticWIFIPayloadGenerator is not truly realisitic, especially in GPS location, but produced RSSI
-is taken by a formula visualized [here](/datavisual/try_to_find_handy_func.ipynb).
+- Data producing by RealisticWIFIPayloadGenerator is not truly realisitic, especially in GPS location, but produced RSS taken by a formula visualized [here](/datavisual/try_to_find_handy_func.ipynb).
 
 To start up the PoC, you should check if you have Docker and docker-compose installed:
 

@@ -1,6 +1,6 @@
 # Building Blocks
 
-## Level 1. Main Scope and Context
+## Level 1 Main Scope and Context
 
 The following diagram represents the main component in the framework divided by four subsystems:
 
@@ -9,7 +9,7 @@ The following diagram represents the main component in the framework divided by 
 - Storage Subsystem
 - UI Subsystem
 
-![Level 1 Main scope](schemes/classes/ClassDiagram-overview.png)
+![Level 1 Main scope](schemes/classes/ClassDiagram_overview.png)
 
 ### Motivation
 
@@ -27,7 +27,7 @@ The framework highly utilize already completed components and protocols. The mos
     - **FTP** - used to measure uplink/downlink throughput.
     - **MQTT** - used to communicate the telemetry messages to the MQTT Broker.
 3. Program
-    - FTP-server - vsftpd - implementation of FTP server.
+    - FTP-server - VSFTPd - implementation of FTP server.
     - MQTT Broker - Eclipse Mosquitto - implementation of MQTT Protocol Broker.
     - NoSQL Database - MongoDB - a NoSQL database to store messages in BSON format.
     - Queue Broker - RabbitMQ - a message queue used to register the users scheduled tasks.
@@ -44,15 +44,15 @@ The framework highly utilize already completed components and protocols. The mos
 
 - Analyzer
 - MessageBroker
-- DataBroker
+- DataBroker (deprecated, use direct pushing to DataBackend via HTTP)
 
-These components are currently implemented in Python. Some code regarding placement optimization algorithms are private and provided to the production environment as installation packages of code written in Python also.
+These components currently implemented in Python. Some code regarding placement optimization algorithms are private and provided to the production environment as installation packages of code written in Python as well.
 
 #### Open Issues
 
 ##### MQTT Broker doesn't hold message for the future
 
-Since we use quite simple MQTT protocol, the used implementation of MQTT Eclipso Mosquitto doesn't hold messages if there no subscribers for that message's topic. It requires at least one subscriber or set up properly QoS to guarantee that the message will be delivered and consumed properly.
+Since we use quite simple MQTT protocol, the used implementation of MQTT Eclipse Mosquitto doesn't hold messages if here no subscribers for that message's topic. It requires at least one subscriber or set up properly QoS to guarantee that the message will be delivered and consumed properly.
 
 One of the possibilities is to use more advanced publisher/subscriber systems such as Apache Kafka, but that has its drawbacks.
 
@@ -76,7 +76,7 @@ The MongoDB adapter is available only in Python currently.
 
 The DataBackend is written in Python. It has access to the Celery Worker infrastructure that requires RabbitMQ. This is needed to properly register the task by the user, so it quite tangled.
 
-The tasks are performed in the background so feedback of the web backend server is quite fast. The users can check the task status through REST API (not implemented, //TODO).
+The tasks performed in the background so feedback of the web backend server is quite fast. The users can check the task status through REST API (not implemented, //TODO).
 
 This subsystem includes the components from the conceptual design phase:
 

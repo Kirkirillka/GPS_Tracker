@@ -38,7 +38,7 @@ Moreover, all components must be aware of to be written with efficient programmi
 
 #### Goal
 
-The communication sides must have a way to check if the message was received and interpreted correctly.
+The communication sides must have a way to check if the message received and interpreted correctly.
 
 #### Solution 
 
@@ -52,7 +52,7 @@ There must be an opportunity to easily increase the performance of the framework
 
 #### Solution
 
-Publish/subscriber architecture pattern suits well the scalability requirement. Each component can be changed separately by different component regarding the proper interface implementation is done.
+Publish/subscriber architecture pattern suits well the scalability requirement. Each component can be changed separately by different component regarding the proper interface implementation done.
 
 ### Usability
 
@@ -72,4 +72,4 @@ Since the framework is quite complex, the additional complexity definitely will 
 
 #### Solution
 
-To increase maintainability automation tools for development, deployment and maintenance are used. The framework is configured to provide easy-to-use instruments for the administrators.
+To increase maintainability automation tools for development, deployment and maintenance used. The framework configured to provide easy-to-use instruments for the administrators.
