@@ -2,7 +2,7 @@
 
 The first attempt took place on 12.02.2020.
 
-The aim was to involve as many UEs as possible. This is partly a reason for experiment day selection. Eventually, **6 UEs** took part ranging by the Android version from 4 to 9.
+The aim was to involve as many UEs as possible. This is the reason for performing the experiment on that day. Eventually, **6 UEs** took part ranging by the Android version from 4 to 9.
 
 Besides, the installation of apps and binding Wi-Fi to the necessary access point, a detailed **journal of the Wi-Fi** connection information enabled. This allowed monitoring RSS value on each UE.
 
@@ -11,6 +11,7 @@ Besides, the installation of apps and binding Wi-Fi to the necessary access poin
 - no precipitation
 - cloudy sky
 - a thin layer of snow on the ground
+- temperature of -1..+1
 
 ## Procedure
 
@@ -23,7 +24,7 @@ they are a bit raised from the ground.
 
 **Suboptimal scheme** was chosen to begin with: UEs' connection to one AP was made successfully.
 
-The second AP was connected to the other 3 UEs with more effort. The reason for it was in the Wi-Fi module issues of AP.
+The second AP was connected to the other 3 UEs with more effort. The reason for it was in the Wi-Fi module issues of AP (the laptop freeze).
 
 After some time of data collection, it was clear the second AP was not sending data to CnC at all, so we decided to locate devices according to the near-optimal scheme.
 
