@@ -1,0 +1,54 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{hyperref}
+
+\usepackage{glossaries}
+
+\loadglsentries{glossaries}
+\loadglsentries{acronyms}
+
+
+
+\providecommand{\tightlist}{%
+	\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\title{Experiment results}
+\author{Kukartsev Kirill, Zufar Makhmutov, Rustam Khakov}
+
+\makeglossaries
+
+
+\begin{document}
+	
+	\maketitle
+	
+	\printglossary[type=\acronymtype]
+	
+	\printglossary
+	
+	\newpage
+	
+	\input{01-formal-description.md.tex}
+	\input{02-requirements.md.tex}
+	\input{03-preparation-procedures.md.tex}
+	\input{04-experiment-description.md.tex}
+	\input{05-cases-description-01.md.tex}
+	\input{05-cases-description-02.md.tex}
+	\input{05-cases-description-03.md.tex}
+	\input{06-00-experimental_phase.md.tex}
+	\input{06-01-attempt.md.tex}
+	\input{06-02-attempt.md.tex}
+	\input{06-attempt-03.md.tex}
+	\input{06-attempt-04.md.tex}
+	\input{07-results.md.tex}
+	
+	\bibliography{bibliography}{}
+	\bibliographystyle{plain}
+	
+\end{document}

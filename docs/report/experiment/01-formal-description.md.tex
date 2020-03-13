@@ -1,0 +1,98 @@
+\hypertarget{formal-description-of-the-experiment}{%
+\section{Formal Description of the
+experiment}\label{formal-description-of-the-experiment}}
+
+In the experiment we seek to:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Check the functionality of experimental software system: \gls{gps_android}, \gls{gps_frontend}, \gls{gps_tracker}.
+  
+  \begin{itemize}
+  	\tightlist
+  	\item
+  	Check the functional properties of the system.
+  	\item
+  	Stability, performance and usability of the components in real case
+  	scenarios.
+  \end{itemize}
+
+\item
+  Evaluation of \acrshort{uav}s (having Wi-Fi \acrshort{ap}) layout
+  optimization algorithms.
+  
+  \begin{itemize}
+  	\tightlist
+  	\item
+  	Evaluation of correctness of provided optimized positions by the
+  	algorithms.
+  	\item
+  	Measurement of stability, performance, and usability of the
+  	algorithms.
+  \end{itemize}
+  
+\end{enumerate}
+
+
+\hypertarget{main-information}{%
+\subsection{Main information}\label{main-information}}
+
+The main purpose of the experiment is to optimize the location of \acrfull{ap}'s in 
+a such way that throughput and RSS of UE's connected to those AP is
+maximized.
+
+For that we experiment with the following way:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  APs located in the space without any obstacles. They are surrounded by
+  UEs.
+\item
+  UEs connected to APs and evaluate RSS and throughput via specially
+  designed software.
+\item
+  Stored measured records by UEs are sent/copied to the central server.
+\item
+  An operator uses the provided interface to analyze the measurements
+  and run optimization algorithms to find out the best positions for
+  APs.
+\item
+  After the next optimal positions for APs are found, access points
+  moved to the optimized points.
+\item
+  An experiment is going to step 3 and repeated until no significant
+  improvement for APs positions will be observed.
+\end{enumerate}
+
+The experiment repeated three times with different initial APs and UE
+positions.
+
+Test sets:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Suboptimal (APs in between clusters)
+\item
+  Near-optimal (APs in clusters according to K-Means.)
+\item
+  Uniform (in the area)
+\end{enumerate}
+
+For each test case, we expect that:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Minimization of the distance between UEs and APs will lead to RSS gain
+  and throughput increase.
+\item
+  The interference effect may be visible -- in the suboptimal
+  placements, it should decrease the throughput;
+\end{enumerate}

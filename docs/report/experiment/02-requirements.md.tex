@@ -1,0 +1,129 @@
+\hypertarget{experiment-requirement}{%
+\section{Experiment requirement}\label{experiment-requirement}}
+
+\hypertarget{hardware-equipment}{%
+\subsection{Hardware Equipment}\label{hardware-equipment}}
+
+\begin{itemize}
+\tightlist
+\item
+  6 cellphones with Android OS (version 5.0 and above). A dedicated GPS
+  and Wi-Fi modules.
+\item
+  3 external Wi-Fi Adapters with AP mode capable.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Model: AWUS036NEH
+  \item
+    Antenna's height for CnC: 17.2 cm
+  \item
+    Antenna's height for AP: 11 cm
+  \end{itemize}
+\item
+  3 Laptops.
+\item
+  One ruler.
+\item
+  Optionally, 6-10 carton bags for hardware safety against the weather.
+\end{itemize}
+
+\hypertarget{software-equipment}{%
+\subsection{Software Equipment}\label{software-equipment}}
+
+\hypertarget{for-ues}{%
+\subsubsection{For UEs}\label{for-ues}}
+
+\begin{itemize}
+\tightlist
+\item
+  Android-enabled smartphone (version 5.0 and above).
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{Magic\ Perf} installed.
+  \end{itemize}
+\item
+  \texttt{GPS\_Android} installed.
+\end{itemize}
+
+\hypertarget{for-command-center-cnc}{%
+\subsubsection{For Command Center (CnC)}\label{for-command-center-cnc}}
+
+\begin{itemize}
+\tightlist
+\item
+  Host OS
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Any Debian-based OS (Debian, Ubuntu, etc.).
+  \item
+    \texttt{VirtualBox} + \texttt{VirtualBox\ Extention\ Pack} latest
+    version.
+  \item
+    \texttt{Python3} + \texttt{Ansible} installed.
+  \item
+    \texttt{openssh-server}.
+  \end{itemize}
+\item
+  The virtual CnC machine
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{dnsmasq}, \texttt{hostapd} installed.
+  \item
+    \texttt{openssh-server} installed.
+  \item
+    \texttt{docker} and \texttt{docker-compose} installed.
+
+    \begin{itemize}
+    \tightlist
+    \item
+      MongoDB container.
+    \item
+      RabbitMQ container.
+    \item
+      Mosquitto MQTT broker container.
+    \item
+      Python3 container.
+    \item
+      nginx container.
+    \item
+      nodeJS container.
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{for-aps}{%
+\subsubsection{For APs}\label{for-aps}}
+
+\begin{itemize}
+\tightlist
+\item
+  Host OS
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Any Debian-based OS (Debian, Ubuntu, etc.).
+  \item
+    \texttt{dnsmasq}, \texttt{hostapd} installed.
+  \item
+    \texttt{iperf3} installed.
+  \item
+    \texttt{openssh-server} installed.
+  \item
+    \texttt{docker} and \texttt{docker-compose} installed.
+
+    \begin{itemize}
+    \tightlist
+    \item
+      An FTP server container (e.g.~VSFTPd).
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
