@@ -1,0 +1,80 @@
+\section{Crosscutting concepts}\label{crosscutting-concepts}
+
+\subsection{GPS\_Android}\label{gps_android}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.47\columnwidth}\raggedright
+Used approach\strut
+\end{minipage} & \begin{minipage}[b]{0.47\columnwidth}\raggedright
+Reason\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
+In case if a message cannot be sent it saved in the local SQLite
+database. In the next iteration, the app first tries to send saved
+messages\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
+If there is a poor signal quality that will help to save the measurement
+to resend them after connection become better.\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsection{GPS\_Tracker}\label{gps_tracker}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.47\columnwidth}\raggedright
+Used approach\strut
+\end{minipage} & \begin{minipage}[b]{0.47\columnwidth}\raggedright
+Reason\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
+Used Worker pattern\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
+\texttt{Celery} workers allow to parallelize task execution.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
+MQTT Broker as Message Broker\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
+MQTT Protocol is a lightweight reliable protocol for IoT intended
+application\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
+MongoDB as storage for message\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
+Use NoSQL MongoDB increase development velocity as well as performance,
+especially for JSON-formatted data.\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\subsection{GPS\_Frontend}\label{gps_frontend}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.47\columnwidth}\raggedright
+Used approach\strut
+\end{minipage} & \begin{minipage}[b]{0.47\columnwidth}\raggedright
+Reason\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
+Backend is built on Flask Python Web Framework\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
+Flask is a light, easy-to-use framework that requires a little effort
+but highly extensible.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
+Frontend app is built using Vue.js framework\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
+Vue.js is perfectly suited for fast development but still has good
+design and extensions.\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
