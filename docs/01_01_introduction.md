@@ -8,7 +8,7 @@ To prepare the experimental evaluation of the placement of the aerial base stati
 
 ## Requirement Overview
 
-Its main objective is to receive the GPS location data from several Android-based telephones that send this data via UDP sockets.
+The main objective is to receive the GPS location data from several Android-based telephones that send this data via UDP sockets.
 
 The site data collector must store the received data in an internal database and then make this data available to the placement algorithm. Another part of this framework is the performance evaluation module, which sends the data over the network and records the amount of data sent.
 
