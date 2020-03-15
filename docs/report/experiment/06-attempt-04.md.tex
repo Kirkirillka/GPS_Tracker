@@ -1,30 +1,21 @@
 \hypertarget{experiment-4.-03.03.2020}{%
 \section{Experiment 4. 03.03.2020}\label{experiment-4.-03.03.2020}}
 
-It took place on 03.03.2020. The weather condition is appropriate for
-running experiments, despite there was rain.
+It took place on 03.03.2020. The weather condition was appropriate for running experiments, despite that it was raining lightly.
 
-For the fourth attempt, we implement message sending only via HTTP. The
-main aim of the experiment is to try to place the UEs in three cases
-(sub-optimal, uniform, near-optimal). Phones forced to push their
-channel quality metric to the server for each case. On the server-side,
-GPS\_Tracker tries to find optimal positions for UAVs supposing there
-are 2 AP is required.
+For the fourth attempt, we implement message sending only via HTTP. The main aim of the experiment is to try to place the UEs in three cases (sub-optimal, uniform, near-optimal). Phones forced to push their channel quality metric to the server for each case. On the server-side, GPS\_Tracker tries to find optimal positions for UAVs supposing there are 2 AP is required.
 
 We decided to reduce the area layout to 25x25 meters.
 
 \hypertarget{results}{%
 \subsection{Results}\label{results}}
 
-THe HTTP protocol helps us to receive messages more reliable, although
-there was a problem, e.g.~the far from AP a UE is the less probable the
-message receiving. Tests in \href{06-attempt-03.md}{experiment 3} showed
-the reliability of sending over HTTP. However, we decided to continue
-our experiment.
+The HTTP protocol helps us to receive messages more reliable, although there was a problem, e.g. the further UE is located from AP, the less is probable the reception of the message.
 
-We found out that network speed measurement was not reliable, uplink
-tests throw the timeout exception in case of larger distance between a
-UE and used AP.
+Tests in \href{06-attempt-03.md}{experiment 3} showed
+the reliability of sending over HTTP. However, we decided to continue our experiment.
+
+We found out that network speed measurement was not reliable, uplink tests threw the timeout exception in case of larger distance between a UE and used AP, since the communication took longer and the session finished.
 
 \begin{figure}[H]
 	\centering
@@ -85,15 +76,12 @@ connected UEs. The level of interference is low.
 \caption{Signal Quality changes in Suboptimal case}
 \end{figure}
 
-Despite the APs were located close to UEs, the RSS level varies
-markedly. However, only in this case the speed and signal quality
-measurement were the most stable among all cases.
+Despite the APs were located close to UEs, the RSS level varies noticeably. However, only in this case the speed and signal quality measurement were the most stable among all cases.
 
 \hypertarget{uniform-case}{%
 \subsubsection{Uniform case}\label{uniform-case}}
 
-In this case, the APs are located with equal distance from the CnC on
-the same line.
+In this case, the APs are located with equal distance from the CnC on the same line.
 
 \begin{figure}[H]
 	\centering
@@ -116,7 +104,7 @@ sometimes.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth,keepaspectratio]{images/05-cases-description-Exp4-Near-Optimal.png}
-\caption{Suboptimal Layout}
+\caption{Near-optimal Layout}
 \end{figure}
 
 The third case simulates the situation where the APs are placed
@@ -150,7 +138,7 @@ AP2 & (50.4056339, 10.5625975)\tabularnewline
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth,keepaspectratio]{images/Exp4_UEs_Location_to_optimize.png}
-\caption{The APs coordinates used to optimize UAVs positions}
+\caption{The UEs coordinates used to optimize UAVs positions}
 \end{figure}
 
 The coordinates for \textbf{27349a2cde6592df} and

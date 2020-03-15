@@ -7,14 +7,12 @@
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth,keepaspectratio]{images/Deployment Diagram-Free-structure_scheme.png}
-\caption{Main perspective of the experiment}
+\caption{Main scenario of the experiment}
 \label{fig:experiment-overall-layout}
 \end{figure}
 
 From the general system engineering perspective, the experiment is a set
-of wireless-connected nodes (via Wi-Fi protocol) which measures the
-receiving signal strength and measure the throughput of the link to
-upload and download.
+of wireless-connected nodes (via Wi-Fi 802.11n (300 mbps)) which measures the receiving signal strength and measure the throughput of the link to upload and download.
 
 All connections are wireless on each bearer:
 
@@ -28,32 +26,19 @@ All connections are wireless on each bearer:
 
 There investigated one problem: the experimental network bandwidth
 between UE and AP measurements with \texttt{iperf3} showed about
-\textbf{30 MBit/s} speed rate. On the contrary, the speed on the bearer
-UE \textless{}- AP -CnC\textgreater{} showed about \textbf{12-15 MBit/s}
-speed rate. There is markedly seen a drop in speed rate, probably,
-because of transmission on the radio channel two-times. The problem not
-in the Wi-Fi itself, but the radio link is not as reliable, as a cord
-one, so the active bandwidth measurement part must be located as close
-to the APs as possible - in our case, the server-side \texttt{iperf3} is
-located in APs.
+\textbf{30 MBit/s} speed rate. On the contrary, speed on the bearer UE \textless{}- AP -CnC\textgreater{} showed about \textbf{12-15 MBit/s} speed rate. There is markedly seen a drop in speed rate, probably, because of transmission on the radio channel two-times. The problem  is not in the Wi-Fi itself, but in the fact that radio (wireless) link is not as reliable, as a cord one, so the active bandwidth measurement part must be located as close to the APs as possible - in our case, the server-side \texttt{iperf3} is located in \acrshort{ap}s.
 
 Each UE has two programs on board:
 
 \begin{itemize}
 \tightlist
 \item
-  \texttt{GPS\_Android} - special software designed to perform RSS and
-  link measurements linked to GPS coordinates.
+  \texttt{GPS\_Android} - special software designed to perform \acrshort{rss} and  link measurements linked to GPS coordinates.
 \item
-  \texttt{Magic\ iperf} - a network bandwidth measurement software.
-  Provides a user-friendly interface to client-side app \texttt{iperf}
-  on Android phones.
+  \texttt{Magic\ iperf} - a network bandwidth measurement software.  Provides a user-friendly interface to client-side app \texttt{iperf}  on Android phones.
 \end{itemize}
 
-Each APs has two Wi-Fi adapters. Since we use laptops to run APs, they
-expected to have one already included, thus one external extra required
-for each AP. The internal Wi-Fi adapter connects to the CnC provided
-Wi-Fi network, the external Wi-Fi adapter creates the access point named
+Each APs has two Wi-Fi adapters. Since we use laptops to run APs, they expected to have one already included, thus one external extra required for each AP. The internal Wi-Fi adapter connects to the CnC provided Wi-Fi network, the external Wi-Fi adapter creates the access point named
 ``\textbf{ap}'' for the UEs.
 
 The CnC uses one external AP to create the access point named
@@ -121,11 +106,9 @@ routines.
 (CnC)}\label{command-center-deployment-cnc}}
 
 The CnC software runs on Debian OS in VirtualBox virtual machine.
-\texttt{GPS\_Tracker} \texttt{GPS\_Frontend} is designed to run in
-containers. For the experiment, the virtual machine has \textbf{docker}
-and \textbf{docker-compose} installed to run these containers. We don't
-consider much performance decrease as long as enough hardware resources
-provided for the CnC virtual machine.
+\texttt{GPS\_Tracker} and \texttt{GPS\_Frontend} are designed to run in
+Docker containers. For the experiment, the virtual machine has \textbf{docker}
+and \textbf{docker-compose} installed to run these containers. It possible to have performance decrease because of running in containers, however more powerful hardware resources compensates those possible consequences of additional run-time level.
 
 The AP software consists of two packages:
 
@@ -138,13 +121,10 @@ The AP software consists of two packages:
   and DNS information via DHCP protocol.
 \end{itemize}
 
-The AP software starts in the virtual machine. To access the physical
-external Wi-Fi adapter the hardware pass-through from the host machine
-to the virtual machine via hypervisor is used.
+The AP software starts in the virtual machine, which can access the physical Wi-Fi adapter using the hardware pass-through function from the host machine.
 
 For easy-to-run configuration and deployment of the CnC, there are
-provided an \textbf{Ansible} script and a \textbf{Vagrantfile}. See
-their requirements to use.
+provided an \textbf{Ansible} script.
 
 \hypertarget{access-points-deployment-aps}{%
 \subsubsection{Access Points deployment
