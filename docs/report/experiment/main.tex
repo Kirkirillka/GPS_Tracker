@@ -1,23 +1,22 @@
 \documentclass{article}
+\usepackage[utf8]{inputenc}
 
 \usepackage{graphicx}
 \usepackage{siunitx}
 \usepackage{longtable}
 \usepackage{booktabs}
 \usepackage{float}
-\usepackage{wrapfig}
 \usepackage{hyperref}
-\usepackage{svg}
 \usepackage{amsmath}
 
+
 \usepackage{glossaries}
-
-\loadglsentries{glossaries}
-\loadglsentries{acronyms}
-
+\input{glossaries.tex}
+\makeglossaries
 
 
-\providecommand{\tightlist}{%
+
+\providecommand{\tightlist}{%s
 	\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
 \title{Experiment Report: \\
@@ -25,18 +24,15 @@
 }
 \author{Kukartsev Kirill,Rustam Khakov, Zufar Makhmutov }
 
-\makeglossaries
-
-
 \begin{document}
 	
 	\maketitle
 	
-	\printglossary[type=\acronymtype]
+		\clearpage
 	
-	\printglossary
+	\printglossaries
 	
-	\newpage
+	\clearpage
 	
 	\input{01-formal-description.md.tex}
 	\input{02-requirements.md.tex}
@@ -51,6 +47,9 @@
 	\input{06-attempt-03.md.tex}
 	\input{06-attempt-04.md.tex}
 	\input{07-results.md.tex}
+	
+	
+	\clearpage
 	
 	\bibliography{bibliography}{}
 	\bibliographystyle{plain}

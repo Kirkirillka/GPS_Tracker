@@ -1,5 +1,4 @@
-\hypertarget{experiment-4.-03.03.2020}{%
-\section{Experiment 4. 03.03.2020}\label{experiment-4.-03.03.2020}}
+\section{Experiment 4. 03.03.2020}\label{experiment-4.-03.03.2020}
 
 It took place on 03.03.2020. The weather condition was appropriate for running experiments, despite that it was raining lightly.
 
@@ -7,21 +6,13 @@ For the fourth attempt, we implement message sending only via HTTP. The main aim
 
 We decided to reduce the area layout to 25x25 meters.
 
-\hypertarget{results}{%
-\subsection{Results}\label{results}}
+\subsection{Results}\label{results}
 
 The HTTP protocol helps us to receive messages more reliable, although there was a problem, e.g. the further UE is located from AP, the less is probable the reception of the message.
 
-Tests in \href{06-attempt-03.md}{experiment 3} showed
-the reliability of sending over HTTP. However, we decided to continue our experiment.
+Tests showed reliability of HTTP protocol, therefore, we decided to continue our experiment.
 
-We found out that network speed measurement was not reliable, uplink tests threw the timeout exception in case of larger distance between a UE and used AP, since the communication took longer and the session finished.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth,keepaspectratio]{images/05-cases-description-Exp-4-Initial-Layout.png}
-\caption{Experiment 4: Initial Layout}
-\end{figure}
+We found out that network speed measurements were not significant, because there was markedly seen difference between uplink and downlink speed, uplink tests threw the timeout exception in case of larger distance between a UE and used AP, since the communication took longer and the session finished.
 
 The measurements showed the following coordinates for the 6 UEs:
 
@@ -57,14 +48,7 @@ The experiment is divided into four parts:
   11:12 - 11:15 suboptimal to compare to the suggested positions
 \end{itemize}
 
-\hypertarget{suboptimal-case}{%
-\subsubsection{Suboptimal case}\label{suboptimal-case}}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth,keepaspectratio]{images/05-cases-description-Exp4-Suboptimal.png}
-\caption{Suboptimal Layout}
-\end{figure}
+\subsubsection{Suboptimal case}\label{suboptimal-case}
 
 The first case is the most profitable from the signal quality point of
 view. The APs are implicitly located at the same distance from the
@@ -78,16 +62,9 @@ connected UEs. The level of interference is low.
 
 Despite the APs were located close to UEs, the RSS level varies noticeably. However, only in this case the speed and signal quality measurement were the most stable among all cases.
 
-\hypertarget{uniform-case}{%
-\subsubsection{Uniform case}\label{uniform-case}}
+\subsubsection{Uniform case}\label{uniform-case}
 
 In this case, the APs are located with equal distance from the CnC on the same line.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth,keepaspectratio]{images/05-cases-description-Exp4-Uniform.png}
-	\caption{Uniform layout}
-\end{figure}
 
 \begin{figure}[H]
 	\centering
@@ -98,14 +75,7 @@ In this case, the APs are located with equal distance from the CnC on the same l
 Link measurement became more smooth, but the speed test failed
 sometimes.
 
-\hypertarget{near-optimal-case}{%
-\subsubsection{Near-optimal case}\label{near-optimal-case}}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth,keepaspectratio]{images/05-cases-description-Exp4-Near-Optimal.png}
-\caption{Near-optimal Layout}
-\end{figure}
+\subsubsection{Near-optimal case}\label{near-optimal-case}
 
 The third case simulates the situation where the APs are placed
 uniformly far from centers of UEs' clusters.
@@ -116,9 +86,8 @@ uniformly far from centers of UEs' clusters.
 \caption{Signal Quality changes in Near-optimal case}
 \end{figure}
 
-\hypertarget{comparison-between-suboptimal-case-and-the-suggested-positions}{%
 \subsubsection{Comparison between Suboptimal case, and the suggested
-positions}\label{comparison-between-suboptimal-case-and-the-suggested-positions}}
+positions}\label{comparison-between-suboptimal-case-and-the-suggested-positions}
 
 To check the validity of the UAVs layout optimization algorithm, we
 place the APs in a Suboptimal case position.
@@ -198,8 +167,7 @@ based on GPS coordinates for UEs. The result provides insights about
 that layout optimization algorithms relying solely on the coordinate
 input data can result in a biased solution.
 
-\hypertarget{pictures-of-experiment}{%
-\subsubsection{Pictures of experiment}\label{pictures-of-experiment}}
+\subsubsection{Pictures of experiment}\label{pictures-of-experiment}
 
 \begin{figure}[H]
 	\centering
@@ -225,8 +193,7 @@ input data can result in a biased solution.
 \caption{Layout Problem discussion}
 \end{figure}
 
-\hypertarget{outcome}{%
-\subsection{Outcome}\label{outcome}}
+\subsection{Outcome}\label{outcome}
 
 Finally, we have managed to test the framework and estimate an optimized
 position for UAVs which were represented by WiFi access points. The

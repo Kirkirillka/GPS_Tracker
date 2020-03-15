@@ -1,12 +1,11 @@
-\hypertarget{experiment-description}{%
-\section{Experiment description}\label{experiment-description}}
 
-\hypertarget{general-perspective}{%
-\subsection{General perspective}\label{general-perspective}}
+\section{Experiment description}\label{experiment-description}
+
+\subsection{General perspective}\label{general-perspective}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth,keepaspectratio]{images/Deployment Diagram-Free-structure_scheme.png}
+\includegraphics[width=\linewidth,keepaspectratio]{images/Deployment Diagram-Free-structure_scheme.pdf}
 \caption{Main scenario of the experiment}
 \label{fig:experiment-overall-layout}
 \end{figure}
@@ -26,7 +25,7 @@ All connections are wireless on each bearer:
 
 There investigated one problem: the experimental network bandwidth
 between UE and AP measurements with \texttt{iperf3} showed about
-\textbf{30 MBit/s} speed rate. On the contrary, speed on the bearer UE \textless{}- AP -CnC\textgreater{} showed about \textbf{12-15 MBit/s} speed rate. There is markedly seen a drop in speed rate, probably, because of transmission on the radio channel two-times. The problem  is not in the Wi-Fi itself, but in the fact that radio (wireless) link is not as reliable, as a cord one, so the active bandwidth measurement part must be located as close to the APs as possible - in our case, the server-side \texttt{iperf3} is located in \acrshort{ap}s.
+\textbf{30 MBit/s} speed rate. On the contrary, speed on the bearer UE \textless{}- AP -CnC\textgreater{} showed about \textbf{12-15 MBit/s} speed rate. There is markedly seen a drop in speed rate, probably, because of transmission on the radio channel two-times. The problem  is not in the Wi-Fi itself, but in the fact that radio (wireless) link is not as reliable, as a cord one, so the active bandwidth measurement part must be located as close to the APs as possible - in our case, the server-side \texttt{iperf3} is located in \gls{access_point}.
 
 Each UE has two programs on board:
 
@@ -44,8 +43,7 @@ Each APs has two Wi-Fi adapters. Since we use laptops to run APs, they expected 
 The CnC uses one external AP to create the access point named
 ``\textbf{cnc}''.
 
-\hypertarget{deployment-diagram}{%
-\subsection{Deployment Diagram}\label{deployment-diagram}}
+\subsection{Deployment Diagram}\label{deployment-diagram}
 
 \begin{longtable}[]{@{}ll@{}}
 \caption{The main deployed components.}\tabularnewline
@@ -96,14 +94,13 @@ routines.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=\linewidth, keepaspectratio]{images/Deployment Diagram-Deployment_Diagram.png}
+\includegraphics[width=\linewidth, keepaspectratio]{images/Deployment Diagram-Deployment_Diagram.pdf}
 \caption{Deployment Diagram}
 \label{fig:deployment-diagram}
 \end{figure}
 
-\hypertarget{command-center-deployment-cnc}{%
 \subsubsection{Command center deployment
-(CnC)}\label{command-center-deployment-cnc}}
+(CnC)}\label{command-center-deployment-cnc}
 
 The CnC software runs on Debian OS in VirtualBox virtual machine.
 \texttt{GPS\_Tracker} and \texttt{GPS\_Frontend} are designed to run in
@@ -126,15 +123,13 @@ The AP software starts in the virtual machine, which can access the physical Wi-
 For easy-to-run configuration and deployment of the CnC, there are
 provided an \textbf{Ansible} script.
 
-\hypertarget{access-points-deployment-aps}{%
 \subsubsection{Access Points deployment
-(APs)}\label{access-points-deployment-aps}}
+(APs)}\label{access-points-deployment-aps}
 
 Unlike CnC, physical nodes run the AP software and server-side
 \texttt{iperf3} app.
 
-\hypertarget{network-diagram}{%
-\subsection{Network Diagram}\label{network-diagram}}
+\subsection{Network Diagram}\label{network-diagram}
 
 The APs subnet has identical settings. These
 \texttt{Wi-Fi\ HotSpot\ Network} has an internal DHCP server to provide
@@ -156,13 +151,12 @@ as well as its local AP's gateway address \texttt{192.168.10.1}.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.3\linewidth, keepaspectratio]{images/Deployment Diagram-Network_Diagram.pdf}
+	\includegraphics[width=\linewidth, keepaspectratio]{images/Deployment Diagram-Network_Diagram.pdf}
 \caption{Network Diagram}
 \label{fig:network-diagram}
 \end{figure}
 
-\hypertarget{experiment-steps}{%
-\subsection{Experiment Steps}\label{experiment-steps}}
+\subsection{Experiment Steps}\label{experiment-steps}
 
 The following steps will be executed for each described experimental
 case:
