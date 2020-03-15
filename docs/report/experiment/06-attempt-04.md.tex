@@ -2,11 +2,11 @@
 
 It took place on 03.03.2020. The weather condition was appropriate for running experiments, despite that it was raining lightly.
 
-For the fourth attempt, we implement message sending only via HTTP. The main aim of the experiment is to try to place the UEs in three cases (sub-optimal, uniform, near-optimal). Phones forced to push their channel quality metric to the server for each case. On the server-side, GPS\_Tracker tries to find optimal positions for UAVs supposing there are 2 AP is required.
+For the fourth attempt, we implement message sending only via HTTP. The main aim of the experiment is to find optimized positions for the UEs in three cases (sub-optimal, uniform, near-optimal). Phones forced to push their channel quality metric to the server for each case. On the server-side, GPS\_Tracker tries to find optimal positions for UAVs supposing there are 2 AP is required.
 
 We decided to reduce the area layout to 25x25 meters.
 
-\subsection{Results}\label{results}
+\subsection{Results}
 
 The HTTP protocol helps us to receive messages more reliable, although there was a problem, e.g. the further UE is located from AP, the less is probable the reception of the message.
 
@@ -39,16 +39,16 @@ The experiment is divided into four parts:
 \begin{itemize}
 \tightlist
 \item
-  Before 11:05 - suboptimal case
+  Before 11:05 - sub-optimal case
 \item
   11:05 - 11:08 - uniform case
 \item
   11:08 - 11:12 - near-optimal case
 \item
-  11:12 - 11:15 suboptimal to compare to the suggested positions
+  11:12 - 11:15 sub-optimal to compare to the suggested positions
 \end{itemize}
 
-\subsubsection{Suboptimal case}\label{suboptimal-case}
+\subsubsection{Sub-optimal case}
 
 The first case is the most profitable from the signal quality point of
 view. The APs are implicitly located at the same distance from the
@@ -57,12 +57,12 @@ connected UEs. The level of interference is low.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth,keepaspectratio]{images/Exp4_Suboptimal.png}
-\caption{Signal Quality changes in Suboptimal case}
+\caption{Signal Quality changes in Sub-optimal case}
 \end{figure}
 
 Despite the APs were located close to UEs, the RSS level varies noticeably. However, only in this case the speed and signal quality measurement were the most stable among all cases.
 
-\subsubsection{Uniform case}\label{uniform-case}
+\subsubsection{Uniform case}
 
 In this case, the APs are located with equal distance from the CnC on the same line.
 
@@ -75,7 +75,7 @@ In this case, the APs are located with equal distance from the CnC on the same l
 Link measurement became more smooth, but the speed test failed
 sometimes.
 
-\subsubsection{Near-optimal case}\label{near-optimal-case}
+\subsubsection{Near-optimal case}
 
 The third case simulates the situation where the APs are placed
 uniformly far from centers of UEs' clusters.
@@ -86,11 +86,11 @@ uniformly far from centers of UEs' clusters.
 \caption{Signal Quality changes in Near-optimal case}
 \end{figure}
 
-\subsubsection{Comparison between Suboptimal case, and the suggested
-positions}\label{comparison-between-suboptimal-case-and-the-suggested-positions}
+\subsubsection{Comparison between Sub-optimal case, and the suggested
+positions}
 
 To check the validity of the UAVs layout optimization algorithm, we
-place the APs in a Suboptimal case position.
+place the APs in a Sub-optimal case position.
 
 The given coordinates for \textbf{APs}:
 
@@ -124,9 +124,7 @@ optimization task with the following parameters:
   Estimation method: ``clustering''
 \end{itemize}
 
-Using of ``simplex'' method against two clusters is not possible,
-because that method for 2 clusters cannot converge, the produced result
-is unreliable.
+Using of ``simplex'' method against two clusters is not possible, produced result is unreliable.
 
 \begin{figure}[H]
 	\centering
@@ -167,7 +165,7 @@ based on GPS coordinates for UEs. The result provides insights about
 that layout optimization algorithms relying solely on the coordinate
 input data can result in a biased solution.
 
-\subsubsection{Pictures of experiment}\label{pictures-of-experiment}
+\subsubsection{Pictures of experiment}
 
 \begin{figure}[H]
 	\centering
@@ -193,7 +191,7 @@ input data can result in a biased solution.
 \caption{Layout Problem discussion}
 \end{figure}
 
-\subsection{Outcome}\label{outcome}
+\subsection{Outcome}
 
 Finally, we have managed to test the framework and estimate an optimized
 position for UAVs which were represented by WiFi access points. The
