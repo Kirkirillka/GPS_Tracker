@@ -19,17 +19,15 @@ In the experiment we seek to:
   \end{itemize}
 
 \item
-  Evaluation of \gls{unmanned_aerial_vehicle}s (having Wi-Fi \gls{access_point}) layout
+  Evaluation of \glspl{unmanned_aerial_vehicle} (having Wi-Fi \glspl{access_point}) layout
   optimization algorithms.
   
   \begin{itemize}
   	\tightlist
   	\item
-  	Evaluation of correctness of provided optimized positions by the
-  	algorithms.
+  	Correctness evaluation of suggested positions for \glspl{uav}.
   	\item
-  	Measurement of stability, performance, and usability of the
-  	algorithms.
+  	Measurement of stability and performance of the	algorithms.
   \end{itemize}
   
 \end{enumerate}
@@ -37,9 +35,8 @@ In the experiment we seek to:
 
 \subsection{Main information}\label{main-information}
 
-The main purpose of the experiment is to optimize the location of \gls{access_point}'s in 
-a such way that throughput and RSS of UE's connected to those AP is
-maximized.
+The main purpose of the experiment is to optimize the location of \glspl{access_point} in 
+a such way that network throughput and \gls{rss} of \glspl{ue} is maximized.
 
 For that we experiment with the following way:
 
@@ -47,39 +44,35 @@ For that we experiment with the following way:
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  APs located in the space without any obstacles. They are surrounded by
-  UEs.
+  \gls{access_point} located in the space without any obstacles. They are surrounded by
+  \glspl{ue}.
 \item
-  UEs connected to APs and evaluate RSS and throughput via specially
-  designed software.
+  \glspl{ue} connect to \glspl{access_point}.\Gls{rss} and throughput are evaluated via specially
+  designed experimental software.
 \item
-  Stored measured records by UEs are sent/copied to the central server.
+  \Glspl{ue} send messages to central server.
 \item
-  An operator uses the provided interface to analyze the measurements
-  and run optimization algorithms to find out the best positions for
-  APs.
+  An operator has access to control interface, where he can analyze received data
+  and run optimization algorithms to find out the best positions for \glspl{access_point}.
 \item
-  After the next optimal positions for APs are found, access points
-  moved to the optimized points.
+  Once an better suggested position for \gls{access_point} is found, the \gls{access_point} will be moved there.
 \item
-  An experiment is going to step 3 and repeated until no significant
-  improvement for APs positions will be observed.
+  Experiment goes to the third step and repeats until no significant
+  improvement regarding \gls{rss} and speed rate will be observed.
 \end{enumerate}
 
-The experiment repeated three times with different initial APs and UE
-positions.
-
-Test sets:
+The experiment repeated three times with different initial positions. Test sets:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Suboptimal (APs in between clusters)
+  Sub-optimal (\glspl{access_point} are surrounded by \glspl{ue}), described in Section \ref{case-1.-sub-optimal-layout}.
 \item
-  Near-optimal (APs in clusters according to K-Means.)
+Uniform (\glspl{access_point} has the same distance to \gls{command_n_center}), described in Section \ref{case-2.-uniform-layout}.  
 \item
-  Uniform (in the area)
+  Near-optimal (\glspl{access_point} are equidistant from \glspl{ue}  according to K-Means), described in Section \ref{case-3.-near-optimal-layout}.
+
 \end{enumerate}
 
 For each test case, we expect that:
@@ -88,9 +81,8 @@ For each test case, we expect that:
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Minimization of the distance between UEs and APs will lead to RSS gain
-  and throughput increase.
+  Minimization of the distance between \glspl{ue} and \glspl{access_point} will lead to \glspl{rss} gain and throughput increase.
 \item
-  The interference effect may be visible -- in the suboptimal
+  The interference effect may be visible -- in the sub-optimal
   placements, it should decrease the throughput;
 \end{enumerate}

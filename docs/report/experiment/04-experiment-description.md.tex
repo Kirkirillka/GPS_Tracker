@@ -3,6 +3,8 @@
 
 \subsection{General perspective}\label{general-perspective}
 
+Figure \ref{fig:experiment-overall-layout} shows default experiment layout. We have 3 laptops: two \glspl{access_point} and one \glspl{command_n_center}. \Gls{command_n_center} use external \gls{wifi} adapter to set up wireless point for \glspl{access_point} to access provided services. Each \gls{access_point} has two \gls{wifi} adapters: one used to set up \gls{wifi} access point for \glspl{ue}, the second (internal, built in the vast majority of modern laptops) adapter is used for connection to \gls{command_n_center}.
+
 \begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth,keepaspectratio]{images/Deployment Diagram-Free-structure_scheme.pdf}
@@ -13,146 +15,55 @@
 From the general system engineering perspective, the experiment is a set
 of wireless-connected nodes (via Wi-Fi 802.11n (300 mbps)) which measures the receiving signal strength and measure the throughput of the link to upload and download.
 
-All connections are wireless on each bearer:
+Preliminary tests in default layout showed one restrictions on experiment activity: network bandwidth
+between \gls{ue} and \gls{access_point} measurements with \texttt{iperf3} showed about \textbf{30 MBit/s} speed rate. On the contrary, speed on the bearer \gls{ue} - \gls{access_point} - \gls{command_n_center} showed about \textbf{12-15 MBit/s} speed rate. This is significant drop in network rate, probably, because of transmission on the radio channel two-times. The problem  is not in the Wi-Fi itself, but in the fact that radio (wireless) link is not as reliable compared to a wired one, so the active bandwidth measurement part must be located as close to the \glspl{access_point} as possible - in our case, the \acrshort{ftp} server is located in \gls{access_point}.
 
-\begin{itemize}
-\tightlist
-\item
-  UE \textless{}-\textgreater{} AP.
-\item
-  AP \textless{}-\textgreater{} CnC.
-\end{itemize}
-
-There investigated one problem: the experimental network bandwidth
-between UE and AP measurements with \texttt{iperf3} showed about
-\textbf{30 MBit/s} speed rate. On the contrary, speed on the bearer UE \textless{}- AP -CnC\textgreater{} showed about \textbf{12-15 MBit/s} speed rate. There is markedly seen a drop in speed rate, probably, because of transmission on the radio channel two-times. The problem  is not in the Wi-Fi itself, but in the fact that radio (wireless) link is not as reliable, as a cord one, so the active bandwidth measurement part must be located as close to the APs as possible - in our case, the server-side \texttt{iperf3} is located in \gls{access_point}.
-
-Each UE has two programs on board:
-
-\begin{itemize}
-\tightlist
-\item
-  \texttt{GPS\_Android} - special software designed to perform \acrshort{rss} and  link measurements linked to GPS coordinates.
-\item
-  \texttt{Magic\ iperf} - a network bandwidth measurement software.  Provides a user-friendly interface to client-side app \texttt{iperf}  on Android phones.
-\end{itemize}
-
-Each APs has two Wi-Fi adapters. Since we use laptops to run APs, they expected to have one already included, thus one external extra required for each AP. The internal Wi-Fi adapter connects to the CnC provided Wi-Fi network, the external Wi-Fi adapter creates the access point named
-``\textbf{ap}'' for the UEs.
-
-The CnC uses one external AP to create the access point named
+Each \gls{ue} has   \gls{gps_android} installed. \Gls{access_point} create a \gls{wifi} access point named ``\textbf{ap}''.
+\Gls{command_n_center} runs a wireless point named
 ``\textbf{cnc}''.
 
 \subsection{Deployment Diagram}\label{deployment-diagram}
 
-\begin{longtable}[]{@{}ll@{}}
-\caption{The main deployed components.}\tabularnewline
-\toprule
-\begin{minipage}[b]{0.16\columnwidth}\raggedright
-Component\strut
-\end{minipage} & \begin{minipage}[b]{0.78\columnwidth}\raggedright
-Description\strut
-\end{minipage}\tabularnewline
-\midrule
-\endfirsthead
-\toprule
-\begin{minipage}[b]{0.16\columnwidth}\raggedright
-Component\strut
-\end{minipage} & \begin{minipage}[b]{0.78\columnwidth}\raggedright
-Description\strut
-\end{minipage}\tabularnewline
-\midrule
-\endhead
-\begin{minipage}[t]{0.16\columnwidth}\raggedright
-Android smartphone group (UEs)\strut
-\end{minipage} & \begin{minipage}[t]{0.78\columnwidth}\raggedright
-A set of smartphones running Android OS (version 5.0+) with dedicated
-Wi-Fi and installed software.\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.16\columnwidth}\raggedright
-Access points (APs)\strut
-\end{minipage} & \begin{minipage}[t]{0.78\columnwidth}\raggedright
-The computers running a Wi-Fi AP software for the UEs connection. Pass
-traffic through to CnC and take part in RSS and link quality
-measurement.\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.16\columnwidth}\raggedright
-Command Center (CnC)\strut
-\end{minipage} & \begin{minipage}[t]{0.78\columnwidth}\raggedright
-A computing node running the optimization software. Should be provided
-with sufficient hardware resources.\strut
-\end{minipage}\tabularnewline
-\bottomrule
-\end{longtable}
-
-From the deployment view, we are using a complicated combination of
-software and hardware.
-
-We prefer to run AP and designed software separately in a virtual
-machine. That helps to automate development, testing, and maintenance
-routines.
+Figure \ref{fig:deployment-diagram} shows components and their communication in the deployed phase. Each building block has certain level of independence, therefore it possible fix a fragile block when the system in operating mode.
 
 \begin{figure}[H]
-\centering
-\includegraphics[width=\linewidth, keepaspectratio]{images/Deployment Diagram-Deployment_Diagram.pdf}
-\caption{Deployment Diagram}
-\label{fig:deployment-diagram}
+	\centering
+	\includegraphics[width=0.8\linewidth, keepaspectratio]{images/Deployment Diagram-Deployment_Diagram.pdf}
+	\caption{Deployment Diagram}
+	\label{fig:deployment-diagram}
 \end{figure}
 
-\subsubsection{Command center deployment
-(CnC)}\label{command-center-deployment-cnc}
+We use virtual machines for running software components. It possible to 
+have performance decrease because of running in containers, however more powerful
+hardware resources compensates those possible consequences of additional 
+run-time level. Hypervisor can pass through access to physical equipment directly into guest operation system. To automate deployment of components, \gls{ansible} is used.
 
-The CnC software runs on Debian OS in VirtualBox virtual machine.
-\texttt{GPS\_Tracker} and \texttt{GPS\_Frontend} are designed to run in
-Docker containers. For the experiment, the virtual machine has \textbf{docker}
-and \textbf{docker-compose} installed to run these containers. It possible to have performance decrease because of running in containers, however more powerful hardware resources compensates those possible consequences of additional run-time level.
-
-The AP software consists of two packages:
+To start up a \gls{wifi} access point, it requires to have two packages in \acrshort{os}:
 
 \begin{itemize}
 \tightlist
 \item
-  \texttt{hostapd} - software to manage and run Wi-Fi access points.
+  \texttt{hostapd} - software to manage and run \gls{wifi} access points.
 \item
-  \texttt{dnsmasq} - DNS/DHCP server, to provide an IP address, routing
-  and DNS information via DHCP protocol.
+  \texttt{dnsmasq} - \acrshort{dns}/\acrshort{dhcp} server, to provide an \acrshort{ip} address, routing
+  and \acrshort{dns} information via \acrshort{dhcp} protocol.
 \end{itemize}
-
-The AP software starts in the virtual machine, which can access the physical Wi-Fi adapter using the hardware pass-through function from the host machine.
-
-For easy-to-run configuration and deployment of the CnC, there are
-provided an \textbf{Ansible} script.
-
-\subsubsection{Access Points deployment
-(APs)}\label{access-points-deployment-aps}
-
-Unlike CnC, physical nodes run the AP software and server-side
-\texttt{iperf3} app.
 
 \subsection{Network Diagram}\label{network-diagram}
 
-The APs subnet has identical settings. These
-\texttt{Wi-Fi\ HotSpot\ Network} has an internal DHCP server to provide
-dynamic addresses for connected UEs. To prevent the network IP addresses
-collisions and simplify routing, the APs perform masquerading
-(SNAT/DNAT) on the output interface (the internal interface used to
-connect to CnC). On the one side, it cannot access the UEs directly from
-CnC, but the UEs will always reach CnC as long as DHCP sets the default
-gateway IP address.
 
-In \texttt{Wi-Fi\ CnC\ Network} installed another DHCP server. It used
-to reply to connecting APs with dynamic addresses. Because the subnet
-used in this network is different from the internal Wi-Fi adapter's
-network in the APs, there is no network collision.
+Figure \ref{fig:network-diagram} shows network configuration. The \glspl{access_point} subnet has identical settings, they have an internal DHCP server to provide dynamic addresses for connected \glspl{ue}. To prevent address collisions and to simplify routing, the \glspl{access_point} perform masquerading (\acrshort{snat}/\acrshort{dnat}) on the output interface (connection to \gls{command_n_center}). Consequently, \gls{command_n_center} cannot access the \glspl{ue} directly, but \glspl{ue} will always reach \gls{command_n_center} because \acrshort{dhcp} server sets the default gateway IP address.
 
-Finally, the UEs can access the static CnC address \texttt{192.168.20.1}
-as well as its local AP's gateway address \texttt{192.168.10.1}.
+\gls{command_n_center} has another \acrshort{dhcp} server to set \glspl{access_point} dynamic addresses. Because network address for \gls{command_n_center} is different from the internal networks of \gls{wifi} adapters in the \glspl{access_point}, there is no network collision.
+
+Finally, each connected \gls{ue} can access static \gls{command_n_center} address \texttt{192.168.20.1}
+and local \gls{access_point} gateway \texttt{192.168.10.1}.
 
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth, keepaspectratio]{images/Deployment Diagram-Network_Diagram.pdf}
-\caption{Network Diagram}
+\caption{Network Configuration Diagram for experiment}
 \label{fig:network-diagram}
 \end{figure}
 
@@ -164,80 +75,69 @@ case:
 \begin{longtable}[]{@{}lll@{}}
 \caption{Steps for one experimental case.}\tabularnewline
 \toprule
-\begin{minipage}[b]{0.01\columnwidth}\raggedright
-No\strut
-\end{minipage} & \begin{minipage}[b]{0.35\columnwidth}\raggedright
-Step\strut
-\end{minipage} & \begin{minipage}[b]{0.55\columnwidth}\raggedright
-Description\strut
-\end{minipage}\tabularnewline
-\midrule
-\endfirsthead
-\toprule
-\begin{minipage}[b]{0.01\columnwidth}\raggedright
-No\strut
-\end{minipage} & \begin{minipage}[b]{0.35\columnwidth}\raggedright
-Step\strut
-\end{minipage} & \begin{minipage}[b]{0.55\columnwidth}\raggedright
-Description\strut
+\begin{minipage}[b]{0.1\columnwidth}\raggedright
+No
+\end{minipage} & \begin{minipage}[b]{0.3\columnwidth}\raggedright
+Step
+\end{minipage} & \begin{minipage}[b]{0.5\columnwidth}\raggedright
+Description
 \end{minipage}\tabularnewline
 \midrule
 \endhead
-\begin{minipage}[t]{0.01\columnwidth}\raggedright
-1\strut
-\end{minipage} & \begin{minipage}[t]{0.35\columnwidth}\raggedright
-Initialize network connectivity between APs and CnCs\strut
-\end{minipage} & \begin{minipage}[t]{0.55\columnwidth}\raggedright
-Ensure that these nodes are available in the network by the ICMP
-protocol\strut
+\begin{minipage}[t]{0.1\columnwidth}\raggedright
+1
+\end{minipage} & \begin{minipage}[t]{0.3\columnwidth}\raggedright
+Initialize network connectivity between \glspl{access_point} and \gls{command_n_center}
+\end{minipage} & \begin{minipage}[t]{0.50\columnwidth}\raggedright
+Ensure all nodes are available in the network by \acrshort{icmp}
+protocol
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.01\columnwidth}\raggedright
-2\strut
-\end{minipage} & \begin{minipage}[t]{0.35\columnwidth}\raggedright
-Run the software for the experiment\strut
-\end{minipage} & \begin{minipage}[t]{0.55\columnwidth}\raggedright
-Startup GPS\_Tracker, GPS\_Frontend\strut
+\begin{minipage}[t]{0.1\columnwidth}\raggedright
+2
+\end{minipage} & \begin{minipage}[t]{0.3\columnwidth}\raggedright
+Start up software
+\end{minipage} & \begin{minipage}[t]{0.5\columnwidth}\raggedright
+Startup \gls{gps_tracker}, \gls{gps_frontend}
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.01\columnwidth}\raggedright
-3\strut
+\begin{minipage}[t]{0.1\columnwidth}\raggedright
+3
 \end{minipage} & \begin{minipage}[t]{0.35\columnwidth}\raggedright
-Place the APs and UEs according to an experiment case\strut
-\end{minipage} & \begin{minipage}[t]{0.55\columnwidth}\raggedright
+Place the \glspl{access_point} and \glspl{ue} according to an experiment case
+\end{minipage} & \begin{minipage}[t]{0.5\columnwidth}\raggedright
 There are specific predefined positions for each element on the
-experiment area.\strut
+experiment area.
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.01\columnwidth}\raggedright
-4\strut
-\end{minipage} & \begin{minipage}[t]{0.35\columnwidth}\raggedright
-Measure RSS, Link quality for the initial layout\strut
-\end{minipage} & \begin{minipage}[t]{0.55\columnwidth}\raggedright
-Measurements are done via GPS\_Android that sends the result to
-GPS\_Tracker\strut
+\begin{minipage}[t]{0.1\columnwidth}\raggedright
+4
+\end{minipage} & \begin{minipage}[t]{0.3\columnwidth}\raggedright
+Measure \gls{rss}, Link quality for the initial layout
+\end{minipage} & \begin{minipage}[t]{0.5\columnwidth}\raggedright
+Measurements are done via \gls{gps_android} that sends the result to
+\gls{gps_tracker}
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.01\columnwidth}\raggedright
-5\strut
-\end{minipage} & \begin{minipage}[t]{0.35\columnwidth}\raggedright
-Run the APs location optimization for each algorithm in
-GPS\_Tracker\strut
-\end{minipage} & \begin{minipage}[t]{0.55\columnwidth}\raggedright
+\begin{minipage}[t]{0.1\columnwidth}\raggedright
+5
+\end{minipage} & \begin{minipage}[t]{0.3\columnwidth}\raggedright
+Run the \glspl{access_point} location optimization for each algorithm in
+\gls{gps_tracker}
+\end{minipage} & \begin{minipage}[t]{0.5\columnwidth}\raggedright
 Each optimization algorithm can produce different probable positions for
-the same UE positions and measurements.\strut
+the same UE positions and measurements.
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.01\columnwidth}\raggedright
-6\strut
-\end{minipage} & \begin{minipage}[t]{0.35\columnwidth}\raggedright
-Move the APs to the optimized positions\strut
-\end{minipage} & \begin{minipage}[t]{0.55\columnwidth}\raggedright
-It is expected that new positions for APs would increase our network
-efficiency.\strut
+\begin{minipage}[t]{0.1\columnwidth}\raggedright
+6
+\end{minipage} & \begin{minipage}[t]{0.3\columnwidth}\raggedright
+Move the \glspl{access_point} to the optimized positions
+\end{minipage} & \begin{minipage}[t]{0.5\columnwidth}\raggedright
+It is expected that new positions for \glspl{access_point} would increase our network
+efficiency.
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.01\columnwidth}\raggedright
-7\strut
-\end{minipage} & \begin{minipage}[t]{0.35\columnwidth}\raggedright
-Repeat RSS and Link quality measurements for the optimized APs
-positions\strut
-\end{minipage} & \begin{minipage}[t]{0.55\columnwidth}\raggedright
-1-3 interactions for optimization per each case.\strut
+\begin{minipage}[t]{0.1\columnwidth}\raggedright
+7
+\end{minipage} & \begin{minipage}[t]{0.3\columnwidth}\raggedright
+Repeat \gls{rss} and link throughput measurements for the optimized \glspl{access_point} positions
+\end{minipage} & \begin{minipage}[t]{0.5\columnwidth}\raggedright
+1-3 iteration per each case.
 \end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}

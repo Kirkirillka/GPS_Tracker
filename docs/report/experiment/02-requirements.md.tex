@@ -5,19 +5,19 @@
 \begin{itemize}
 \tightlist
 \item
-  6 cellphones with Android OS (version 5.0 and above). A dedicated GPS
-  and Wi-Fi modules.
+  6 cellphones with Android \acrshort{os} (version 5.0 and above). A dedicated \gls{gnss}
+  and \gls{wifi} modules.
 \item
-  3 external Wi-Fi Adapters with AP mode capable.
+  3 external \gls{wifi} Adapters with managed mode.
 
   \begin{itemize}
   \tightlist
   \item
     Model: AWUS036NEH
   \item
-    Antenna's height for CnC: 17.2 cm
+    Antenna's height for \gls{command_n_center}: 17.2 cm
   \item
-    Antenna's height for AP: 11 cm
+    Antenna's height for \gls{access_point}: 11 cm
   \end{itemize}
 \item
   3 Laptops.
@@ -29,7 +29,7 @@
 
 \subsection{Software Equipment}\label{software-equipment}
 
-\subsubsection{For UEs}\label{for-ues}
+\subsubsection{For \glsentrytext{ue} }
 
 \begin{itemize}
 \tightlist
@@ -39,33 +39,30 @@
   \begin{itemize}
   \tightlist
   \item
-    \texttt{Magic\ Perf} installed.
-  \end{itemize}
-\item
-  \texttt{GPS\_Android} installed.
+  	\Gls{gps_android} installed.
+    \end{itemize}
 \end{itemize}
 
-\subsubsection{For Command Center (CnC)}\label{for-command-center-cnc}
+\subsubsection{For \glsentrytext{command_n_center} }\label{for-command-center-cnc}
 
 \begin{itemize}
 \tightlist
 \item
-  Host OS
+  The host machine
 
-  \begin{itemize}
-  \tightlist
-  \item
-    Any Debian-based OS (Debian, Ubuntu, etc.).
-  \item
-    \texttt{VirtualBox} + \texttt{VirtualBox\ Extention\ Pack} latest
-    version.
-  \item
-    \texttt{Python3} + \texttt{Ansible} (for convenient configuration) installed.
-  \item
-    \texttt{openssh-server}.
-  \end{itemize}
+\begin{itemize}
+	\tightlist
+	\item
+	Any Debian-based \acrshort{os} (Debian, Ubuntu, etc.).
+	\item
+	\gls{virtualbox} + \gls{virtualbox_ext_pack} latest version.
+	\item
+	\gls{python3} + \gls{ansible} (for convenient configuration) installed.
+	\item
+	\texttt{openssh-server}.
+\end{itemize}
 \item
-  The virtual CnC machine
+  The virtual \gls{command_n_center} machine
 
   \begin{itemize}
   \tightlist
@@ -75,36 +72,52 @@
     \texttt{openssh-server} installed.
   \item
     \texttt{docker} and \texttt{docker-compose} installed.
+  \item
+  	\texttt{iperf3} installed.
 
     \begin{itemize}
     \tightlist
     \item
-      MongoDB container.
+      \gls{mongodb} container.
     \item
-      RabbitMQ container.
+      \gls{rabbitmq} container.
     \item
-      Mosquitto MQTT broker container.
+      \gls{mqtt} broker container.
     \item
-      Python3 container.
+      \gls{python3} container.
     \item
-      nginx container.
+      \gls{nginx} container.
     \item
-      nodeJS container.
+      \gls{nodejs} container.
     \end{itemize}
   \end{itemize}
 \end{itemize}
 
-\subsubsection{For APs}\label{for-aps}
+\subsubsection{For \glsentrytext{access_point}}\label{for-aps}
 
 \begin{itemize}
 \tightlist
 \item
-  The virtual AP machine
+The host machine
+
+\begin{itemize}
+	\tightlist
+	\item
+	Any Debian-based \acrshort{os} (Debian, Ubuntu, etc.).
+	\item
+	\gls{virtualbox} + \gls{virtualbox_ext_pack} latest version.
+	\item
+	\gls{python3} + \gls{ansible} (for convenient configuration) installed.
+	\item
+	\texttt{openssh-server}.
+\end{itemize}
+\item
+  The virtual \gls{access_point} machine
 
   \begin{itemize}
   \tightlist
   \item
-    Any Debian-based OS (Debian, Ubuntu, etc.).
+    Any Debian-based \acrshort{os} (Debian, Ubuntu, etc.).
   \item
     \texttt{dnsmasq}, \texttt{hostapd} installed.
   \item
@@ -117,7 +130,7 @@
     \begin{itemize}
     \tightlist
     \item
-      An FTP server container (e.g.~VSFTPd).
+      \acrshort{ftp}-server container.
     \end{itemize}
   \end{itemize}
 \end{itemize}
