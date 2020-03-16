@@ -1,12 +1,6 @@
 \subsection{Experiment-1. 12.02.2020}\label{experiment-1.-12.02.2020}
 
-The first attempt took place on 12.02.2020.
-
-The aim was to involve as many UEs as possible. This is the reason for performing the experiment on that day. Eventually, \textbf{6 UEs} took part ranging by the Android version from 4 to 9.
-
-Besides, the installation of apps and binding Wi-Fi to the necessary
-access point, a detailed \textbf{journal of the Wi-Fi} connection
-information enabled. This allowed monitoring RSS value on each UE.
+The first attempt took place on 12.02.2020. 6 \Glspl{ue} took part ranging by \gls{android} version from 4 to 9.
 
 \subsection{Weather conditions}
 
@@ -24,45 +18,47 @@ information enabled. This allowed monitoring RSS value on each UE.
 
 \subsection{Procedure}
 
-All items of the experiment placed on the carton boxes on the ground, so that they are a bit raised from the ground.
+All items of the experiment placed on carton boxes on the ground. Figure \ref{fig:cnc-position} shows a picture of \gls{command_n_center} position during the first trial of experiment.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth,keepaspectratio]{images/experiment_1_cnc.jpg}
-\caption{Layout of CnC server}
+	\includegraphics[width=0.6\linewidth,keepaspectratio]{images/experiment_1_cnc.jpg}
+\caption{Layout of \gls{command_n_center} server}
+\label{fig:cnc-position}
 \end{figure}
 
 \subsubsection{Case 1}
 
-\textbf{Suboptimal scheme} was chosen to begin with: UEs' connection to one AP was made successfully.
+We started with \hyperref[sub-optimal-layout]{Sub-Optimal case}.
 
-The second AP was connected to the other 3 UEs with more effort. The reason for it was in the Wi-Fi module issues of AP  (the laptop freeze).
+One \gls{ap} functioned correctly - one group of \glspl{ap} connection to one \gls{ap} was made successfully.
+Here was a problem with the second group of \glspl{ap} - due to weather conditions we encountered \gls{wifi} module issues of \gls{ap} (the laptop freeze).
 
-After some time of data collection, it was clear the second AP was not sending data to CnC at all, so we decided to locate devices according to the near-optimal scheme.
+After some time of data collection, it was clear the second \gls{ap} was not sending data to \gls{command_n_center} at all, so we decided to locate devices according to \hyperref[near-optimal-layout]{Near-Optimal layout scheme}.
 
 \subsubsection{Case 2}
 
-This helped to increase the RSS level a bit from -82 and -84 to -76 and
--80, data still was collected only from the first AP.
+During \hyperref[near-optimal-layout]{Near-Optimal layout case} we observed increase of \gls{rss} level -82 and -84 dBm for the left \gls{ap} to -76 and -80 dBm for the other. Link measurement messages from \glspl{ue} connected to the second \gls{ap} dropped by an unknown reason.
 
-Besides, the graphical view in CnC showed 4 UEs close to each other (having approximately the same GPS coordinate), whereas the other 2 were detected much further.
+Moreover, \gls{gps_frontend} showed that some \glspl{ue} are close to each other (having approximately the same coordinate), whereas the other 2 were detected much further. It indicates that \glspl{gnss} position measurements are biased.
 
-Then we figured out that the second AP stopped working at some time. Restart and re-connection of UEs did not help to obtain data of that 3 UEs in CnC.
+After, the second \gls{access_point} stopped working at some time. Restart and re-connection of \glspl{ue} did not help to obtain data.
+
 
 \subsubsection{Case 3}
 
-It made no sense to try without data collection on CnC.
+Because of problems encountered in the previous case, we decided to stop experiment and figure out possible solutions.
 
 \subsection{Outcome}
 
-The first attempt of the experiment showed:
+The first trial showed:
 
 \begin{itemize}
 \tightlist
 \item
-  Further development of GPS\_Tracker and GPS\_Android to fix bugs required.
+  Further development and bug fixes of \gls{gps_tracker}  and  \gls{gps_android} required.
 \item
-  Tests of placement algorithms performing, but due to problem with message communication, we were unable to test if the optimized positions would lead to better signal conditions.
+  Tests of placement algorithms can be performed, but due to problems with message sending, we could not prove that the suggested optimal positions would lead to better signal conditions.
 \end{itemize}
 
 As a result, we decided to:
@@ -70,7 +66,7 @@ As a result, we decided to:
 \begin{itemize}
 \tightlist
 \item
-  fix the second AP failure reasons
+  Find out and fix the failure reasons for the second \gls{access_point}.
 \item
-  figure out the source of 2 point-outliers in the plot
+  Analyze the outliers in \gls{gnss} measured positions.
 \end{itemize}

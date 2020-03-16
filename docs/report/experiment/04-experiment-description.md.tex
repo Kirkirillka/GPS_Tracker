@@ -3,7 +3,7 @@
 
 \subsection{General perspective}\label{general-perspective}
 
-Figure \ref{fig:experiment-overall-layout} shows default experiment layout. We have 3 laptops: two \glspl{access_point} and one \glspl{command_n_center}. \Gls{command_n_center} use external \gls{wifi} adapter to set up wireless point for \glspl{access_point} to access provided services. Each \gls{access_point} has two \gls{wifi} adapters: one used to set up \gls{wifi} access point for \glspl{ue}, the second (internal, built in the vast majority of modern laptops) adapter is used for connection to \gls{command_n_center}.
+Figure \ref{fig:experiment-overall-layout} shows default experiment layout. We have 3 laptops: two \glspl{ap} and one \glspl{command_n_center}. \Gls{command_n_center} use external \gls{wifi} adapter to set up wireless point for \glspl{ap} to access provided services. Each \acrshort{access_point} has two \gls{wifi} adapters: one used to set up \gls{wifi} access point for \glspl{ue}, the second (internal, built in the vast majority of modern laptops) adapter is used for connection to \gls{command_n_center}.
 
 \begin{figure}[H]
 \centering
@@ -13,10 +13,10 @@ Figure \ref{fig:experiment-overall-layout} shows default experiment layout. We h
 \end{figure}
 
 From the general system engineering perspective, the experiment is a set
-of wireless-connected nodes (via Wi-Fi 802.11n (300 mbps)) which measures the receiving signal strength and measure the throughput of the link to upload and download.
+of wireless-connected nodes (via \gls{wifi} 802.11n (300 mbps)) which measures the receiving signal strength and measure the throughput of the link to upload and download.
 
 Preliminary tests in default layout showed one restrictions on experiment activity: network bandwidth
-between \gls{ue} and \gls{access_point} measurements with \texttt{iperf3} showed about \textbf{30 MBit/s} speed rate. On the contrary, speed on the bearer \gls{ue} - \gls{access_point} - \gls{command_n_center} showed about \textbf{12-15 MBit/s} speed rate. This is significant drop in network rate, probably, because of transmission on the radio channel two-times. The problem  is not in the Wi-Fi itself, but in the fact that radio (wireless) link is not as reliable compared to a wired one, so the active bandwidth measurement part must be located as close to the \glspl{access_point} as possible - in our case, the \acrshort{ftp} server is located in \gls{access_point}.
+between \gls{ue} and \acrshort{access_point} measurements with \texttt{iperf3} showed about \textbf{30 MBit/s} speed rate. On the contrary, speed on the bearer \gls{ue} - \acrshort{access_point} - \gls{command_n_center} showed about \textbf{12-15 MBit/s} speed rate. This is significant drop in network rate, probably, because of transmission on the radio channel two-times. The problem  is not in the \gls{wifi} itself, but in the fact that radio (wireless) link is not as reliable compared to a wired one, so the active bandwidth measurement part must be located as close to the \glspl{ap} as possible - in our case, the \acrshort{ftp} server is located in \acrshort{access_point}.
 
 Each \gls{ue} has   \gls{gps_android} installed. \Gls{access_point} create a \gls{wifi} access point named ``\textbf{ap}''.
 \Gls{command_n_center} runs a wireless point named
@@ -52,12 +52,12 @@ To start up a \gls{wifi} access point, it requires to have two packages in \acrs
 \subsection{Network Diagram}\label{network-diagram}
 
 
-Figure \ref{fig:network-diagram} shows network configuration. The \glspl{access_point} subnet has identical settings, they have an internal DHCP server to provide dynamic addresses for connected \glspl{ue}. To prevent address collisions and to simplify routing, the \glspl{access_point} perform masquerading (\acrshort{snat}/\acrshort{dnat}) on the output interface (connection to \gls{command_n_center}). Consequently, \gls{command_n_center} cannot access the \glspl{ue} directly, but \glspl{ue} will always reach \gls{command_n_center} because \acrshort{dhcp} server sets the default gateway IP address.
+Figure \ref{fig:network-diagram} shows network configuration. The \glspl{ap} subnet has identical settings, they have an internal \gls{dhcp} server to provide dynamic addresses for connected \glspl{ue}. To prevent address collisions and to simplify routing, the \glspl{ap} perform masquerading (\acrshort{snat}/\acrshort{dnat}) on the output interface (connection to \gls{command_n_center}). Consequently, \gls{command_n_center} cannot access the \glspl{ue} directly, but \glspl{ue} will always reach \gls{command_n_center} because \acrshort{dhcp} server sets the default gateway IP address.
 
-\gls{command_n_center} has another \acrshort{dhcp} server to set \glspl{access_point} dynamic addresses. Because network address for \gls{command_n_center} is different from the internal networks of \gls{wifi} adapters in the \glspl{access_point}, there is no network collision.
+\gls{command_n_center} has another \acrshort{dhcp} server to set \glspl{ap} dynamic addresses. Because network address for \gls{command_n_center} is different from the internal networks of \gls{wifi} adapters in the \glspl{ap}, there is no network collision.
 
 Finally, each connected \gls{ue} can access static \gls{command_n_center} address \texttt{192.168.20.1}
-and local \gls{access_point} gateway \texttt{192.168.10.1}.
+and local \acrshort{access_point} gateway \texttt{192.168.10.1}.
 
 
 \begin{figure}[H]
@@ -87,10 +87,10 @@ Description
 \begin{minipage}[t]{0.1\columnwidth}\raggedright
 1
 \end{minipage} & \begin{minipage}[t]{0.3\columnwidth}\raggedright
-Initialize network connectivity between \glspl{access_point} and \gls{command_n_center}
+Initialize network connectivity between \glspl{ap} and \gls{command_n_center}
 \end{minipage} & \begin{minipage}[t]{0.50\columnwidth}\raggedright
-Ensure all nodes are available in the network by \acrshort{icmp}
-protocol
+Ensure using \acrshort{icmp}
+protocol that all nodes are available in the network 
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.1\columnwidth}\raggedright
 2
@@ -102,7 +102,7 @@ Startup \gls{gps_tracker}, \gls{gps_frontend}
 \begin{minipage}[t]{0.1\columnwidth}\raggedright
 3
 \end{minipage} & \begin{minipage}[t]{0.35\columnwidth}\raggedright
-Place the \glspl{access_point} and \glspl{ue} according to an experiment case
+Place the \glspl{ap} and \glspl{ue} according to an experiment case
 \end{minipage} & \begin{minipage}[t]{0.5\columnwidth}\raggedright
 There are specific predefined positions for each element on the
 experiment area.
@@ -118,24 +118,24 @@ Measurements are done via \gls{gps_android} that sends the result to
 \begin{minipage}[t]{0.1\columnwidth}\raggedright
 5
 \end{minipage} & \begin{minipage}[t]{0.3\columnwidth}\raggedright
-Run the \glspl{access_point} location optimization for each algorithm in
+Run the \glspl{ap} location optimization for an algorithm in
 \gls{gps_tracker}
 \end{minipage} & \begin{minipage}[t]{0.5\columnwidth}\raggedright
-Each optimization algorithm can produce different probable positions for
-the same UE positions and measurements.
+Each method can give different results for
+the same \gls{ue} input set.
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.1\columnwidth}\raggedright
 6
 \end{minipage} & \begin{minipage}[t]{0.3\columnwidth}\raggedright
-Move the \glspl{access_point} to the optimized positions
+Move the \glspl{ap} to optimized positions.
 \end{minipage} & \begin{minipage}[t]{0.5\columnwidth}\raggedright
-It is expected that new positions for \glspl{access_point} would increase our network
+It is expected that new coordinates for \glspl{ap} would increase our network
 efficiency.
 \end{minipage}\tabularnewline
 \begin{minipage}[t]{0.1\columnwidth}\raggedright
 7
 \end{minipage} & \begin{minipage}[t]{0.3\columnwidth}\raggedright
-Repeat \gls{rss} and link throughput measurements for the optimized \glspl{access_point} positions
+Repeat \gls{rss} and link throughput measurements for the optimized \glspl{ap} positions
 \end{minipage} & \begin{minipage}[t]{0.5\columnwidth}\raggedright
 1-3 iteration per each case.
 \end{minipage}\tabularnewline

@@ -1,38 +1,50 @@
 \section{Experiment 4. 03.03.2020}\label{experiment-4.-03.03.2020}
 
-It took place on 03.03.2020. The weather condition was appropriate for running experiments, despite that it was raining lightly.
+It took place on 03.03.2020. The weather conditions were appropriate for experiment, although there was rain for a short time (approximately 10 minutes).
 
-For the fourth attempt, we implement message sending only via HTTP. The main aim of the experiment is to find optimized positions for the UEs in three cases (sub-optimal, uniform, near-optimal). Phones forced to push their channel quality metric to the server for each case. On the server-side, GPS\_Tracker tries to find optimal positions for UAVs supposing there are 2 AP is required.
+For the fourth trial, we implement sending of measurement messages only with \gls{http} protcol from \gls{ue} to \gls{command_n_center}. 
+
+We aimed to find optimized positions for the \glspl{ue} in three cases (Sub-Optimal, Uniform, Near-Optimal).
 
 We decided to reduce the area layout to 25x25 meters.
 
-\subsection{Results}
-
-The HTTP protocol helps us to receive messages more reliable, although there was a problem, e.g. the further UE is located from AP, the less is probable the reception of the message.
-
-Tests showed reliability of HTTP protocol, therefore, we decided to continue our experiment.
-
-We found out that network speed measurements were not significant, because there was markedly seen difference between uplink and downlink speed, uplink tests threw the timeout exception in case of larger distance between a UE and used AP, since the communication took longer and the session finished.
-
-The measurements showed the following coordinates for the 6 UEs:
+\glspl{ue} had initial coordinates shown in Table \ref{tab:exp4-initial-coordinates-ues}.
 
 \begin{longtable}[]{@{}ll@{}}
-\caption{Initial positions for UEs}\tabularnewline
-\toprule
-Unique ID & Coordinates\tabularnewline
-\midrule
-\endfirsthead
-\toprule
-Unique ID & Coordinates\tabularnewline
-\midrule
-\endhead
-f072f812f48ce468 & (50.4056203, 10.5626057)\tabularnewline
-eb0b54819c69cf0c & (50.4056230, 10.5626126)\tabularnewline
-27349a2cde6592df & (50.4056445, 10.5625865)\tabularnewline
-51336504999bc1ca & (50.40567855, 10.5625238)\tabularnewline
-b1c225280d0ed13f & (50.4056924, 10.5624943)\tabularnewline
-\bottomrule
+	\caption{Initial coordinates for \glspl{ue}}\tabularnewline
+	\toprule
+	Unique ID & Coordinates\tabularnewline
+	\midrule
+	\endhead
+	f072f812f48ce468 & (50.4056203, 10.5626057)\tabularnewline
+	eb0b54819c69cf0c & (50.4056230, 10.5626126)\tabularnewline
+	27349a2cde6592df & (50.4056445, 10.5625865)\tabularnewline
+	51336504999bc1ca & (50.40567855, 10.5625238)\tabularnewline
+	b1c225280d0ed13f & (50.4056924, 10.5624943)\tabularnewline
+	\bottomrule
+	\label{tab:exp4-initial-coordinates-ues}
 \end{longtable}
+
+
+The initial coordinates for \glspl{ap} are shown in Table \ref{tab:exp4-initial-coordinates-aps}.
+
+\begin{longtable}[]{@{}ll@{}}
+	\caption{Initial coordinates for \glspl{ap} }\tabularnewline
+	\toprule
+	AP & Coordinates\tabularnewline
+	\midrule
+	\endhead
+	AP1 & (50.4056741, 10.5625129)\tabularnewline
+	AP2 & (50.4056339, 10.5625975)\tabularnewline
+	\bottomrule
+	\label{tab:exp4-initial-coordinates-aps}
+\end{longtable}
+
+\subsection{Results}
+
+The \gls{http} protocol helped to receive messages reliably, despite there was connection failures, we observed that the farther \gls{ue} is located from \gls{ap}, the less probable reception of the message. Retransmisson of messages implemented in \gls{gps_android} partly mitigated losses.
+
+We found out that network speed measurements were not significant, because there was markedly seen difference between \texttt{uplink} and \texttt{downlink} speed, uplink tests threw timeout exception in case of larger distance between a \gls{ue} and a \gls{access_point}, because the communication took longer and the session finished.
 
 The experiment is divided into four parts:
 
@@ -51,8 +63,8 @@ The experiment is divided into four parts:
 \subsubsection{Sub-optimal case}
 
 The first case is the most profitable from the signal quality point of
-view. The APs are implicitly located at the same distance from the
-connected UEs. The level of interference is low.
+view. The \glspl{ap} are implicitly located at the same distance from the
+connected \glspl{ue}. The level of interference is low.
 
 \begin{figure}[H]
 	\centering
@@ -60,15 +72,15 @@ connected UEs. The level of interference is low.
 \caption{Signal Quality changes in Sub-optimal case}
 \end{figure}
 
-Despite the APs were located close to UEs, the RSS level varies noticeably. However, only in this case the speed and signal quality measurement were the most stable among all cases.
+Despite the \glspl{ap} were located close to \glspl{ue}, the \gls{rss} level varies noticeably. However, only in this case the speed and signal quality measurement were the most stable among all cases.
 
 \subsubsection{Uniform case}
 
-In this case, the APs are located with equal distance from the CnC on the same line.
+In this case, the \glspl{ap} are located with equal distance from the \gls{command_n_center} on the same line.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth,keepaspectratio]{images/Exp4_Uniform.png}
+	\includegraphics[width=0.5\linewidth,keepaspectratio]{images/Exp4_Uniform.png}
 \caption{Signal Quality changes in Uniform case}
 \end{figure}
 
@@ -77,44 +89,30 @@ sometimes.
 
 \subsubsection{Near-optimal case}
 
-The third case simulates the situation where the APs are placed
-uniformly far from centers of UEs' clusters.
+The third case simulates the situation where the \glspl{ap} are placed
+uniformly far from centers of \glspl{ue} clusters.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth,keepaspectratio]{images/Exp4_Near_Optimal.png}
+	\includegraphics[width=0.5\linewidth,keepaspectratio]{images/Exp4_Near_Optimal.png}
 \caption{Signal Quality changes in Near-optimal case}
 \end{figure}
 
 \subsubsection{Comparison between Sub-optimal case, and the suggested
 positions}
 
-To check the validity of the UAVs layout optimization algorithm, we
-place the APs in a Sub-optimal case position.
-
-The given coordinates for \textbf{APs}:
-
-\begin{longtable}[]{@{}ll@{}}
-\toprule
-AP & Coordinates\tabularnewline
-\midrule
-\endhead
-AP1 & (50.4056741, 10.5625129)\tabularnewline
-AP2 & (50.4056339, 10.5625975)\tabularnewline
-\bottomrule
-\end{longtable}
+To check the validity of \glspl{uav} layout optimization algorithm, we place the \glspl{ap} in a Sub-optimal case position.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth,keepaspectratio]{images/Exp4_UEs_Location_to_optimize.png}
-\caption{The UEs coordinates used to optimize UAVs positions}
+	\includegraphics[width=0.5\linewidth,keepaspectratio]{images/Exp4_UEs_Location_to_optimize.png}
+\caption{The \glspl{ue} coordinates used to optimize \glspl{uav} positions}
 \end{figure}
 
 The coordinates for \textbf{27349a2cde6592df} and
 \textbf{51336504999bc1ca} overlap.
 
-The most recent received coordinates for UEs used to schedule an
-optimization task with the following parameters:
+The most recent received coordinates for \glspl{ue} used to schedule an optimization task with the following parameters:
 
 \begin{itemize}
 \tightlist
@@ -128,12 +126,12 @@ Using of ``simplex'' method against two clusters is not possible, produced resul
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth,keepaspectratio]{images/Expt4_Estimated UAVs_locations.png}
+	\includegraphics[width=0.5\linewidth,keepaspectratio]{images/Expt4_Estimated UAVs_locations.png}
 \caption{Black dots represent suggested points as the most optimal
-position for UAVs}
+position for \glspl{uav}}
 \end{figure}
 
-The suggested optimal coordinates for \textbf{APs}:
+The suggested optimal coordinates for \glspl{ap}:
 
 \begin{longtable}[]{@{}lll@{}}
 \toprule
@@ -156,44 +154,12 @@ because of a large distance.}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth,keepaspectratio]{images/Expt4_Result_of_optimization_sattelite.png}
-\caption{Original and Optimized Coordinates for UAvs: A picture from
-satellite}
+\caption{Original and Optimized Coordinates for \glspl{uav}: A picture from satellite}
 \end{figure}
 
 ``Clustering'' algorithm performs simple K-means cluster calculation
-based on GPS coordinates for UEs. The result provides insights about
-that layout optimization algorithms relying solely on the coordinate
-input data can result in a biased solution.
-
-\subsubsection{Pictures of experiment}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth,keepaspectratio]{images/Exp4-Overall-Signal-Changes.png}
-\caption{Signal Quality level changes during the experiment}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth,keepaspectratio]{images/Exp4_Overall_Heatmap.png}
-\caption{Signal Heatmap obtained during the experiment}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth,keepaspectratio]{images/Exp4_Overall_Heatmap.png}
-\caption{Signal Heatmap obtained during the experiment}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth,keepaspectratio]{images/Layout_Problem_Discussion.jpg}
-\caption{Layout Problem discussion}
-\end{figure}
+based on \gls{gnss} coordinates for \glspl{ue}. The result provides insights about that layout optimization algorithms relying solely on the coordinate input data can result in a biased solution.
 
 \subsection{Outcome}
 
-Finally, we have managed to test the framework and estimate an optimized
-position for UAVs which were represented by WiFi access points. The
-results showed that the framework, as well as optimization algorithms,
-should be redesigned and evaluated on updated data.
+Finally, we have managed to test the framework and estimate an optimized position for \glspl{uav} which were represented by \gls{wifi} access points. The results showed that the framework match requirements, however should be redesigned and evaluated on updated data.

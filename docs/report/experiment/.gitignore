@@ -12,3 +12,5 @@ main.pdf
 *.blg
 *.bbl
 *.synctex
+*.fdb_latexmk
+*.fls
