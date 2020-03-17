@@ -1,6 +1,5 @@
 \documentclass{article}
 \usepackage [utf8] {inputenc} 
-\usepackage[automake]{glossaries} 
 
 \usepackage{graphicx}
 \usepackage{siunitx}
@@ -10,7 +9,7 @@
 \usepackage{hyperref}
 \usepackage{amsmath}
 
-
+\usepackage[toc,acronym]{glossaries}
 \loadglsentries{glossary}
 \makeglossaries
 
@@ -49,7 +48,10 @@
 	
 	\newpage
 	
-	\printglossaries
+	\printglossary
+	\clearpage
+	
+	\printglossary[type=\acronymtype]
 	\clearpage
 	
 	\begin{appendix}
@@ -58,8 +60,5 @@
 	\end{appendix}
 	
 	\clearpage
-	
-%	\bibliography{bibliography}{}
-%	\bibliographystyle{plain}
 	
 \end{document}
