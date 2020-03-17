@@ -1,4 +1,6 @@
 \documentclass{article}
+\usepackage [utf8] {inputenc} 
+\usepackage[automake]{glossaries} 
 
 \usepackage{graphicx}
 \usepackage{siunitx}
@@ -9,7 +11,6 @@
 \usepackage{amsmath}
 
 
-\usepackage{glossaries}
 \loadglsentries{glossary}
 \makeglossaries
 
@@ -46,7 +47,7 @@
 	\input{06-attempt-04.md.tex}
 	\input{07-results.md.tex}
 	
-	\clearpage
+	\newpage
 	
 	\printglossaries
 	\clearpage
