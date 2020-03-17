@@ -1,59 +1,48 @@
 
-\newglossaryentry{gps_frontend}{name={GPS\_Frontend},description={A web-based application to provide a user with a convenient user interface.}}
+\newglossaryentry{gps_frontend}{name={GPS\_Frontend},description={A web-based application to provide user interface to interact with \gls{gps_tracker}.}}
 
 \newglossaryentry{gps_tracker}{name={GPS\_Tracker},description={A name of the framework and as well a name for the backend software running for processing and storing telemetry data}}
 
-\newglossaryentry{gps_android}{name={GPS\_Android},description={An Android application to send the telemetry information about the current mobile network from the users' phones to GPS\_Tracker.}}
+\newglossaryentry{gps_android}{name={GPS\_Android},description={An Android application to send the telemetry information about the current mobile network from the users' phones to \gls{gps_tracker}.}}
 
-\newglossaryentry{telemetry}{name={Telemetry},description={Messages from the phones insalled \gls{gps_android}. Includes RSS level, uplink/downlink throughput measurement, GPS coordinates.}}
+\newglossaryentry{telemetry}{name={Telemetry},description={Messages from the phones insalled \gls{gps_android}. Includes \acrshort{rss} level, uplink/downlink throughput measurement, \acrshort{gnss} coordinates.}}
 
-\newglossaryentry{broker}{name={Broker},description={A special architectural pattern, program, that is the point of communication between components.}}
+\newglossaryentry{broker}{name={Broker},description={A broker component coordinates communication of requests from client to server and also coordinates returning the results from server to client \cite{2}}}
 
-\newglossaryentry{mqtt}{name={MQTT},description={Message Queuing Telemetry Transport, an publisher/subscriber-based application protocol running over TCP/IP, suitable for IoT application.}}
+\newglossaryentry{mqtt_protocol}{name={Message Queuing Telemetry Transport},description={An publisher/subscriber-based application protocol running over TCP/IP, suitable for IoT application.}}
 
-\newglossaryentry{json}{name={JSON},description={JavaScript Object Notation, a lightweight data-interchange format.}}
+\newglossaryentry{json_format}{name={JavaScript Object Notation},description={a lightweight data-interchange format.}}
 
-\newglossaryentry{mongodb}{name={MongoDB},description={ A NoSQL database storing data in BSON (Binary JSON) format.}}
+\newglossaryentry{mongodb}{name={MongoDB},description={A NoSQL database storing data in BSON (Binary \acrshort{json}) format \cite{mongodb}}}
 
-\newglossaryentry{celery}{name={Celery},description={A framework to implement a program using "Worker" architecture design.}}
+\newglossaryentry{celery}{name={Celery},description={A framework to implement a program using "Worker" architecture design  \cite{celery}}}
 
-\newglossaryentry{rabbitmq}{name={RabbitMQ},description={An in-memory queuing message broker.}}
+\newglossaryentry{rabbitmq}{name={RabbitMQ},description={An in-memory queuing message broker \cite{rabbitmq}}}
 
 \newglossaryentry{user_equipment}{name={User Equipment},description={A mobile terminal which transmits data via the radio link.}}
 
-\newglossaryentry{access_point}{name={Access Point},description={A Wi-Fi access point running by a laptop with an external	Wi-Fi adapter. Each laptop has a side application to support throughput measurement.}}
+\newglossaryentry{access_point}{name={Access Point},description={A laptop with an external \gls{wifi} adapter.}}
 
-\newglossaryentry{command_n_center}{name={CnC},description={A central server where the system core is running. All measurement analysis and UI interactions perform here.}}
+\newglossaryentry{command_n_center}{name={Command Center},description={A central server where the system core is running. All measurement analysis and UI interactions perform here.}}
 
-\newglossaryentry{unmanned_aerial_vehicle}{name={Unmanned Aerial Vehicle},description={A vehicle having AP on the board.}}
+\newglossaryentry{unmanned_aerial_vehicle}{name={Unmanned Aerial Vehicle},description={A vehicle having \gls{access_point} on the board.}}
 
+\newglossaryentry{received_signal_strength}{name={Received Signal Strength},description={The estimated value of signal power for the radio signal. The greater the RSS value, the stronger the signal.}}
 
-\newglossaryentry{received_signal_strength}{name={Received Signal Strength},description={Received Signal Strength - the estimated value of signal power for the radio signal. The greater the RSS value, the stronger the signal.}}
+\newglossaryentry{wifi}{name={Wi-Fi},description={Wi-Fi a family of wireless networking technologies, based on the IEEE 802.11 family of standards, which are commonly used for local area networking of devices and Internet access. \cite{1}}}
 
+\newglossaryentry{python}{name={Python},description={Python is an interpreted, high-level, general-purpose programming language.}}
 
-\newglossaryentry{gnss}{name={GNSS},description={Global Navigation Satellite System}}
+\newglossaryentry{nginx}{name={nginx},description={is an HTTP and reverse proxy server, a mail proxy server, and a generic TCP/UDP proxy server \cite{nginx}}}
 
-\newglossaryentry{rss}{name={RSS},description={Received Signal Strength}}
+\newglossaryentry{nodejs}{name={NodeJS},description={Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine \cite{nodejs}Facc }}
 
-\newglossaryentry{gps}{name={GPS},description={Global Positioning System}}
+\newglossaryentry{ansible}{name={Ansible},description={Ansible is a simple, but powerful, server and configuration management tool \cite{ansible}}}
 
-
-\newglossaryentry{ue}{name={UE},description={User Equipment}}
-
-\newglossaryentry{uav}{name={UAV},description={Unmanned Aerial Vehicle}}
-
-\newglossaryentry{wifi}{name={Wi-Fi},description={Wi-Fi a family of wireless networking technologies, based on the IEEE 802.11 family of standards, which are commonly used for local area networking of devices and Internet access. \cite{} }}
-
-\newglossaryentry{python3}{name={python3},description={Python3}}
-
-\newglossaryentry{nginx}{name={nginx},description={nginx}}
-
-\newglossaryentry{nodejs}{name={nodejs},description={nodejs}}
+\newglossaryentry{android}{name={Android},description={A modern operation system for mobile phones developed by Google}}
 
 
-\newglossaryentry{ansible}{name={Ansible},description={Ansible}}
 
-\newglossaryentry{android}{name={Android},description={A modern operation system for cell phones developed by Google}}
 
 \newacronym{ftp}{FTP}{File Transport Protocol}
 
@@ -61,8 +50,8 @@
 
 \newacronym{ap}{AP}{Access Point}
 
-\newacronym{snat}{SNAT}{Source \gls{nat}}
-\newacronym{dnat}{DNAT}{Destination \gls{nat}}
+\newacronym{snat}{SNAT}{Source \acrfull{nat}}
+\newacronym{dnat}{DNAT}{Destination \acrfull{nat}}
 \newacronym{nat}{NAT}{Network Address Translation}
 
 \newacronym{http}{HTTP}{Hyper Text Transfer Protocol}
@@ -74,3 +63,17 @@
 \newacronym{ip}{IP}{Internet Protocol}
 \newacronym{icmp}{ICMP}{Internet Control Message Protocol}
 
+\newacronym{cnc}{CnC}{Command Center}
+\newacronym{mqtt}{MQTT}{Message Queuing Telemetry Transport}
+
+\newacronym{ue}{UE}{\gls{user_equipment}}
+\newacronym{uav}{UAV}{\gls{unmanned_aerial_vehicle}}
+
+\newacronym{rss}{RSS}{Received Signal Strength}
+
+\newacronym{json}{JSON}{\gls{json_format}}
+
+
+\newacronym{gnss}{GNSS}{Global Navigation Satellite System}
+
+\newacronym{gps}{GPS}{Global Positioning System}

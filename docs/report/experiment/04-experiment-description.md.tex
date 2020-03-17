@@ -22,13 +22,13 @@ Each \gls{ue} has   \gls{gps_android} installed. \Gls{access_point} create a \gl
 \Gls{command_n_center} runs a wireless point named
 ``\textbf{cnc}''.
 
-\subsection{Deployment Diagram}\label{deployment-diagram}
+\subsection{Deployment diagram}\label{deployment-diagram}
 
 Figure \ref{fig:deployment-diagram} shows components and their communication in the deployed phase. Each building block has certain level of independence, therefore it possible fix a fragile block when the system in operating mode.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\linewidth, keepaspectratio]{images/Deployment Diagram-Deployment_Diagram.pdf}
+	\includegraphics[width=0.7\linewidth, keepaspectratio]{images/Deployment Diagram-Deployment_Diagram.pdf}
 	\caption{Deployment Diagram}
 	\label{fig:deployment-diagram}
 \end{figure}
@@ -49,7 +49,7 @@ To start up a \gls{wifi} access point, it requires to have two packages in \acrs
   and \acrshort{dns} information via \acrshort{dhcp} protocol.
 \end{itemize}
 
-\subsection{Network Diagram}\label{network-diagram}
+\subsection{Network diagram}\label{network-diagram}
 
 
 Figure \ref{fig:network-diagram} shows network configuration. The \glspl{ap} subnet has identical settings, they have an internal \gls{dhcp} server to provide dynamic addresses for connected \glspl{ue}. To prevent address collisions and to simplify routing, the \glspl{ap} perform masquerading (\acrshort{snat}/\acrshort{dnat}) on the output interface (connection to \gls{command_n_center}). Consequently, \gls{command_n_center} cannot access the \glspl{ue} directly, but \glspl{ue} will always reach \gls{command_n_center} because \acrshort{dhcp} server sets the default gateway IP address.
@@ -68,7 +68,7 @@ and local \acrshort{access_point} gateway \texttt{192.168.10.1}.
 \label{fig:network-diagram}
 \end{figure}
 
-\subsection{Experiment Steps}\label{experiment-steps}
+\subsection{Experiment steps}\label{experiment-steps}
 
 The following steps will be executed for each described experimental
 case:

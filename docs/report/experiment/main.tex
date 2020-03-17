@@ -1,3 +1,5 @@
+% !TeX program = pdflatex
+
 \documentclass{article}
 \usepackage [utf8] {inputenc} 
 
@@ -9,10 +11,18 @@
 \usepackage{hyperref}
 \usepackage{amsmath}
 
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+
 \usepackage[toc,acronym]{glossaries}
 \loadglsentries{glossary}
 \makeglossaries
 
+\usepackage[
+backend=bibtex,
+style=alphabetic,
+sorting=ynt
+]{biblatex}
+\bibliography{bibliography.bib}
 
 
 \providecommand{\tightlist}{%s
@@ -52,6 +62,11 @@
 	\clearpage
 	
 	\printglossary[type=\acronymtype]
+	
+	\clearpage
+	
+	\printbibliography[heading=bibintoc,title={References}]
+	
 	\clearpage
 	
 	\begin{appendix}
@@ -59,6 +74,6 @@
 		\listoftables
 	\end{appendix}
 	
-	\clearpage
+
 	
 \end{document}
