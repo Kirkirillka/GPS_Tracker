@@ -1,83 +1,83 @@
 \section{Formal description of the
-experiment}\label{formal-description-of-the-experiment}
+	experiment}\label{formal-description-of-the-experiment}
 
 In the experiment we seek to:
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Check the functionality of experimental software system.
-  
-  \begin{itemize}
-  	\tightlist
-  	\item
-  	Check if the framework match initial functional properties.
-  	\item
-  	Test for stability, performance and usability in real case scenarios.
-  \end{itemize}
-
-\item
-  Evaluation of \glspl{unmanned_aerial_vehicle} (having \gls{wifi} \glspl{access_point}) layout optimization algorithms.
-  
-  \begin{itemize}
-  	\tightlist
-  	\item
-  	Evaluation for correctness of suggested positions for \glspl{uav}.
-  	\item
-  	Measurement of accuracy, stability and performance of the	optimization algorithms.
-  \end{itemize}
-  
+	\def\labelenumi{\arabic{enumi}.}
+	\tightlist
+	\item
+	Check the functionality of the experimental software system.
+	
+	\begin{itemize}
+		\tightlist
+		\item
+		Check if the framework matches initial functional properties.
+		\item
+		Test for stability, performance, and usability in real case scenarios.
+	\end{itemize}
+	
+	\item
+	Evaluation of \glspl{unmanned_aerial_vehicle} (having \gls{wifi} \glspl{access_point}) layout optimization algorithms.
+	
+	\begin{itemize}
+		\tightlist
+		\item
+		Evaluation for the correctness of suggested positions for \glspl{uav}. We suppose that the framework is intended to optimize positions for \acrshort{uavbs}, but in the experiment we use \glspl{ap} placed on the ground instead.
+		\item
+		Measurement of accuracy, stability, and performance of the optimization algorithms.
+	\end{itemize}
+	
 \end{enumerate}
 
 
 \subsection{Main information}\label{main-information}
 
-The main purpose of the experiment is to optimize the location of \glspl{access_point} in a such way that network throughput and \acrshort{rss} of \glspl{ue} is maximized.
+The main purpose of the experiment is to optimize the location of \glspl{access_point} in such a way that network throughput and \acrshort{rss} of \glspl{ue} is maximized.
 
-For that, we design the experiment with the following way:
+For that, we design our experiment in the following way:
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  \gls{ap} located in the space without any obstacles. They are surrounded by
-  \glspl{ue}.
-\item
-  \glspl{ue} connect to \glspl{ap}. \acrshort{rss} and throughput are evaluated via specially designed experimental software.
-\item
-  \Glspl{ue} send messages to central server.
-\item
-  An operator has access to control interface, where he can analyze received data and run optimization algorithms to find out the best positions for \glspl{ap}.
-\item
-  Once an better suggested position for \gls{ap} is found, the \gls{ap} will be moved there.
-\item
-  Experiment goes to the third step and repeats until no significant improvement regarding \acrshort{rss} and speed rate will be observed.
+	\def\labelenumi{\arabic{enumi}.}
+	\tightlist
+	\item
+	\gls{ap} located in the space without any obstacles. They are surrounded by
+	\glspl{ue}.
+	\item
+	\glspl{ue} connect to \glspl{ap}. \acrshort{rss} and throughput are evaluated via specially designed framework (combination of \gls{gps_tracker}, \gls{gps_android}, \gls{gps_frontend}).
+	\item
+	\Glspl{ue} sends messages to the central server.
+	\item
+	An operator has access to a control interface, where he can analyze received data and run optimization algorithms to find out the best positions for \glspl{ap}.
+	\item
+	Once a better-suggested position for \gls{ap} is found, the \gls{ap} will be moved there.
+	\item
+	The experiment goes to the third step and repeats until no significant improvement regarding \acrshort{rss} and speed rate will be observed.
 \end{enumerate}
 
 The experiment repeated three times with different initial positions. Test sets:
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-Near-Optimal (\glspl{ap} are equidistant from \glspl{ue}  according to K-Means), described in Section \ref{near-optimal-layout}.
-\item
-Uniform (\glspl{ap} has the same distance to \gls{command_n_center}), described in Section \ref{uniform-layout}.  
-\item
-Sub-Optimal (\glspl{ap} are surrounded by \glspl{ue}), described in Section \ref{sub-optimal-layout}.
-
-
+	\def\labelenumi{\arabic{enumi}.}
+	\tightlist
+	\item
+	Near-Optimal (\glspl{ap} are equidistant from \glspl{ue}  according to K-Means), described in Section \ref{near-optimal-layout}.
+	\item
+	Uniform (\glspl{ap} has the same distance to \gls{command_n_center}), described in Section \ref{uniform-layout}.  
+	\item
+	Sub-Optimal (\glspl{ap} are surrounded by \glspl{ue}), described in Section \ref{sub-optimal-layout}.
+	
+	
 \end{enumerate}
 
 For each test case, we expect that:
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  Minimization of the distance between \glspl{ue} and \glspl{ap} will lead to \glspl{rss} gain and throughput increase.
-\item
-  The interference effect may be visible - in the sub-optimal
-  placements, it should decrease the throughput;
+	\def\labelenumi{\arabic{enumi}.}
+	\tightlist
+	\item
+	Minimization of the distance between \glspl{ue} and \glspl{ap} will lead to \glspl{rss} gain and throughput increase.
+	\item
+	The interference effect may be visible - in the sub-optimal
+	placements, it should decrease the throughput;
 \end{enumerate}
