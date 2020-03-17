@@ -8,7 +8,7 @@ We aimed to find optimized positions for the \glspl{ue} in three cases (Sub-Opti
 
 We decided to reduce the area layout to 25x25 meters.
 
-\glspl{ue} had initial coordinates shown in Table \ref{tab:exp4-initial-coordinates-ues}.
+We use one smartphone with a special program which can precisely locate position. Then we placed the phone where \glspl{ue} and \glspl{ap} were, that helped us to find out the initial positions. These coordinates for \glspl{ue} are shown in Table \ref{tab:exp4-initial-coordinates-ues}. We use \texttt{decimal degrees} for coordinates.
 
 \begin{longtable}[]{@{}ll@{}}
 	\caption{Initial coordinates for \glspl{ue}}\tabularnewline
@@ -16,12 +16,12 @@ We decided to reduce the area layout to 25x25 meters.
 	Unique ID & Coordinates\tabularnewline
 	\midrule
 	\endhead
-	f072f812f48ce468 & (50.4056203, 10.5626057)\tabularnewline
-	eb0b54819c69cf0c & (50.4056230, 10.5626126)\tabularnewline
-	27349a2cde6592df & (50.4056445, 10.5625865)\tabularnewline
-	51336504999bc1ca & (50.40567855, 10.5625238)\tabularnewline
-	b1c225280d0ed13f & (50.4056924, 10.5624943)\tabularnewline
-	\bottomrule
+	f072f812f48ce468 & 50.6823458, 10.94051806\tabularnewline
+	eb0b54819c69cf0c & 50.6824625, 10.9403367\tabularnewline
+	27349a2cde6592df & 50.6822786, 10.94057\tabularnewline
+	51336504999bc1ca & 50.6822861, 10.940590\tabularnewline
+	b1c225280d0ed13f & 50.6824403, 10.940343889\tabularnewline
+	abb76773bdee4fa0 & 50.6824789, 10.940261944\tabularnewline
 	\label{tab:exp4-initial-coordinates-ues}
 \end{longtable}
 
@@ -34,8 +34,8 @@ The initial coordinates for \glspl{ap} are shown in Table \ref{tab:exp4-initial-
 	AP & Coordinates\tabularnewline
 	\midrule
 	\endhead
-	AP1 & (50.4056741, 10.5625129)\tabularnewline
-	AP2 & (50.4056339, 10.5625975)\tabularnewline
+	AP1 & 50.6823778, 10.94054861\tabularnewline
+	AP2 & 50.6824281, 10.940313611\tabularnewline
 	\bottomrule
 	\label{tab:exp4-initial-coordinates-aps}
 \end{longtable}
@@ -57,7 +57,7 @@ The experiment is divided into four parts:
 \item
   11:08 - 11:12 - Near-Optimal case
 \item
-  11:12 - 11:15 Sub-Optimal to compare to the suggested positions
+  11:12 - 11:15 - Sub-Optimal to compare the suggested positions
 \end{itemize}
 
 \subsubsection{Sub-Optimal case}
@@ -102,10 +102,26 @@ Figure \ref{fig:signal-quality-changes-near-optimal} demostrates that measured \
 \label{fig:signal-quality-changes-near-optimal}
 \end{figure}
 
-\subsubsection{Comparison between Sub-Optimal case, and the suggested
+\subsubsection{Comparison between real coordinates in Sub-Optimal case lauout and real positions
 positions}
 
-To check the validity of \glspl{uav} layout optimization algorithm, we place the \glspl{ap} in a Sub-Optimal case position. Figure \ref{fig:ues-positions-for-optimization} represents the most recent positions  of \glspl{ue} as input data used for optimization tasks.
+To check the validity, we place the \glspl{ap} in a Sub-Optimal case position. Figure \ref{fig:ues-positions-for-optimization} represents the most recent positions  of \glspl{ue} as input data used for optimization tasks. The exact coordinates are presented in Table \ref{tab:exp4-sub-optimal-last-received-coordinates-ues}.
+
+\begin{longtable}[]{@{}ll@{}}
+	\caption{The last received coordinates for \glspl{ue} by \gls{gps_android}}\tabularnewline
+	\toprule
+	Unique ID & Coordinates\tabularnewline
+	\midrule
+	\endhead
+	27349a2cde6592df* & 50.68206, 10.94044\tabularnewline
+	51336504999bc1ca* & 50.68206, 10.94044\tabularnewline
+	f072f812f48ce468* & 50.6823, 10.9406\tabularnewline
+	b1c225280d0ed13f* & 50.68243, 10.94035\tabularnewline
+	abb76773bdee4fa0* & 50.6823, 10.93987\tabularnewline
+	eb0b54819c69cf0c* & 50.68253, 10.93984\tabularnewline
+	\bottomrule
+	\label{tab:exp4-sub-optimal-last-received-coordinates-ues}
+\end{longtable}
 
 \begin{figure}[H]
 	\centering
