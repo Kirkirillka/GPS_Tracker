@@ -1,50 +1,30 @@
 \section{Experiment preparation procedures}\label{experiment-preparation-procedures}
 
-In this section, we specify the steps to be performed before the main
-part of the experiment.
-
 These steps influence experiment parameters. We aim to take into account
 environmental conditions and to minimize noise components.
 
-\subsection{Steps}\label{steps}
 
-\begin{longtable}[]{@{}ll@{}}
-\toprule
-\begin{minipage}[b]{0.2\columnwidth}\raggedright
-Step\strut
-\end{minipage} & \begin{minipage}[b]{0.7\columnwidth}\raggedright
-Description\strut
-\end{minipage}\tabularnewline
-\midrule
-\endhead
-\begin{minipage}[t]{0.2\columnwidth}\raggedright
-Prepare hardware and software bundles\strut
-\end{minipage} & \begin{minipage}[t]{0.7\columnwidth}\raggedright
-Because the experiment would be complicated from the control point of
-view, this is required to prepare and automate as much as possible\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.2\columnwidth}\raggedright
-Install \gls{gps_android} on \glspl{ue}\strut
-\end{minipage} & \begin{minipage}[t]{0.7\columnwidth}\raggedright
-Before the experiment, software must be already installed on \gls{android} phones to
-ensure compatibility\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.2\columnwidth}\raggedright
-Check the weather\strut
-\end{minipage} & \begin{minipage}[t]{0.7\columnwidth}\raggedright
+\subsection{Preparation steps}\label{steps}
+
+\subsubsection{Prepare hardware and software bundles}
+
+Early preparation will solve possible problems during real experiment.
+
+\subsubsection{Install \gls{gps_android} on \glspl{ue}}
+
+Before the experiment, software must be already installed on \gls{android} phones to ensure compatibility.
+
+\subsubsection{Check the weather condition}
+
 Specific environment condition (such as snow or rain) may damage equipment
-and disrupt experiment result\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.2\columnwidth}\raggedright
-Check the \gls{rss} attenuation\strut
-\end{minipage} & \begin{minipage}[t]{0.7\columnwidth}\raggedright
-This parameter will influence the area used to locate \glspl{ap} and \glspl{ue}
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.2\columnwidth}\raggedright
-Measure the experiment area and place \glspl{ue} on the field\strut
-\end{minipage} & \begin{minipage}[t]{0.7\columnwidth}\raggedright
-In case if \gls{rss} is high enough there is no reason to use a smaller area
-because the radio link quality would remain the same\strut
-\end{minipage}\tabularnewline
-\bottomrule
-\end{longtable}
+and disrupt experiment result.
+
+\subsubsection{Check the \gls{rss} attenuation}
+
+This parameter will influence size of area used to place \glspl{ap} and \glspl{ue}.
+
+
+\subsubsection{Measure the experiment area and place \glspl{ue} on the field}
+
+In case if \gls{rss} is high enough (level of highness evaluated by expert method) there is no reason to use a smaller area
+because the radio link quality would remain the same.

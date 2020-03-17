@@ -16,7 +16,7 @@ From the general system engineering perspective, the experiment is a set
 of wireless-connected nodes (via \gls{wifi} 802.11n (300 mbps)) which measures the receiving signal strength and measure the throughput of the link to upload and download.
 
 Preliminary tests in default layout showed one restrictions on experiment activity: network bandwidth
-between \gls{ue} and \acrshort{access_point} measurements with \texttt{iperf3} showed about \textbf{30 MBit/s} speed rate. On the contrary, speed on the bearer \gls{ue} - \acrshort{access_point} - \gls{command_n_center} showed about \textbf{12-15 MBit/s} speed rate. This is significant drop in network rate, probably, because of transmission on the radio channel two-times. The problem  is not in the \gls{wifi} itself, but in the fact that radio (wireless) link is not as reliable compared to a wired one, so the active bandwidth measurement part must be located as close to the \glspl{ap} as possible - in our case, the \acrshort{ftp} server is located in \acrshort{access_point}.
+between \gls{ue} and \acrshort{access_point} measurements with \texttt{iperf3} showed about \textbf{30 MBit/s} speed rate. On the contrary, speed on the bearer \gls{ue} - \acrshort{access_point} - \gls{command_n_center} showed about \textbf{12-15 MBit/s} speed rate. This is significant drop in network rate, probably, because of transmission on the radio channel two-times. The problem  is not in the \gls{wifi} itself, but in the fact that radio (wireless) link is not as reliable compared to a wired one, so the active bandwidth measurement part must be located close to the \glspl{ap},thus \acrshort{ftp}-server placed in \gls{ap}.
 
 Each \gls{ue} has   \gls{gps_android} installed. \Gls{access_point} create a \gls{wifi} access point named ``\textbf{ap}''.
 \Gls{command_n_center} runs a wireless point named
@@ -33,10 +33,10 @@ Figure \ref{fig:deployment-diagram} shows components and their communication in 
 	\label{fig:deployment-diagram}
 \end{figure}
 
-We use virtual machines for running software components. It possible to 
-have performance decrease because of running in containers, however more powerful
+We use virtual machines for running software components. It is possible to 
+have performance decrease because of containers, however, more powerful
 hardware resources compensates those possible consequences of additional 
-run-time level. Hypervisor can pass through access to physical equipment directly into guest operation system. To automate deployment of components, \gls{ansible} is used.
+run-time level. Hypervisor can pass-through access to physical equipment directly into guest operation system. To automate deployment of components, we use \gls{ansible}.
 
 To start up a \gls{wifi} access point, it requires to have two packages in \acrshort{os}:
 
@@ -54,7 +54,8 @@ To start up a \gls{wifi} access point, it requires to have two packages in \acrs
 
 Figure \ref{fig:network-diagram} shows network configuration. The \glspl{ap} subnet has identical settings, they have an internal \gls{dhcp} server to provide dynamic addresses for connected \glspl{ue}. To prevent address collisions and to simplify routing, the \glspl{ap} perform masquerading (\acrshort{snat}/\acrshort{dnat}) on the output interface (connection to \gls{command_n_center}). Consequently, \gls{command_n_center} cannot access the \glspl{ue} directly, but \glspl{ue} will always reach \gls{command_n_center} because \acrshort{dhcp} server sets the default gateway IP address.
 
-\gls{command_n_center} has another \acrshort{dhcp} server to set \glspl{ap} dynamic addresses. Because network address for \gls{command_n_center} is different from the internal networks of \gls{wifi} adapters in the \glspl{ap}, there is no network collision.
+\gls{command_n_center} has another \acrshort{dhcp} server to set \glspl{ap} dynamic addresses. When \glspl{ap} connect to wireless point
+``\textbf{cnc}'' they receive a dynamic IP address by \gls{command_n_center}.  Because network for \gls{command_n_center} is different from the internal networks of \gls{wifi} adapters in the \glspl{ap}, there is no network collision.
 
 Finally, each connected \gls{ue} can access static \gls{command_n_center} address \texttt{192.168.20.1}
 and local \acrshort{access_point} gateway \texttt{192.168.10.1}.

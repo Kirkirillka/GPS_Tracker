@@ -51,62 +51,67 @@ The experiment is divided into four parts:
 \begin{itemize}
 \tightlist
 \item
-  Before 11:05 - sub-optimal case
+  Before 11:05 - Sub-Optimal case
 \item
-  11:05 - 11:08 - uniform case
+  11:05 - 11:08 - Uniform case
 \item
-  11:08 - 11:12 - near-optimal case
+  11:08 - 11:12 - Near-Optimal case
 \item
-  11:12 - 11:15 sub-optimal to compare to the suggested positions
+  11:12 - 11:15 Sub-Optimal to compare to the suggested positions
 \end{itemize}
 
-\subsubsection{Sub-optimal case}
+\subsubsection{Sub-Optimal case}
 
 The first case is the most profitable from the signal quality point of
 view. The \glspl{ap} are implicitly located at the same distance from the
-connected \glspl{ue}. The level of interference is low.
+connected \glspl{ue}. Signal changes can be seen in Figure \ref{fig:signal-quality-changes-sub-optimal} - despite this case is expected to have the best link parameters, \gls{rss} is unstable for \glspl{ue}, possible reason for this - differences in phone generations, e.g. modern phones also include more advanced \gls{wifi} model.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=\linewidth,keepaspectratio]{images/Exp4_Suboptimal.png}
-\caption{Signal Quality changes in Sub-optimal case}
+	\includegraphics[width=0.7\linewidth,keepaspectratio]{images/Exp4_Suboptimal.png}
+\caption{Signal Quality changes in Sub-Optimal case}
+\label{fig:signal-quality-changes-sub-optimal}
 \end{figure}
 
 Despite the \glspl{ap} were located close to \glspl{ue}, the \gls{rss} level varies noticeably. However, only in this case the speed and signal quality measurement were the most stable among all cases.
 
 \subsubsection{Uniform case}
 
-In this case, the \glspl{ap} are located with equal distance from the \gls{command_n_center} on the same line.
+In this case, the \glspl{ap} are located with equal distance from the \gls{command_n_center}.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.5\linewidth,keepaspectratio]{images/Exp4_Uniform.png}
+	\includegraphics[width=0.7\linewidth,keepaspectratio]{images/Exp4_Uniform.png}
 \caption{Signal Quality changes in Uniform case}
+\label{fig:signal-quality-changes-uniform-optimal}
 \end{figure}
 
-Link measurement became more smooth, but the speed test failed
-sometimes.
+Figure \ref{fig:signal-quality-changes-uniform-optimal} depict \gls{rss} changes in Uniform case. Link measurement are more steady and keep on the same level for the majority of \gls{ue}, however we encountered speed test failed.
 
 \subsubsection{Near-optimal case}
 
 The third case simulates the situation where the \glspl{ap} are placed
 uniformly far from centers of \glspl{ue} clusters.
 
+Figure \ref{fig:signal-quality-changes-near-optimal} demostrates that measured \gls{rss} lower than in Uniform case because of larger distance between \glspl{ap} and \glspl{ue} approximately on 10-15 dBm.
+
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.5\linewidth,keepaspectratio]{images/Exp4_Near_Optimal.png}
+	\includegraphics[width=0.7\linewidth,keepaspectratio]{images/Exp4_Near_Optimal.png}
 \caption{Signal Quality changes in Near-optimal case}
+\label{fig:signal-quality-changes-near-optimal}
 \end{figure}
 
-\subsubsection{Comparison between Sub-optimal case, and the suggested
+\subsubsection{Comparison between Sub-Optimal case, and the suggested
 positions}
 
-To check the validity of \glspl{uav} layout optimization algorithm, we place the \glspl{ap} in a Sub-optimal case position.
+To check the validity of \glspl{uav} layout optimization algorithm, we place the \glspl{ap} in a Sub-Optimal case position. Figure \ref{fig:ues-positions-for-optimization} represents the most recent positions  of \glspl{ue} as input data used for optimization tasks.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.5\linewidth,keepaspectratio]{images/Exp4_UEs_Location_to_optimize.png}
 \caption{The \glspl{ue} coordinates used to optimize \glspl{uav} positions}
+\label{fig:ues-positions-for-optimization}
 \end{figure}
 
 The coordinates for \textbf{27349a2cde6592df} and
@@ -122,39 +127,43 @@ The most recent received coordinates for \glspl{ue} used to schedule an optimiza
   Estimation method: ``clustering''
 \end{itemize}
 
-Using of ``simplex'' method against two clusters is not possible, produced result is unreliable.
+The ``simplex'' method against two clusters is not possible. Instead we use 'clustering' method which uses K-means clusterization algorithm. Figure \ref{fig:ues-positions-and-suggested-optimal-positions-for-uavs} demonstrate positions for \glspl{ue} as blue dots and suggested coordinates for two \glspl{uav} as black box.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.5\linewidth,keepaspectratio]{images/Expt4_Estimated UAVs_locations.png}
-\caption{Black dots represent suggested points as the most optimal
-position for \glspl{uav}}
+\caption{Result of optimization task to obtain optimal positions for \glspl{uav}}
+\label{fig:ues-positions-and-suggested-optimal-positions-for-uavs}
 \end{figure}
 
-The suggested optimal coordinates for \glspl{ap}:
+The suggested optimal coordinates for \glspl{ap} are shown in Table \ref{tab:optimal-coordinates}.
 
 \begin{longtable}[]{@{}lll@{}}
+\caption{Suggested optimal positions for \glspl{uav} }\tabularnewline
 \toprule
-AP & Real coordinates & Optimal coordinates\tabularnewline
+AP & Real coordinates & Suggested coordinates\tabularnewline
 \midrule
 \endhead
 AP1 & (50.4056741, 10.5625129) & (50.68221, 10.94046)\tabularnewline
 AP2 & (50.4056339, 10.5625975) & (50.68245, 10.93986)\tabularnewline
 \bottomrule
+\label{tab:optimal-coordinates}
 \end{longtable}
+
+Figure \ref{fig:optimized-coordinates-on-logical-map} shows on the map real and suggested optimal coordinates for \gls{uav}. Clearly seen these new positions can drop out connected clients because of large distance. Figure \ref{fig:optimized-coordinates-satellite-map} depict these coordinates on the map from satellite point of view.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth,keepaspectratio]{images/Expt4_Result_of_optimization_map_with_names.png}
-\caption{Original and Optimized Coordinates: A map with tags. Clearly
-seen the suggested ``optimal'' position can drop out connected clients
-because of a large distance.}
+\caption{Original and Optimized Coordinates: A map with tags.}
+\label{fig:optimized-coordinates-on-logical-map}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth,keepaspectratio]{images/Expt4_Result_of_optimization_sattelite.png}
 \caption{Original and Optimized Coordinates for \glspl{uav}: A picture from satellite}
+\label{fig:optimized-coordinates-satellite-map}
 \end{figure}
 
 ``Clustering'' algorithm performs simple K-means cluster calculation
