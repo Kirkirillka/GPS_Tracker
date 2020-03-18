@@ -9,7 +9,7 @@ The following diagram represents the main component in the framework divided by 
 - Storage Subsystem
 - UI Subsystem
 
-![Level 1 Main scope](schemes/classes/ClassDiagram-overview.png)
+![Level 1 Main scope](schemes/classes/ClassDiagram_overview.png)
 
 ### Motivation
 

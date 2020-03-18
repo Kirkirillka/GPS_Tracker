@@ -1,0 +1,59 @@
+
+\newpage
+\section{Risk and technical debt}\label{risk-and-technical-debt}
+
+\begin{longtable}[]{@{}ll@{}}
+\caption{Risk and technical debt}\tabularnewline
+\toprule
+\begin{minipage}[b]{0.1\columnwidth}\raggedright
+Number\strut
+\end{minipage} & \begin{minipage}[b]{0.8\columnwidth}\raggedright
+Description\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.1\columnwidth}\raggedright
+1\strut
+\end{minipage} & \begin{minipage}[t]{0.8\columnwidth}\raggedright
+There is still a lack of testing in both GPS\_Frontend and
+GPS\_Tracker.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.1\columnwidth}\raggedright
+2\strut
+\end{minipage} & \begin{minipage}[t]{0.8\columnwidth}\raggedright
+Currently, MQTT enabled protocol is not stable in GPS\_Android, we
+haven't figured out why GPS\_Tracker sometimes doesn't correctly receive
+messages, requires to find out the reason why. So, better to rely on
+HTTP protocol sending method.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.1\columnwidth}\raggedright
+3\strut
+\end{minipage} & \begin{minipage}[t]{0.8\columnwidth}\raggedright
+GPS\_Frontend might have a long list of unnecessary dependencies that
+influences the final size of code supplied to users.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.1\columnwidth}\raggedright
+4\strut
+\end{minipage} & \begin{minipage}[t]{0.8\columnwidth}\raggedright
+Android programming requires some pattern to be followed. Since there
+are limitations of programming approaches to be used as well as lack of
+proper programming experience, GPS\_Android should be reviewed and
+optimized.\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.1\columnwidth}\raggedright
+5\strut
+\end{minipage} & \begin{minipage}[t]{0.8\columnwidth}\raggedright
+After ``push continuously'', switching off that button actually doesn't
+stop background task, therefore there is still task to test speed and
+send messages\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.1\columnwidth}\raggedright
+6\strut
+\end{minipage} & \begin{minipage}[t]{0.8\columnwidth}\raggedright
+``Simplex'' estimation method cannot converge for 2 clusters and produce
+the unreliable result\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
+
+\newpage

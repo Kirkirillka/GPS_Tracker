@@ -1,0 +1,62 @@
+\subsection{Decision on GPS\_Tracker techniques
+development}\label{decision-on-gps_tracker-techniques-development}
+
+\subsubsection{Description}\label{description}
+
+The GPS\_Tracker is implemented in Python language. This is a dynamic
+interpreting language. That is known the performance is not so perfect
+compared to static compiled languages, but it has higher changeability
+property.
+
+Another problem is its dynamic nature, programmers should add more codes
+to check that the variables they are working on have the right type,
+right values and so one.
+
+Also, Python doesn't have a proper parallel threading mechanism due to
+GIL.
+
+To summarize, there is a set of problems:
+
+\begin{itemize}
+\tightlist
+\item
+  Possible performance degradation.
+\item
+  Ambiguous interfaces, more safe checks.
+\item
+  Parallel execution, scalability is not so high.
+\end{itemize}
+
+\subsubsection{Decision}\label{decision}
+
+In order to mitigate the consequences of using Python as the main
+language for GPS\_Tracker we decided:
+
+\begin{itemize}
+\tightlist
+\item
+  Use additional code documentation and code annotation to clarify the
+  meaning of Python code, helps IDE to derive expected behavior and
+  check code validity.
+\item
+  Use Worker architecture pattern (\texttt{Celery} library). That will
+  help to add scalability to task execution and simplify parallel code
+  programming.
+\item
+  Use JetBrain Pycharm IDE as the main IDE for programmers to use
+\end{itemize}
+
+\subsubsection{Status}\label{status}
+
+Accepted
+
+\subsubsection{Consequences}\label{consequences}
+
+\begin{itemize}
+\tightlist
+\item
+  Worker pattern implemented in \texttt{Celery} requires additional
+  component to store information about registered tasks and perform
+  synchronization between workers. RabbitMQ is a message queue used to
+  store that information.
+\end{itemize}
