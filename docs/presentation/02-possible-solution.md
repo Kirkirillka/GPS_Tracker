@@ -2,7 +2,7 @@
 
 An obvious solution here is to design an framework which can help us to design and run an experiment to test correctness of a placement algorithm.
 
-A brief lookup showed main researches are focused on algorithms itself, 
+Main researches are focused on algorithms itself,
 
 Initially, we built up an general context of the framework, how it can be used, which actors exist, what are they interested in and why. Here is a figure of generalized use-case the framework must implement.
 
