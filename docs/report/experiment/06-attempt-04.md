@@ -1,6 +1,6 @@
 # Experiment 4. 03.03.2020
 
-It took place on 03.03.2020. The weather condition is appropriate for running experiments, despite there was rain.
+It took place on 03.03.2020. The weather condition was appropriate for running experiments, despite that it was raining lightly.
 
 For the fourth attempt, we implement message sending only via HTTP. The main aim of the experiment is to try to place the UEs in three cases (sub-optimal, uniform, near-optimal). Phones forced to push their channel quality metric to the server for each case. On the server-side, GPS_Tracker tries to find optimal positions for UAVs supposing there are 2 AP is required.
 
@@ -8,9 +8,9 @@ We decided to reduce the area layout to 25x25 meters.
 
 ## Results
 
-THe HTTP protocol helps us to receive messages more reliable, although there was a problem, e.g. the far from AP a UE is the less probable the message receiving. Tests in [experiment 3](06-attempt-03.md) showed the reliability of sending over HTTP. However, we decided to continue our experiment.
+The HTTP protocol helps us to receive messages more reliable, although there was a problem, e.g. the further UE is located from AP, the less is probable the reception of the message. Tests in [experiment 3](06-attempt-03.md) showed the reliability of sending over HTTP. However, we decided to continue our experiment.
 
-We found out that network speed measurement was not reliable, uplink tests throw the timeout exception in case of larger distance between a UE and used AP.
+We found out that network speed measurement was not reliable, uplink tests threw the timeout exception in case of larger distance between a UE and used AP, since the communication took longer and the session finished.
 
 ![Experiment 4: Initial Layout](images/05-cases-description-Exp-4-Initial-Layout.png)
 
@@ -41,7 +41,7 @@ The first case is the most profitable from the signal quality point of view. The
 
 ![Signal Quality changes in Suboptimal case](images/Exp4_Suboptimal.png)
 
-Despite the APs were located close to UEs, the RSS level varies markedly. However, only in this case the speed and signal quality measurement were the most stable among all cases.
+Despite the APs were located close to UEs, the RSS level varies noticeably. However, only in this case the speed and signal quality measurement were the most stable among all cases.
 
 ### Uniform case
 
@@ -54,7 +54,7 @@ Link measurement became more smooth, but the speed test failed sometimes.
 
 ### Near-optimal case
 
-![Suboptimal Layout](images/05-cases-description-Exp4-Near-Optimal.png)
+![Near-optimal Layout](images/05-cases-description-Exp4-Near-Optimal.png)
 
 The third case simulates the situation where the APs are placed uniformly far from centers of UEs' clusters.
 
@@ -71,7 +71,7 @@ The given coordinates for **APs**:
 | AP1 | (50.4056741, 10.5625129) |
 | AP2 | (50.4056339, 10.5625975) |
 
-![The APs coordinates used to optimize UAVs positions](images/Exp4_UEs_Location_to_optimize.png)
+![The UEs coordinates used to optimize UAVs positions](images/Exp4_UEs_Location_to_optimize.png)
 
 The coordinates for **27349a2cde6592df** and **51336504999bc1ca** overlap.
 

@@ -1,0 +1,133 @@
+\section{Experiment requirement}\label{experiment-requirement}
+
+\subsection{Hardware equipment}\label{hardware-equipment}
+
+\begin{itemize}
+\tightlist
+\item
+  6 cellphones with \gls{android} \acrshort{os} (version 5.0 and above). Phones have a dedicated \gls{gnss} module and an \gls{wifi} adapter.
+\item
+  3 external \gls{wifi} adapters with managed-mode capability.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Model: AWUS036NEH
+  \item
+    Height of antenna  for \gls{command_n_center}: 17.2 cm
+  \item
+    Height of antenna  for \acrshort{ap}: 11 cm
+  \end{itemize}
+\item
+  3 Laptops
+\item
+  One ruler
+\end{itemize}
+
+\subsection{Software equipment}\label{software-equipment}
+
+\subsubsection{For \glsentrytext{ue} }
+
+\begin{itemize}
+\tightlist
+\item
+  \gls{android}-enabled smartphone (version 5.0 and above).
+
+  \begin{itemize}
+  \tightlist
+  \item
+  	\Gls{gps_android} installed.
+    \end{itemize}
+\end{itemize}
+
+\subsubsection{For \glsentrytext{command_n_center} }\label{for-command-center-cnc}
+
+\begin{itemize}
+\tightlist
+\item
+  The host machine
+
+\begin{itemize}
+	\tightlist
+	\item
+	Any Debian-based \acrshort{os} (Debian, Ubuntu, etc.).
+	\item
+	Oracle VirtualBox hypervisor + VirtualBox Extension Pack latest version installed.
+	\item
+	\gls{python} + \gls{ansible} (for convenient configuration) installed.
+	\item
+	\texttt{openssh-server} package installed.
+\end{itemize}
+\item
+  The virtual \gls{command_n_center} machine
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{dnsmasq}, \texttt{hostapd} packages installed.
+  \item
+    \texttt{openssh-server} package installed.
+  \item
+    \texttt{docker} and \texttt{docker-compose} packages installed.
+  \item
+  	\texttt{iperf3} package installed.
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \gls{mongodb} container.
+    \item
+      \gls{rabbitmq} container.
+    \item
+      \acrshort{mqtt} \gls{broker} container.
+    \item
+      \gls{python} container.
+    \item
+      \gls{nginx} container.
+    \item
+      \gls{nodejs} container.
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{For \glsentrytext{access_point}}\label{for-aps}
+
+\begin{itemize}
+\tightlist
+\item
+The host machine
+
+\begin{itemize}
+	\tightlist
+	\item
+	Any Debian-based \acrshort{os} (Debian, Ubuntu, etc.).
+	\item
+	Oracle VirtualBox hypervisor + VirtualBox Extension Pack latest version installed.
+	\item
+	\gls{python} + \gls{ansible} (for convenient configuration) installed.
+	\item
+	\texttt{openssh-server}.
+\end{itemize}
+\item
+  The virtual \acrshort{ap} machine
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Any Debian-based \acrshort{os} (Debian, Ubuntu, etc.).
+  \item
+    \texttt{dnsmasq}, \texttt{hostapd} installed.
+  \item
+    \texttt{iperf3} installed.
+  \item
+    \texttt{openssh-server} installed.
+  \item
+    \texttt{docker} and \texttt{docker-compose} installed.
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \acrshort{ftp}-server container.
+    \end{itemize}
+  \end{itemize}
+\end{itemize}

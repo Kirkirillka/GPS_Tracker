@@ -1,0 +1,76 @@
+% !TeX program = pdflatex
+
+\documentclass{article}
+\usepackage [utf8] {inputenc} 
+
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{amsmath}
+
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+
+\usepackage[toc,acronym]{glossaries}
+\loadglsentries{glossary}
+\makeglossaries
+
+\usepackage[
+backend=bibtex]{biblatex}
+\bibliography{bibliography.bib}
+
+
+\providecommand{\tightlist}{%s
+	\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\title{Experiment Report: \\
+	"Performance Analysis Framework For Base Station Placement Using IEEE 802.11"
+}
+\author{Kukartsev Kirill,Rustam Khakov, Zufar Makhmutov }
+
+\begin{document}
+	
+	\maketitle
+	
+	\clearpage
+	
+	\tableofcontents
+	\newpage
+	
+	\input{01-formal-description.md.tex}
+	\input{04-experiment-description.md.tex}
+	\input{02-requirements.md.tex}
+	\input{03-preparation-procedures.md.tex}
+	\input{05-cases-description-01.md.tex}
+	\input{05-cases-description-02.md.tex}
+	\input{05-cases-description-03.md.tex}
+	\input{06-00-experimental_phase.md.tex}
+	\input{06-01-attempt.md.tex}
+	\input{06-02-attempt.md.tex}
+	\input{06-attempt-03.md.tex}
+	\input{06-attempt-04.md.tex}
+	\input{07-results.md.tex}
+	
+	\newpage
+	
+	\printglossary
+	\clearpage
+	
+	\printglossary[type=\acronymtype]
+	
+	\clearpage
+	
+	\printbibliography[heading=bibintoc,title={References}]
+	
+	\clearpage
+	
+	\begin{appendix}
+		\listoffigures
+		\listoftables
+	\end{appendix}
+	
+
+	
+\end{document}
