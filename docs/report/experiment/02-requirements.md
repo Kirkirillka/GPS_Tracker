@@ -10,7 +10,7 @@
   - Antenna's height for AP: 11 cm
 - 3 Laptops.
 - One ruler.
-- Optionally, 6-10 carton bags for hardware safety against the weather.
+- Optionally, means against extreme temperatures, humidity, and so on.
 
 ## Software Equipment
 
@@ -25,7 +25,7 @@
 - Host OS
   - Any Debian-based OS (Debian, Ubuntu, etc.).
   - `VirtualBox` + `VirtualBox Extention Pack` latest version.
-  - `Python3` + `Ansible` installed.
+  - `Python3` + `Ansible` (for convenient configuration) installed.
   - `openssh-server`.
 - The virtual CnC machine
   - `dnsmasq`, `hostapd` installed.
@@ -40,7 +40,7 @@
 
 ### For APs
 
-- Host OS
+- The virtual AP machine
   - Any Debian-based OS (Debian, Ubuntu, etc.).
   - `dnsmasq`, `hostapd` installed.
   - `iperf3` installed.

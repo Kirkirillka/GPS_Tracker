@@ -1,0 +1,57 @@
+\documentclass{article}
+
+
+\usepackage{graphicx}
+\usepackage{siunitx}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{hyperref}
+
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue,
+	filecolor=magenta,      
+	urlcolor=cyan,
+}
+
+
+\providecommand{\tightlist}{%
+	\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\title{Performance analysis framework for base station placement using IEEE 802.11}
+\author{Kukartsev Kirill, Zufar Makhmutov, Rustam Khakov}
+
+
+\begin{document}
+	\maketitle
+	
+	\newpage
+	
+	\tableofcontents
+
+	
+
+	\newpage
+	
+	\input{01_01_introduction.tex}
+	\input{02_01_architecture_constraints.tex}
+	\input{03_01_context_and_scope.md.tex}
+	\input{04_01_solution_strategy.md.tex}
+	\input{05_01_building_blocks.md.tex}
+	\input{07_01_deployment_view.md.tex}
+	\input{08_01_crosscutting_concepts.md.tex}		
+	\input{09_00_architecture_decisions.md.tex}
+	\input{09_01_android-justification.md.tex}		
+	\input{09_02_gps_frontend_development.md.tex}
+	\input{09_03_backend_development.md.tex}
+	\input{09_04_mongodb-justification.md.tex}
+	\input{11_01_risk_and_debt.md.tex}
+	
+	\begin{appendix}
+		\listoffigures
+		\listoftables
+	\end{appendix}
+	
+\end{document}

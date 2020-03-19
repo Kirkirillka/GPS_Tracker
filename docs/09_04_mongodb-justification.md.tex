@@ -1,0 +1,54 @@
+\subsection{Decision on the storage component -
+MongoDB}\label{decision-on-the-storage-component---mongodb}
+
+\subsubsection{Description}\label{description}
+
+At the beginning of our group study it was clear all messages from UEs
+must have been stored for further processing/representation graphically
+in CnC.
+
+We decided to use the NoSQL MongoDB database to store messages.
+
+There were some \textbf{aspects} leading us in our way of choice:
+
+\begin{itemize}
+\tightlist
+\item
+  the message structure changed as the project is growing
+\item
+  The JSON message type dictated by Python usage
+\item
+  availability is more important than consistency (ACID)
+\item
+  queries must be fast to collect and represent data in real-time
+\item
+  easy to integrate and use
+\end{itemize}
+
+\subsubsection{Decision}\label{decision}
+
+As a result, MongoDB was selected for the reasons:
+
+\begin{itemize}
+\tightlist
+\item
+  Rustam has experience of using it
+\item
+  fits aspects listed above more than other databases
+\end{itemize}
+
+\subsubsection{Status}\label{status}
+
+Accepted
+
+\subsubsection{Consequences}\label{consequences}
+
+\begin{itemize}
+\tightlist
+\item
+  The query language used in MongoDB is not SQL-compatible, required
+  efforts to learn
+\item
+  There is not strict data schema, you can change the structure of
+  message fields easily, but also it requires more checks for validity.
+\end{itemize}

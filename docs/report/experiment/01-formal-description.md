@@ -12,7 +12,7 @@ The aims of the experiment are:
 - Check the functional properties of the system.
 - System stability, performance and usability measurements in real case scenarios.
 
-2. Optimization algorithms evaluation for UAVs (having Wi-Fi AP) layout optimization.
+2. Evaluation of layout optimization algorithms, which were intended to use on UAVs, but for the experiment we use ground APs.
 
 - Evaluation of correctness of provided optimized positions by the algorithms.
 - Measurement of stability, performance, and usability of the algorithms.
@@ -21,10 +21,10 @@ The aims of the experiment are:
 
 The main purpose of the experiment is to optimize the location of AP's such a way that throughput and RSS of UE's connected to those AP is maximized.
 
-For that we experiment with the following way:
+For that we experiment in the following way:
 
-1. APs located in the space without any obstacles. They are surrounded by UEs.
-2. UEs connected to APs and evaluate RSS and throughput via specially designed software.
+1. APs are located in free space without any obstacles. They are surrounded by UEs.
+2. UEs are connected to APs and evaluate RSS and throughput via our GPS_Android app.
 3. Stored measured records by UEs are sent/copied to the central server.
 4. An operator uses the provided interface to analyze the measurements and run optimization algorithms to find out the best positions for APs.
 5. After the next optimal positions for APs are found, access points moved to the optimized points.
@@ -34,13 +34,14 @@ The experiment repeated three times with different initial APs and UE positions.
 
 Test sets:
 
-1. Suboptimal (APs in between clusters)
+1. Suboptimal (APs are inside of clusters)
+![Main perspective of the experiment](<images/05-cases-description-Sub-optimal-clusters.png>){width=75%}
 2. Near-optimal (APs in clusters according to K-Means.)
 3. Uniform (in the area)
 
 For each test case, we expect that:
 
-1. Minimization of the distance between UEs and APs will lead to RSS gain and throughput increase.
+1. Minimization of the distance between UEs and APs will lead to RSS and throughput increase.
 2. The interference effect may be visible – in the suboptimal placements, it should decrease the throughput;
 
 ## Glossary
