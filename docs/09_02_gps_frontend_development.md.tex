@@ -1,0 +1,145 @@
+\subsection{Decision on GPS\_Frontend techniques
+development}\label{decision-on-gps_frontend-techniques-development}
+
+\subsubsection{Description}\label{description}
+
+The GPS\_Frontend is a UI to access the functions of other components of
+the framework. Thus, it would have complicated behavior. The best-suited
+architecture for that kind of task is Single Page Application (SPA).
+
+There are many possible web frameworks exist that may help to build SPA
+applications but the most famous and functional are:
+
+\begin{itemize}
+\tightlist
+\item
+  Angular
+\item
+  React
+\item
+  Vue.js
+\end{itemize}
+
+\subsubsection{Decision}\label{decision}
+
+Only one person in the team had the experience developing a web
+application with the Vue.js framework.
+
+The team member discussed and decided that:
+
+\begin{itemize}
+\tightlist
+\item
+  Angular has reach functionality, but too complex for that task.
+\item
+  React is more flexible, but requires more time to get working in.
+\item
+  Vue.js is a simple framework with an excellent documentation but has a
+  lack of components in the default configuration. It requires
+  additional libraries and components to design required functions.
+\end{itemize}
+
+Finally, the team decided to use the Vue.js framework as the core for
+\textbf{GPS\_Frontend}.
+
+Also there is a set of dependencies specified:
+
+\begin{itemize}
+\tightlist
+\item
+  ``font-awesome'' - A set of fonts.
+\item
+  ``@fortawesome/fontawesome-free'' - A set of fonts.
+\item
+  ``apexcharts'' - A library do draw figures using Web.
+\item
+  ``axios'' - A library to work with HTTP(S) requests.
+\item
+  ``bootstrap'' - An open source toolkit/framework for developing with
+  HTML, CSS, and JS.
+\item
+  ``bootstrap-vue'' - A wrapper to use Bootstrap components natively in
+  Vue.js.
+\item
+  ``core-js'' - An standard library to extend the number of components
+  and operation.
+\item
+  ``d3v4'' - level JavaScript library for manipulating documents based
+  on data using HTML, SVG, CSS.
+\item
+  ``d3-colorbar'' - An extension to d3 library to work with colors.
+\item
+  ``jquery'' - rich JavaScript library.
+\item
+  ``moment'' - A convenient library to work with time.
+\item
+  ``pc-bootstrap4-datetimepicker'' - a DatetimePicker component
+  compatible with Bootstrap.
+\item
+  ``plotly.js-dist'' - A library do draw figures using Web.
+\item
+  ``portal-vue'' - A Vue component to render your component's template
+  anywhere in the DOM.
+\item
+  ``underscore'' - A JavaScript library that provides a whole mess of
+  useful functional programming helpers without extending any built-in
+  objects.
+\item
+  ``vue'' - The Progressive JavaScript Framework to build web
+  application.
+\item
+  ``vue-apexcharts'' - A wrapper to use ApexChart components natively in
+  Vue.js.
+\item
+  ``vue-axios'' - A wrapper to use Axios components natively in Vue.js.
+\item
+  ``vue-bootstrap-datetimepicker'' - datetimepicker components natively
+  in Vue.js.
+\item
+  ``vue-router'' - An router extension to Vue.js.
+\item
+  ``vuex'' - A storage library extension to Vue.js.
+\end{itemize}
+
+\subsubsection{Status}\label{status}
+
+Accepted
+
+\subsubsection{Consequences}\label{consequences}
+
+Advantages:
+
+\begin{itemize}
+\tightlist
+\item
+  We received a well-designed, good-looking and user-friendly UI.
+\item
+  It can be easily changed and adapted to new requirements.
+\item
+  Rich set of features and further development.
+\item
+  High SPA performance.
+\item
+  UI can be accessed easily from different devices, good portability.
+\end{itemize}
+
+Disadvantages:
+
+\begin{itemize}
+\tightlist
+\item
+  The difficulty of data analysis in JavaScript, that language probably
+  is not the best suit for that kind of task.
+\item
+  Some very complex figures (like Heatmap) may busy the whole program
+  drawing a large dataset.
+\item
+  Due to the big number of components, the JS code compilation takes a
+  relatively long time.
+\item
+  Dependency on the user's web browser.
+\item
+  Vue.js is a young project, it may suffer a lack of functions provided
+  by more matured frameworks.
+\end{itemize}
+

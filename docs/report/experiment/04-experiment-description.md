@@ -2,16 +2,16 @@
 
 ## General perspective
 
-![Main perspective of the experiment](<images/Deployment Diagram-Free-structure_scheme.png>){width=75%}
+![Main scenario of the experiment](<images/Deployment Diagram-Free-structure_scheme.png>){width=75%}
 
-From the general system engineering perspective, the experiment is a set of wireless-connected nodes (via Wi-Fi protocol) which measures the receiving signal strength and measure the throughput of the link to upload and download.
+From the general system engineering perspective, the experiment is a set of wireless-connected nodes (via Wi-Fi protocol 802.11n (300 mbps)) which measures the receiving signal strength and measure the throughput of the link to upload and download.
 
 All connections are wireless on each bearer:
 
 - UE <-> AP.
 - AP <-> CnC.
 
-There investigated one problem: the experimental network bandwidth between UE and AP measurements with `iperf3` showed about **30 MBit/s** speed rate. On the contrary, the speed on the bearer UE <- AP -CnC> showed about **12-15 MBit/s** speed rate. There is markedly seen a drop in speed rate, probably, because of transmission on the radio channel two-times. The problem not in the Wi-Fi itself, but the radio link is not as reliable, as a cord one, so the active bandwidth measurement part must be located as close to the APs as possible - in our case, the server-side `iperf3` is located in APs.
+There investigated one problem: the experimental network bandwidth between UE and AP measurements with `iperf3` showed about **30 MBit/s** speed rate. On the contrary, the speed on the bearer UE <- AP -CnC> showed about **12-15 MBit/s** speed rate. There is markedly seen a drop in speed rate, probably, because of transmission on the radio channel two-times. The problem is not in the Wi-Fi itself, but in the fact that radio (wireless) link is not as reliable, as a cord one, so the active bandwidth measurement part must be located as close to the APs as possible - in our case, the server-side `iperf3` is located in APs.
 
 Each UE has two programs on board:
 
@@ -40,16 +40,17 @@ We prefer to run AP and designed software separately in a virtual machine. That 
 
 ### Command center deployment (CnC)
 
-The CnC software runs on Debian OS in VirtualBox virtual machine. `GPS_Tracker` `GPS_Frontend` is designed to run in containers. For the experiment, the virtual machine has **docker** and **docker-compose** installed to run these containers. We don't consider much performance decrease as long as enough hardware resources provided for the CnC virtual machine.
+The CnC software runs on Debian OS in VirtualBox virtual machine. `GPS_Tracker` and `GPS_Frontend` are designed to run in Docker containers. For the experiment, the virtual machine has **docker** and **docker-compose** installed to run these containers. There is a little performance decrease because of running in containers. But it can be easily compensated by extra hardware resources provided for the CnC virtual machine.
 
 The AP software consists of two packages:
 
 - `hostapd` - software to manage and run Wi-Fi access points.
 - `dnsmasq` - DNS/DHCP server, to provide an IP address, routing and DNS information via DHCP protocol.
 
-The AP software starts in the virtual machine. To access the physical external Wi-Fi adapter the hardware pass-through from the host machine to the virtual machine via hypervisor is used.
+The AP software starts in the virtual machine, which can access the physical Wi-Fi adapter using the hardware pass-through function from the host machine.
 
-For easy-to-run configuration and deployment of the CnC, there are provided an **Ansible** script and a **Vagrantfile**. See their requirements to use.
+
+For easy-to-run configuration and deployment of the CnC, there is provided an **Ansible** script. See their requirements to use.
 
 ### Access Points deployment (APs)
 
