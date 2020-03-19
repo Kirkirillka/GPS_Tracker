@@ -1,5 +1,10 @@
 # RCSE WS19/20 Group Study: Performance analysis framework for base station placement using IEEE 802.11
 
+## Links
+
+- A [LaTex](docs/Performance%20analysis%20framework%20for%20base%20station%20placement%20using%20IEEE%20802.11.pdf) project docuemntation.
+- An [Experiment](./docs/report/experiment/experiment_report.pdf) report.
+- Group Study [presentation](./docs/presentation/GroupStudy-presentation.pptx).
 
 ## Some tips
 

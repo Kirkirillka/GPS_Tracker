@@ -1,14 +1,6 @@
 # Project Documentation
 
-## Usage
-
-Generate a PDF file:
-
-```bash
-pandoc *.md -H disable_float.tex -o "Performance analysis framework for base station placement using IEEE 802.11.pdf"
-```
-
-## Description 
+## Description
 
 Welcome to the documentation!
 
@@ -35,3 +27,12 @@ Also, you can find out more detailed information on the sections:
 - Diagrams and Schemes - [link](schemes/README.md)
 - About System Launching - #TODO: 
 - About System Testing - [link](testing/README.md)
+
+
+## Usage
+
+Generate a PDF file:
+
+```bash
+pandoc *.md -H disable_float.tex -o "Performance analysis framework for base station placement using IEEE 802.11.pdf"
+```
