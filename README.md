@@ -2,9 +2,9 @@
 
 ## Links
 
-- A [LaTex](docs/Performance%20analysis%20framework%20for%20base%20station%20placement%20using%20IEEE%20802.11.pdf) project docuemntation.
+- A [LaTex](docs/Performance%20analysis%20framework%20for%20base%20station%20placement%20using%20IEEE%20802.11.pdf) project documentation.
 - An [Experiment](./docs/report/experiment/experiment_report.pdf) report.
-- Group Study [presentation](./docs/presentation/GroupStudy-presentation.pptx).
+- Group Study [Presentation](./docs/presentation/GroupStudy-presentation.pptx).
 
 ## Some tips
 
